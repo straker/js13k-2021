@@ -10,8 +10,8 @@
     "build": "gulp build",
     "dist": "gulp dist",
     "zip": "gulp zip",
-    "watch": "gulp",
-    "serve": "cd dist && http-server",
+    "develop": "npm run serve && gulp",
+    "serve": "cd dist && http-server --silent &",
     "eslint": "eslint src/*.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "husky install"

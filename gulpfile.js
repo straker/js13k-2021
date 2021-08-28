@@ -134,5 +134,5 @@ exports.build = series(clean, build);
 exports.dist = series(clean, dist);
 exports.zip = zip;
 exports.default = function () {
-  watch('src/**/*.js', build);
+  watch('src/**/*.js', series(clean, build));
 };

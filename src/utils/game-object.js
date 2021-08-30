@@ -6,8 +6,8 @@ export class GameObject extends GameObj.class {
     if (!properties.anchor) {
       properties.anchor = { x: 0.5, y: 0.5 };
     }
-    properties.x = properties.col * GRID_SIZE + properties.width / 2;
-    properties.y = properties.row * GRID_SIZE + properties.height / 2;
+    properties.x = properties.col * GRID_SIZE + GRID_SIZE * properties.anchor.x;
+    properties.y = properties.row * GRID_SIZE + GRID_SIZE * properties.anchor.y;
     super(properties);
   }
 }

@@ -55,26 +55,29 @@ function clean(cb) {
   del(['dist'], cb);
 }
 
-function buildJsStream() {
-  return src('src/index.js').pipe(
+function build() {
+  const jsStream = src('src/index.js').pipe(
     esbuild({
       bundle: true,
-      sourcemap: 'inline'
+      sourcemap: true
     })
   );
-}
 
-function build() {
-  // zip works best on a single html file
-  // (multiple files = more overhead of zip headers)
-  return merge(buildJsStream(), src('src/index.html'))
-    .pipe(concat('index.html'))
-    .pipe(concat.footer('\n</script>'))
-    .pipe(dest('dist'));
+  const htmlStream = src('src/index.html').pipe(
+    concat.footer('\n</script><script src="index.js"></script>')
+  );
+
+  // sourcemaps only seem to work when it's not a single html file
+  return merge(jsStream, htmlStream).pipe(dest('dist'));
 }
 
 function dist() {
-  const jsStream = buildJsStream()
+  const jsStream = src('src/index.js')
+    .pipe(
+      esbuild({
+        bundle: true
+      })
+    )
     // will gain more savings later when using preprocess on the kontra code
     // @see https://github.com/straker/rollup-plugin-kontra
     .pipe(
@@ -103,6 +106,8 @@ function dist() {
       })
     );
 
+  // zip works best on a single html file
+  // (multiple files = more overhead of zip headers)
   return merge(jsStream, src('src/index.html'))
     .pipe(concat('index.html'))
     .pipe(concat.footer('\n</script>'))
@@ -134,5 +139,5 @@ exports.build = series(clean, build);
 exports.dist = series(clean, dist);
 exports.zip = zip;
 exports.default = function () {
-  watch('src/**/*.js', series(clean, build));
+  watch('src/**/*.*', series(clean, build));
 };

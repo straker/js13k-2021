@@ -1,9 +1,10 @@
-export const GRID_SIZE = 32;
-export const GAME_WIDTH = GRID_SIZE * 32;
-export const GAME_HEIGHT = GRID_SIZE * 18;
+export const GRID_SIZE = 16;
+export const GAME_WIDTH = GRID_SIZE * 64;
+export const GAME_HEIGHT = GRID_SIZE * 36;
 export const TYPES = {
-  BELT: 0,
-  COMPONENT: 1
+  WALL: 0,
+  BELT: 1,
+  COMPONENT: 2
 };
 // dir values by name, degree, and radian
 const RIGHT = { row: 0, col: 1 };
@@ -26,3 +27,5 @@ export const DIRS = {
 export const BELT = {
   SPEED: [0.75]
 };
+// 200 ms (200ms / 1000 ms = 0.2)
+export const TICK_DURATION = 0.2;

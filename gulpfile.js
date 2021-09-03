@@ -5,6 +5,7 @@ const { src, dest, series, watch } = require('gulp');
 const del = require('delete');
 const esbuild = require('gulp-esbuild');
 const merge = require('merge-stream');
+const cwebp = require('gulp-cwebp');
 const concat = require('gulp-concat-util');
 const terser = require('gulp-terser');
 const { Packer } = require('roadroller');
@@ -17,7 +18,8 @@ const childProcess = require('child_process');
 const PluginError = require('plugin-error');
 const { name: pkgName } = require('./package.json');
 
-// a gulp plugin for ect based on gulp-advzip
+// a gulp plugin for ect based on gulp-advzip. ect can help save bytes
+// when using zip
 // @see https://github.com/elliot-nelson/gulp-advzip/blob/master/index.js
 function ect() {
   // Because the ect tool does not currently support streaming/piping, we will use
@@ -67,8 +69,12 @@ function build() {
     concat.footer('\n</script><script src="index.js"></script>')
   );
 
+  const assetStream = src('src/assets/*.png')
+    // webp images can save a lot of bytes
+    .pipe(cwebp({ z: 9 }));
+
   // sourcemaps only seem to work when it's not a single html file
-  return merge(jsStream, htmlStream).pipe(dest('dist'));
+  return merge(jsStream, htmlStream, assetStream).pipe(dest('dist'));
 }
 
 function dist() {
@@ -106,9 +112,13 @@ function dist() {
       })
     );
 
+  const assetStream = src('src/assets/*.png')
+    .pipe(cwebp({ z: 9 }))
+    .pipe(dest('dist'));
+
   // zip works best on a single html file
   // (multiple files = more overhead of zip headers)
-  return merge(jsStream, src('src/index.html'))
+  const htmlStream = merge(jsStream, src('src/index.html'))
     .pipe(concat('index.html'))
     .pipe(concat.footer('\n</script>'))
     .pipe(
@@ -118,12 +128,13 @@ function dist() {
         removeComments: true,
         removeAttributeQuotes: true
       })
-    )
-    .pipe(dest('dist'));
+    );
+
+  return merge(htmlStream, assetStream).pipe(dest('dist'));
 }
 
 function zip() {
-  return src('dist/index.html')
+  return src('dist/index.html', 'dist/*.png')
     .pipe(gulpZip(`${pkgName}.zip`))
     .pipe(
       advzip({

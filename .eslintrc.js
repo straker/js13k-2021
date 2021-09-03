@@ -8,7 +8,9 @@ module.exports = {
     sourceType: 'module'
   },
   extends: 'eslint:recommended',
-  rules: {},
+  rules: {
+    'no-debugger': 0
+  },
   overrides: [
     {
       files: ['gulpfile.js'],

@@ -10,8 +10,8 @@
     "build": "gulp build",
     "dist": "gulp dist",
     "zip": "gulp zip",
-    "develop": "npm run serve && gulp",
-    "serve": "cd dist && http-server --silent &",
+    "develop": "npm run start && gulp",
+    "start": "cd dist && http-server --silent &",
     "eslint": "eslint src/*.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "husky install"
@@ -19,7 +19,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "kontra": "^7.2.0"
+    "kontra": "^7.3.1"
   },
   "devDependencies": {
     "delete": "^1.1.0",
@@ -27,6 +27,7 @@
     "gulp": "^4.0.2",
     "gulp-advzip": "^1.3.0",
     "gulp-concat-util": "^0.5.5",
+    "gulp-cwebp": "^4.0.2",
     "gulp-esbuild": "^0.8.6",
     "gulp-htmlmin": "^5.0.1",
     "gulp-intermediate": "^5.0.0",

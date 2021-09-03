@@ -11,3 +11,9 @@ export function getDx(dir, speed) {
 export function getDy(dir, speed) {
   return dir === DIRS.DOWN ? speed : dir === DIRS.UP ? -speed : 0;
 }
+
+// current time (t) to move from point b to point c in a certain
+// duration (d)
+export function easeLinear(t, b, c, d) {
+  return (c * t) / d + b;
+}

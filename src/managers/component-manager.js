@@ -1,14 +1,46 @@
 import { on } from 'kontra';
-import { beltSegments } from './buildings/belt';
+import { beltSegments } from './belt-manager';
+import { easeLinear } from '../utils';
+import grid from '../utils/grid';
+import { TICK_DURATION, TYPES } from '../constants';
+import Component from '../components/component';
 
 const components = [];
+const moveComponents = [];
+
+let time = 0;
+on('update', () => {
+  time = (time + 1 / 60) % TICK_DURATION;
+  moveComponents.forEach(({ x, y, component, belt }) => {
+    component.x = easeLinear(time, x, belt.x - x, TICK_DURATION);
+    component.y = easeLinear(time, y, belt.y - y, TICK_DURATION);
+  });
+});
+
+function moveComponent({ component, belt }) {
+  belt.component = component;
+  component.updated = true;
+
+  moveComponents.push({
+    x: component.x,
+    y: component.y,
+    component,
+    belt
+  });
+}
 
 // belt segments and update pattern inspired from https://www.youtube.com/watch?v=88cIVR4KI_Q
-export default class ComponentManager {
-  constructor() {
+const componentManager = {
+  init() {
     on('gameTick', () => {
-      components.forEach(component => component.updated = false);
-      beltSegments.forEach(beltSegments => beltSegments.updated = false);
+      time = 0;
+      components.forEach(component => (component.updated = false));
+      beltSegments.forEach(beltSegments => (beltSegments.updated = false));
+      moveComponents.forEach(({ component, belt }) => {
+        component.x = belt.x;
+        component.y = belt.y;
+      });
+      moveComponents.length = 0;
 
       beltSegments.forEach(currSegment => {
         let removed;
@@ -63,15 +95,16 @@ export default class ComponentManager {
           }
 
           let belt = segment.end;
-          while(belt) {
+          while (belt) {
             const { component, nextBelt } = belt;
-            if (component && !component.updated && nextBelt && !nextBelt.component) {
-              nextBelt.component = component;
+            if (
+              component &&
+              !component.updated &&
+              nextBelt &&
+              !nextBelt.component
+            ) {
               belt.component = null;
-
-              component.x = nextBelt.x;
-              component.y = nextBelt.y;
-              component.updated = true;
+              moveComponent({ component, belt: nextBelt });
             }
 
             if (belt === segment.start) {
@@ -87,21 +120,25 @@ export default class ComponentManager {
         // place the special case removed component onto the
         // next belt it should have moved to
         if (removed) {
-          const { component, belt } = removed;
-          belt.component = component;
-          component.x = belt.x;
-          component.y = belt.y;
-          component.updated = true;
+          moveComponent(removed);
         }
       });
     });
-  }
+  },
 
-  add(component) {
+  add(properties) {
+    const { row, col } = properties;
+    const belt = grid.getByType({ row, col }, TYPES.BELT)[0];
+    const component = new Component(properties);
+    belt.component = component;
+
     components.push(component);
-  }
+    return component;
+  },
 
   render() {
     components.forEach(component => component.render());
   }
-}
+};
+
+export default componentManager;

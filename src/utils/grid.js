@@ -46,8 +46,10 @@ const grid = {
   add(obj, toObjects = true) {
     const { startRow, startCol, endRow, endCol } = getBoundingBox(obj);
 
-    obj.row = toGrid(obj.y);
-    obj.col = toGrid(obj.x);
+    if (!obj.row) {
+      obj.row = toGrid(obj.y);
+      obj.col = toGrid(obj.x);
+    }
 
     forEachTile([startRow, startCol, endRow, endCol], tile => tile.push(obj));
 
@@ -72,11 +74,22 @@ const grid = {
   get(pos) {
     const row = pos.row ?? (pos.y / GRID_SIZE) | 0;
     const col = pos.col ?? (pos.x / GRID_SIZE) | 0;
-    return tiles[row][col];
+    return tiles[row] && tiles[row][col] ? tiles[row][col] : [];
   },
 
   getByType(pos, type) {
     return this.get(pos).filter(obj => obj.type === type);
+  },
+
+  getAll(obj) {
+    const objs = [];
+    const { startRow, startCol, endRow, endCol } = getBoundingBox(obj);
+
+    forEachTile([startRow, startCol, endRow, endCol], tile =>
+      objs.push(...tile)
+    );
+
+    return objs;
   },
 
   update() {

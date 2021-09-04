@@ -15,8 +15,13 @@ const minerManager = {
         const exitBelt = grid.getByType({ row, col }, TYPES.BELT)[0];
 
         // miners produce every 10 game ticks
-        if (++miner.timer % 10 === 0 && exitBelt && !exitBelt.component) {
+        if (++miner.timer % 10 === 0) {
+          miner.component = true;
+        }
+
+        if (miner.component && exitBelt && !exitBelt.component) {
           componentManager.add({ row, col });
+          miner.component = false;
         }
       });
     });

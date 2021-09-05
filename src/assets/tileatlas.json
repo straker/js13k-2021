@@ -41,6 +41,18 @@
     "width": 1,
     "height": 1
   },
+  "EXPORT": {
+    "row": 1,
+    "col": 5,
+    "width": 1,
+    "height": 1
+  },
+  "IMPORT": {
+    "row": 1,
+    "col": 6,
+    "width": 1,
+    "height": 1
+  },
   "MINER": {
     "row": 5,
     "col": 0,

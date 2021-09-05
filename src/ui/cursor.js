@@ -1,8 +1,8 @@
-import { GRID_SIZE } from '../constants';
+import { GRID_SIZE, TYPES, DIRS } from '../constants';
 import GameObject from '../utils/game-object';
-import { getPointer } from 'kontra';
-import { toGrid } from '../utils/grid';
-import { imageAssets } from 'kontra';
+import { getPointer, imageAssets } from 'kontra';
+import grid, { toGrid } from '../utils/grid';
+import { rotate } from '../utils';
 import tileatlas from '../assets/tileatlas.json';
 
 export default class Cursor extends GameObject {
@@ -10,6 +10,7 @@ export default class Cursor extends GameObject {
     super();
 
     this.state = 'building';
+    this.dir = DIRS.RIGHT;
   }
 
   setImage(name) {
@@ -27,6 +28,22 @@ export default class Cursor extends GameObject {
     this.y = (toGrid(pointer.y) + (1 - 0.5 * atlas.width)) * GRID_SIZE;
     this.row = toGrid(this.y);
     this.col = toGrid(this.x);
+
+    // show import / export belt when appropriate
+    const item = grid.get(this)[0];
+    if (['BELT', 'EXPORT', 'IMPORT'].includes(this.name)) {
+      if (!item) {
+        this.name = 'BELT';
+      } else if (item.type === TYPES.WALL) {
+        if (item.dir === this.dir) {
+          this.name = 'EXPORT';
+        } else if (item.dir === DIRS[rotate(this, 180)]) {
+          this.name = 'IMPORT';
+        } else {
+          this.name = 'BELT';
+        }
+      }
+    }
   }
 
   draw() {

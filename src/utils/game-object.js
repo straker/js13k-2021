@@ -1,5 +1,5 @@
 import { Sprite, imageAssets } from 'kontra';
-import { GRID_SIZE } from '../constants';
+import { GRID_SIZE, DIRS } from '../constants';
 import tileatlas from '../assets/tileatlas.json';
 
 export default class GameObject extends Sprite.class {
@@ -22,6 +22,16 @@ export default class GameObject extends Sprite.class {
     }
 
     super(properties);
+  }
+
+  get rotation() {
+    return this._rot;
+  }
+
+  set rotation(value) {
+    this._rot = value;
+    this.dir = DIRS[value];
+    this._pc();
   }
 
   takesComponent() {

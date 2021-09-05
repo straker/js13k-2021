@@ -3,7 +3,6 @@ import {
   initKeys,
   initPointer,
   GameLoop,
-  degToRad,
   pointerPressed,
   bindKeys,
   emit,
@@ -15,9 +14,11 @@ import {
   GAME_HEIGHT,
   GRID_SIZE,
   TYPES,
+  DIRS,
   TICK_DURATION
 } from './constants';
 import grid, { toGrid } from './utils/grid';
+import { rotate } from './utils';
 
 import componentManager from './managers/component-manager';
 import beltManager from './managers/belt-manager';
@@ -38,8 +39,17 @@ const pointer = initPointer();
 
 const managers = {
   BELT: beltManager,
+  EXPORT: beltManager,
+  IMPORT: beltManager,
   MINER: minerManager,
   MOVER: moverManager
+};
+
+const wallDirs = {
+  33: DIRS.RIGHT,
+  42: DIRS.DOWN,
+  31: DIRS.LEFT,
+  22: DIRS.UP
 };
 
 load('tilesheet.webp', 'tilemap.webp').then(() => {
@@ -55,6 +65,7 @@ load('tilesheet.webp', 'tilemap.webp').then(() => {
           y: row * GRID_SIZE,
           width: GRID_SIZE,
           height: GRID_SIZE,
+          dir: wallDirs[tile],
           render() {},
           update() {}
         });
@@ -107,18 +118,22 @@ load('tilesheet.webp', 'tilemap.webp').then(() => {
               break;
           }
         }
-      } else if (pointerPressed('left') && !grid.getAll(cursor).length) {
-        const { name, x, y, row, col, rotation } = cursor;
+      } else if (pointerPressed('left')) {
+        const items = grid.getAll(cursor);
+        const { name, x, y, row, col, rotation, dir } = cursor;
+        const manager = managers[name];
 
-        gameHistory.push({
-          time: gameTimer,
-          type: TYPES[name],
-          row,
-          col,
-          rotation
-        });
+        if (manager.canPlace(cursor, items)) {
+          gameHistory.push({
+            time: gameTimer,
+            type: TYPES[name],
+            row,
+            col,
+            rotation
+          });
 
-        grid.add(managers[name].add({ x, y, row, col, rotation }));
+          grid.add(manager.add({ name, x, y, row, col, rotation, dir }));
+        }
       }
 
       // update all game logic every 200 ms (200ms / 1000 ms = 0.2)
@@ -142,7 +157,7 @@ load('tilesheet.webp', 'tilemap.webp').then(() => {
   bindKeys(
     'r',
     () => {
-      cursor.rotation = (cursor.rotation + degToRad(90)) % (Math.PI * 2);
+      cursor.rotation = rotate(cursor, 90);
     },
     { preventDefault: false }
   );

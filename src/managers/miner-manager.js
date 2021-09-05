@@ -1,7 +1,4 @@
-import { TYPES } from '../constants';
-import grid from '../utils/grid';
 import { on } from 'kontra';
-import componentManager from './component-manager';
 import Miner from '../buildings/miner';
 
 const miners = [];
@@ -22,6 +19,11 @@ const minerManager = {
     const miner = new Miner(properties);
     miners.push(miner);
     return miner;
+  },
+
+  // miner can only be placed on empty spots
+  canPlace(cursor, items) {
+    return !items.length;
   },
 
   render() {

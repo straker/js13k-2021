@@ -14,6 +14,10 @@ on('update', () => {
   moveComponents.forEach(({ x, y, component, belt }) => {
     component.x = easeLinear(time, x, belt.x - x, TICK_DURATION);
     component.y = easeLinear(time, y, belt.y - y, TICK_DURATION);
+
+    if (belt.name === 'EXIT') {
+      component.opacity = easeLinear(time, 1, -1, TICK_DURATION);
+    }
   });
 });
 

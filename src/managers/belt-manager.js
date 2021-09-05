@@ -1,6 +1,9 @@
-import { TYPES } from '../constants';
+import { TYPES, DIRS } from '../constants';
 import grid from '../utils/grid';
+import { rotate } from '../utils';
 import Belt from '../buildings/belt';
+import ExportBelt from '../buildings/export-belt';
+import ImportBelt from '../buildings/import-belt';
 
 export const beltSegments = [];
 
@@ -8,7 +11,22 @@ const beltManager = {
   init() {},
 
   add(properties) {
-    const belt = new Belt(properties);
+    // auto place import / export belt from a belt
+    const item = grid.get(properties)[0];
+    let belt;
+
+    if (!item) {
+      belt = new Belt(properties);
+    }
+    // import / export belt
+    else {
+      // import belt goes same direction as well
+      if (properties.dir === item.dir) {
+        belt = new ExportBelt(properties);
+      } else {
+        belt = new ImportBelt(properties);
+      }
+    }
 
     // get neighboring belts
     const { row, col, dir } = belt;
@@ -118,6 +136,20 @@ const beltManager = {
     }
 
     return belt;
+  },
+
+  canPlace(cursor, items) {
+    // belts can only be placed on empty spots but import / export
+    // belts can be placed on walls that match their dir
+    return (
+      !items.length ||
+      (items.length &&
+        items.every(
+          item =>
+            item.type === TYPES.WALL &&
+            (item.dir === cursor.dir || item.dir === DIRS[rotate(cursor, 180)])
+        ))
+    );
   }
 };
 

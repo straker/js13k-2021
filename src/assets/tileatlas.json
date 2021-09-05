@@ -29,6 +29,18 @@
     "width": 1,
     "height": 1
   },
+  "MOVER": {
+    "row": 1,
+    "col": 3,
+    "width": 1,
+    "height": 1
+  },
+  "MOVER_END": {
+    "row": 1,
+    "col": 4,
+    "width": 1,
+    "height": 1
+  },
   "MINER": {
     "row": 5,
     "col": 0,

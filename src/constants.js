@@ -4,7 +4,8 @@ export const GAME_HEIGHT = GRID_SIZE * 36;
 export const TYPES = {
   WALL: 0,
   BELT: 1,
-  COMPONENT: 2
+  COMPONENT: 2,
+  MOVER: 3
 };
 // dir values by name, degree, and radian
 const RIGHT = { row: 0, col: 1 };

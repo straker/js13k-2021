@@ -22,6 +22,7 @@ import grid, { toGrid } from './utils/grid';
 import componentManager from './managers/component-manager';
 import beltManager from './managers/belt-manager';
 import minerManager from './managers/miner-manager';
+import moverManager from './managers/mover-manager';
 import Cursor from './ui/cursor';
 import { layers } from './assets/tilemap.json';
 
@@ -37,7 +38,8 @@ const pointer = initPointer();
 
 const managers = {
   BELT: beltManager,
-  MINER: minerManager
+  MINER: minerManager,
+  MOVER: moverManager
 };
 
 load('tilesheet.webp', 'tilemap.webp').then(() => {
@@ -63,6 +65,7 @@ load('tilesheet.webp', 'tilemap.webp').then(() => {
   componentManager.init();
   beltManager.init();
   minerManager.init();
+  moverManager.init();
 
   const cursor = new Cursor();
   cursor.setImage('BELT');
@@ -165,7 +168,7 @@ load('tilesheet.webp', 'tilemap.webp').then(() => {
   });
 
   bindKeys('3', () => {
-    cursor.setImage('ASSEMBLER');
+    cursor.setImage('MOVER');
     cursor.rotation = 0;
   });
 

@@ -14,32 +14,35 @@
     "start": "cd dist && http-server --silent &",
     "eslint": "eslint src/*.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "rollup": "gulp rollup"
   },
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "kontra": "^7.3.1"
-  },
+  "license": "MIT",
   "devDependencies": {
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^13.0.4",
     "delete": "^1.1.0",
     "eslint": "^7.32.0",
     "gulp": "^4.0.2",
     "gulp-advzip": "^1.3.0",
+    "gulp-better-rollup": "^4.0.1",
     "gulp-concat-util": "^0.5.5",
     "gulp-cwebp": "^4.0.2",
-    "gulp-esbuild": "^0.8.6",
     "gulp-htmlmin": "^5.0.1",
     "gulp-intermediate": "^5.0.0",
+    "gulp-sourcemaps": "^3.0.0",
     "gulp-terser": "^2.0.1",
     "gulp-zip": "^5.1.0",
     "http-server": "^13.0.1",
     "husky": "^7.0.2",
+    "kontra": "^7.3.1",
     "lint-staged": "^11.1.2",
     "merge-stream": "^2.0.0",
     "plugin-error": "^1.0.1",
     "prettier": "^2.3.2",
     "roadroller": "^2.0.0",
+    "rollup": "^2.56.3",
     "through2": "^4.0.2"
   },
   "lint-staged": {

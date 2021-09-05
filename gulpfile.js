@@ -3,7 +3,10 @@ const os = require('os');
 
 const { src, dest, series, watch } = require('gulp');
 const del = require('delete');
-const esbuild = require('gulp-esbuild');
+const rollup = require('gulp-better-rollup');
+const { nodeResolve } = require('@rollup/plugin-node-resolve');
+const json = require('@rollup/plugin-json');
+const sourcemaps = require('gulp-sourcemaps');
 const merge = require('merge-stream');
 const cwebp = require('gulp-cwebp');
 const concat = require('gulp-concat-util');
@@ -58,12 +61,17 @@ function clean(cb) {
 }
 
 function build() {
-  const jsStream = src('src/index.js').pipe(
-    esbuild({
-      bundle: true,
-      sourcemap: true
-    })
-  );
+  const jsStream = src('src/index.js')
+    .pipe(sourcemaps.init())
+    .pipe(
+      rollup(
+        {
+          plugins: [nodeResolve(), json()]
+        },
+        'iife'
+      )
+    )
+    .pipe(sourcemaps.write());
 
   const htmlStream = src('src/index.html').pipe(
     concat.footer('\n</script><script src="index.js"></script>')
@@ -80,9 +88,12 @@ function build() {
 function dist() {
   const jsStream = src('src/index.js')
     .pipe(
-      esbuild({
-        bundle: true
-      })
+      rollup(
+        {
+          plugins: [nodeResolve(), json()]
+        },
+        'iife'
+      )
     )
     // will gain more savings later when using preprocess on the kontra code
     // @see https://github.com/straker/rollup-plugin-kontra

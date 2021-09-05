@@ -24,6 +24,10 @@ export default class GameObject extends Sprite.class {
     super(properties);
   }
 
+  takesComponent() {
+    return false;
+  }
+
   draw() {
     const { name, context, width, height } = this;
     const atlas = tileatlas[name];

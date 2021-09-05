@@ -62,10 +62,13 @@ load('tilesheet.webp', 'tilemap.webp').then(() => {
     }
   }
 
+  // order here is important and determines the order in which
+  // these managers run (so a mover will move a component off a
+  // belt before it moves along the belt)
+  moverManager.init();
   componentManager.init();
   beltManager.init();
   minerManager.init();
-  moverManager.init();
 
   const cursor = new Cursor();
   cursor.setImage('BELT');
@@ -122,6 +125,7 @@ load('tilesheet.webp', 'tilemap.webp').then(() => {
       counter += dt;
       if (counter >= TICK_DURATION) {
         counter -= TICK_DURATION;
+        emit('preGameTick', TICK_DURATION);
         emit('gameTick', TICK_DURATION);
       }
     },

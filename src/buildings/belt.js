@@ -13,6 +13,10 @@ export default class Belt extends GameObject {
     super(properties);
   }
 
+  takesComponent() {
+    return !this.component;
+  }
+
   draw() {
     super.draw();
 

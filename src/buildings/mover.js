@@ -7,7 +7,7 @@ export default class Miner extends GameObject {
     properties.type = TYPES.MOVER;
     properties.name = 'MOVER';
     properties.dir = DIRS[properties.rotation];
-    properties.timer = 0;
+    properties.lastMove = 0;
 
     super(properties);
   }

@@ -17,7 +17,7 @@ on('update', () => {
   });
 });
 
-function moveComponent({ component, belt }) {
+export function moveComponent({ component, belt }) {
   belt.component = component;
   component.updated = true;
 
@@ -32,7 +32,7 @@ function moveComponent({ component, belt }) {
 // belt segments and update pattern inspired from https://www.youtube.com/watch?v=88cIVR4KI_Q
 const componentManager = {
   init() {
-    on('gameTick', () => {
+    on('preGameTick', () => {
       time = 0;
       components.forEach(component => (component.updated = false));
       beltSegments.forEach(beltSegments => (beltSegments.updated = false));
@@ -41,7 +41,9 @@ const componentManager = {
         component.y = belt.y;
       });
       moveComponents.length = 0;
+    });
 
+    on('gameTick', () => {
       beltSegments.forEach(currSegment => {
         let removed;
 

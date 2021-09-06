@@ -6,6 +6,7 @@ import { rotate } from '../utils';
 import tileatlas from '../assets/tileatlas.json';
 
 let cursor;
+let gameRect;
 let menuY;
 
 // don't show game cursor on the selection menu
@@ -14,7 +15,7 @@ game.addEventListener('mousemove', showHideCursor);
 function showHideCursor(evt) {
   // cache bounding rect
   if (!menuY) {
-    const gameRect = game.getBoundingClientRect();
+    gameRect = game.getBoundingClientRect();
     menuY = gameRect.y + gameRect.height - GRID_SIZE * 3;
   }
   const atlas = tileatlas[cursor.name];
@@ -53,8 +54,10 @@ class Cursor extends GameObject {
   }
 
   show() {
-    game.style.cursor = 'none';
-    cursor.hidden = false;
+    if (this.y < menuY - gameRect.y) {
+      game.style.cursor = 'none';
+      cursor.hidden = false;
+    }
   }
 
   update() {

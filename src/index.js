@@ -24,8 +24,9 @@ import componentManager from './managers/component-manager';
 import beltManager from './managers/belt-manager';
 import minerManager from './managers/miner-manager';
 import moverManager from './managers/mover-manager';
-import Cursor from './ui/cursor';
+import cursor from './ui/cursor';
 import { layers } from './assets/tilemap.json';
+import selectMenu from './ui/select-menu';
 
 const { canvas, context } = init();
 
@@ -81,8 +82,7 @@ load('tilesheet.webp', 'tilemap.webp').then(() => {
   beltManager.init();
   minerManager.init();
 
-  const cursor = new Cursor();
-  cursor.setImage('BELT');
+  selectMenu.init();
 
   // to help debug problems with belts
   let gameHistory = [];
@@ -118,7 +118,10 @@ load('tilesheet.webp', 'tilemap.webp').then(() => {
               break;
           }
         }
-      } else if (pointerPressed('left')) {
+      } else if (
+        pointerPressed('left') &&
+        cursor.y < GAME_HEIGHT - GRID_SIZE * 3
+      ) {
         const items = grid.getAll(cursor);
         const { name, x, y, row, col, rotation, dir } = cursor;
         const manager = managers[name];
@@ -150,6 +153,8 @@ load('tilesheet.webp', 'tilemap.webp').then(() => {
       componentManager.render();
       sprites.forEach(sprite => sprite.render());
       cursor.render();
+
+      selectMenu.render();
     }
   });
   loop.start();
@@ -174,21 +179,15 @@ load('tilesheet.webp', 'tilemap.webp').then(() => {
     }
   });
 
-  // for testing
-  // keys 1-3 change building
-  bindKeys('1', () => {
-    cursor.setImage('BELT');
-    cursor.rotation = 0;
-  });
-
-  bindKeys('2', () => {
-    cursor.setImage('MINER');
-    cursor.rotation = 0;
-  });
-
-  bindKeys('3', () => {
-    cursor.setImage('MOVER');
-    cursor.rotation = 0;
+  const gameRect = game.getBoundingClientRect();
+  game.addEventListener('mousemove', evt => {
+    if (evt.clientY > gameRect.y + gameRect.height - GRID_SIZE * 3) {
+      game.style.cursor = 'default';
+      cursor.hidden = true;
+    } else {
+      game.style.cursor = 'none';
+      cursor.hidden = false;
+    }
   });
 
   window.grid = grid;

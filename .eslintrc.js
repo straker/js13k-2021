@@ -8,6 +8,9 @@ module.exports = {
     sourceType: 'module'
   },
   extends: 'eslint:recommended',
+  globals: {
+    game: 'readonly'
+  },
   rules: {
     'no-debugger': 0
   },

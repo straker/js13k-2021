@@ -5,9 +5,11 @@ import grid, { toGrid } from '../utils/grid';
 import { rotate } from '../utils';
 import tileatlas from '../assets/tileatlas.json';
 
-export default class Cursor extends GameObject {
+class Cursor extends GameObject {
   constructor() {
-    super();
+    super({
+      context: game.getContext('2d')
+    });
 
     this.state = 'building';
     this.dir = DIRS.RIGHT;
@@ -50,6 +52,8 @@ export default class Cursor extends GameObject {
     const { context, scaleSize } = this;
     const atlas = tileatlas.CURSOR;
 
+    if (this.hidden) return;
+
     context.save();
     context.globalAlpha = 0.6;
     super.draw();
@@ -69,3 +73,6 @@ export default class Cursor extends GameObject {
     );
   }
 }
+
+const cursor = new Cursor();
+export default cursor;

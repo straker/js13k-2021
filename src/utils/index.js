@@ -1,5 +1,5 @@
 import { DIRS } from '../constants';
-import { degToRad } from 'kontra';
+import { degToRad } from '../libs/kontra';
 
 export function getSign(number) {
   return number < 0 ? -1 : number > 0 ? 1 : 0;

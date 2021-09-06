@@ -1,23 +1,72 @@
-import { Button, imageAssets, bindKeys } from 'kontra';
+import { Grid, Button, imageAssets, bindKeys } from '../libs/kontra';
 import { GRID_SIZE, GAME_HEIGHT, COLORS } from '../constants';
 import tileatlas from '../assets/tileatlas.json';
 import cursor from './cursor';
 
-const menuItems = [];
+let menu;
+let openedMenu;
+const menuHierarchy = {};
+
+function closeMenu(name) {
+  const hierarchy = menuHierarchy[name];
+  hierarchy.parent.opened = false;
+  hierarchy.parent.blur();
+  hierarchy.grid.children = [hierarchy.parent];
+  hierarchy.children.forEach(child => {
+    child.blur();
+    child.disable();
+  });
+}
 
 function createButton(properties) {
   properties.width = properties.height = GRID_SIZE * 2;
-  properties.scaleX = properties.scaleY = 0.75;
+  properties.scaleX = properties.scaleY = properties.child ? 0.6 : 0.75;
 
   return Button({
     ...properties,
-    anchor: { x: 0.5, y: 0.5 },
     onDown() {
-      this.focus();
+      if (openedMenu === this) {
+        closeMenu(this.name);
+        openedMenu = null;
+        cursor.setImage('');
+        cursor.hide();
+      } else {
+        this.focus();
+      }
     },
     onFocus() {
-      cursor.setImage(this.name.split('_')[0]);
-      cursor.rotation = 0;
+      Object.keys(menuHierarchy).forEach(menuName => {
+        const hierarchy = menuHierarchy[menuName];
+
+        if (!this.child) {
+          if (hierarchy.parent !== this) {
+            hierarchy.parent.focused = false;
+          }
+
+          // close submenu
+          if (menuName !== this.name) {
+            closeMenu(menuName);
+          }
+          // open submenu
+          else {
+            openedMenu = hierarchy.parent;
+            hierarchy.parent.opened = true;
+            hierarchy.grid.children = [hierarchy.parent, ...hierarchy.children];
+            hierarchy.children.forEach(child => child.enable());
+          }
+        }
+        // focus parent when child is selected
+        else if (hierarchy.children.includes(this)) {
+          hierarchy.parent.focused = true;
+        }
+      });
+
+      if (this.child) {
+        cursor.setImage(this.name.split('_')[0]);
+        cursor.rotation = 0;
+      } else {
+        cursor.setImage('');
+      }
     },
     render() {
       const { name, context, width, height } = this;
@@ -32,8 +81,8 @@ function createButton(properties) {
         imageAssets.tilesheet,
         atlas.col * GRID_SIZE,
         atlas.row * GRID_SIZE,
-        width,
-        height,
+        GRID_SIZE * 2,
+        GRID_SIZE * 2,
         0,
         0,
         width,
@@ -46,6 +95,7 @@ function createButton(properties) {
       } else {
         context.strokeStyle = COLORS.WHITE;
       }
+
       context.strokeRect(start, start, end, end);
     }
   });
@@ -54,56 +104,122 @@ function createButton(properties) {
 const selectMenu = {
   init() {
     const beltMenu = createButton({
-      name: 'BELT_MENU',
-      x: GRID_SIZE * 1.5,
-      y: GAME_HEIGHT - GRID_SIZE * 1.5
+      name: 'BELT_MENU'
     });
-    beltMenu._dn.textContent = 'Belts';
+    beltMenu._dn.setAttribute('aria-label', 'Belt Menu');
+    const beltMenuItem = createButton({
+      name: 'BELT_MENU_ITEM',
+      child: true
+    });
+    beltMenuItem._dn.setAttribute('aria-label', 'Belt');
+    const moverMenuItem = createButton({
+      name: 'MOVER_MENU_ITEM',
+      child: true
+    });
+    moverMenuItem._dn.setAttribute('aria-label', 'Mover');
 
     const minerMenu = createButton({
-      name: 'MINER_MENU',
-      x: GRID_SIZE * 4.5,
-      y: GAME_HEIGHT - GRID_SIZE * 1.5
+      name: 'MINER_MENU'
     });
-    minerMenu._dn.textContent = 'Miners';
+    minerMenu._dn.setAttribute('aria-label', 'Miner Menu');
+    const minerMenuItem = createButton({
+      name: 'MINER_MENU_ITEM',
+      child: true
+    });
+    minerMenuItem._dn.setAttribute('aria-label', 'Metal Miner');
 
     const assemblerMenu = createButton({
-      name: 'ASSEMBLER_MENU',
-      x: GRID_SIZE * 7.5,
-      y: GAME_HEIGHT - GRID_SIZE * 1.5
+      name: 'ASSEMBLER_MENU'
     });
-    assemblerMenu._dn.textContent = 'Assemblers';
+    assemblerMenu._dn.setAttribute('aria-label', 'Assembler Menu');
 
     const deleteMenu = createButton({
-      name: 'DELETE_MENU',
-      x: GRID_SIZE * 10.5,
-      y: GAME_HEIGHT - GRID_SIZE * 1.5
+      name: 'DELETE_MENU'
     });
-    deleteMenu._dn.textContent = 'Miners';
+    deleteMenu._dn.setAttribute('aria-label', 'Delete Tool');
 
-    menuItems.push(beltMenu);
-    menuItems.push(minerMenu);
-    menuItems.push(assemblerMenu);
-    menuItems.push(deleteMenu);
+    const beltMenuGrid = Grid({
+      flow: 'row',
+      align: 'start',
+      jusify: 'start',
+      // for some reason the menu items have to start in the
+      // grid, otherwise they can't be clicked on
+      children: [beltMenu, beltMenuItem, moverMenuItem],
+      colGap: GRID_SIZE / 1.5
+    });
+    const minerMenuGrid = Grid({
+      flow: 'row',
+      children: [minerMenu, minerMenuItem],
+      colGap: GRID_SIZE / 1.5
+    });
+    const assmeblerMenuGrid = Grid({
+      flow: 'row',
+      children: [assemblerMenu],
+      colGap: GRID_SIZE / 1.5
+    });
 
-    beltMenu.focus();
+    menu = Grid({
+      x: GRID_SIZE,
+      y: GAME_HEIGHT - GRID_SIZE * 2,
+      flow: 'row',
+      colGap: GRID_SIZE * 1.25,
+      children: [beltMenuGrid, minerMenuGrid, assmeblerMenuGrid, deleteMenu]
+    });
 
-    bindKeys('1', () => {
-      beltMenu.focus();
+    menuHierarchy.BELT_MENU = {
+      grid: beltMenuGrid,
+      parent: beltMenu,
+      children: [beltMenuItem, moverMenuItem]
+    };
+    menuHierarchy.MINER_MENU = {
+      grid: minerMenuGrid,
+      parent: minerMenu,
+      children: [minerMenuItem]
+    };
+    menuHierarchy.ASSEMBLER_MENU = {
+      grid: assmeblerMenuGrid,
+      parent: assemblerMenu,
+      children: []
+    };
+
+    closeMenu('BELT_MENU');
+    closeMenu('MINER_MENU');
+
+    bindKeys(['1', '2', '3', '4', '5'], evt => {
+      const key = +evt.key - 1;
+
+      // first open menu
+      if (!openedMenu) {
+        if (
+          menu.children[key]?.children &&
+          menu.children[key]?.children[0].focus
+        ) {
+          menu.children[key]?.children[0].focus();
+        } else if (menu.children[key]) {
+          cursor.show();
+          menu.children[key].focus();
+        }
+      }
+      // focus submenu item
+      else {
+        cursor.show();
+        menuHierarchy[openedMenu.name]?.children[key]?.focus();
+      }
     });
-    bindKeys('2', () => {
-      minerMenu.focus();
+    bindKeys('esc', () => {
+      closeMenu(openedMenu.name);
+      openedMenu = null;
+      cursor.setImage('');
+      cursor.hide();
     });
-    bindKeys('3', () => {
-      assemblerMenu.focus();
-    });
-    // bindKeys('4', () => {
-    //   deleteMenu.focus();
-    // });
+  },
+
+  update() {
+    menu.update();
   },
 
   render() {
-    menuItems.forEach(item => item.render());
+    menu.render();
   }
 };
 export default selectMenu;

@@ -8,7 +8,7 @@ import {
   emit,
   load,
   imageAssets
-} from 'kontra';
+} from './libs/kontra';
 import {
   GAME_WIDTH,
   GAME_HEIGHT,
@@ -99,6 +99,7 @@ load('tilesheet.webp', 'tilemap.webp').then(() => {
       grid.update();
 
       cursor.update();
+      selectMenu.update();
 
       if (replay) {
         const item = gameHistory[0];
@@ -126,7 +127,7 @@ load('tilesheet.webp', 'tilemap.webp').then(() => {
         const { name, x, y, row, col, rotation, dir } = cursor;
         const manager = managers[name];
 
-        if (manager.canPlace(cursor, items)) {
+        if (manager?.canPlace(cursor, items)) {
           gameHistory.push({
             time: gameTimer,
             type: TYPES[name],
@@ -176,17 +177,6 @@ load('tilesheet.webp', 'tilemap.webp').then(() => {
     if (belt && !belt.component) {
       gameHistory.push({ time: gameTimer, type: TYPES.COMPONENT, row, col });
       componentManager.add({ row, col });
-    }
-  });
-
-  const gameRect = game.getBoundingClientRect();
-  game.addEventListener('mousemove', evt => {
-    if (evt.clientY > gameRect.y + gameRect.height - GRID_SIZE * 3) {
-      game.style.cursor = 'default';
-      cursor.hidden = true;
-    } else {
-      game.style.cursor = 'none';
-      cursor.hidden = false;
     }
   });
 

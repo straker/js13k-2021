@@ -1,6 +1,6 @@
 import { TYPES } from '../constants';
 import grid from '../utils/grid';
-import { on } from 'kontra';
+import { on } from '../libs/kontra';
 import componentManager, { moveComponent } from './component-manager';
 import Mover from '../buildings/mover';
 

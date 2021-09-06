@@ -1,5 +1,5 @@
 import { GRID_SIZE, GAME_WIDTH, GAME_HEIGHT } from '../constants';
-import { getWorldRect } from 'kontra';
+import { getWorldRect } from '../libs/kontra';
 
 const objects = [];
 const tiles = [];

@@ -1,4 +1,4 @@
-import { on } from 'kontra';
+import { on } from '../libs/kontra';
 import Miner from '../buildings/miner';
 
 const miners = [];

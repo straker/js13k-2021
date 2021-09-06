@@ -10,6 +10,7 @@ export default class ExportBelt extends Belt {
       name: 'EXIT',
       x: this.x + this.dir.col * GRID_SIZE,
       y: this.y + this.dir.row * GRID_SIZE,
+      set component(p) {},
       get component() {
         return false;
       }

@@ -53,6 +53,48 @@
     "width": 1,
     "height": 1
   },
+  "BELT_MENU": {
+    "row": 5,
+    "col": 6,
+    "width": 2,
+    "height": 2
+  },
+  "BELT_MENU_ITEM": {
+    "row": 7,
+    "col": 6,
+    "width": 2,
+    "height": 2
+  },
+  "MOVER_MENU_ITEM": {
+    "row": 7,
+    "col": 8,
+    "width": 2,
+    "height": 2
+  },
+  "MINER_MENU": {
+    "row": 5,
+    "col": 4,
+    "width": 2,
+    "height": 2
+  },
+  "MINER_MENU_ITEM": {
+    "row": 5,
+    "col": 0,
+    "width": 2,
+    "height": 2
+  },
+  "ASSEMBLER_MENU": {
+    "row": 5,
+    "col": 2,
+    "width": 2,
+    "height": 2
+  },
+  "DELETE_MENU": {
+    "row": 5,
+    "col": 8,
+    "width": 2,
+    "height": 2
+  },
   "MINER": {
     "row": 5,
     "col": 0,

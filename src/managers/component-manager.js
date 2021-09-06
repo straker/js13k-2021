@@ -1,4 +1,4 @@
-import { on } from 'kontra';
+import { on } from '../libs/kontra';
 import { beltSegments } from './belt-manager';
 import { easeLinear } from '../utils';
 import grid from '../utils/grid';

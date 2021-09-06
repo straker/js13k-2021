@@ -1,4 +1,4 @@
-import { Sprite, imageAssets } from 'kontra';
+import { Sprite, imageAssets } from '../libs/kontra';
 import { GRID_SIZE, DIRS } from '../constants';
 import tileatlas from '../assets/tileatlas.json';
 

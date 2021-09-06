@@ -28,5 +28,12 @@ export const DIRS = {
 export const BELT = {
   SPEED: [0.75]
 };
+export const COLORS = {
+  WHITE: '#cfc6b8',
+  BLACK: '#333333',
+  RED: '#e6482e',
+  YELLOW: '#f4b41b',
+  GREEN: '#38d973'
+};
 // 200 ms (200ms / 1000 ms = 0.2)
 export const TICK_DURATION = 0.2;

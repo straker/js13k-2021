@@ -10,7 +10,7 @@
     "build": "gulp build",
     "dist": "gulp dist",
     "zip": "gulp zip",
-    "develop": "npm run start && gulp",
+    "develop": "npm run build && npm run start && gulp",
     "start": "cd dist && http-server --silent &",
     "eslint": "eslint src/*.js",
     "test": "echo \"Error: no test specified\" && exit 1",

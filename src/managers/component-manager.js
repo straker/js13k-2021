@@ -43,6 +43,10 @@ const componentManager = {
       moveComponents.forEach(({ component, belt }) => {
         component.x = belt.x;
         component.y = belt.y;
+
+        if (belt.name === 'EXIT') {
+          components.splice(components.indexOf(component), 1);
+        }
       });
       moveComponents.length = 0;
     });

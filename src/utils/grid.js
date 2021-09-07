@@ -21,7 +21,7 @@ export function toGrid(value) {
 function forEachTile([startRow, startCol, endRow, endCol], cb) {
   for (let row = startRow; row <= endRow; row++) {
     for (let col = startCol; col <= endCol; col++) {
-      cb(tiles[row][col]);
+      cb(tiles[row]?.[col] ?? []);
     }
   }
 }

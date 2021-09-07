@@ -9,6 +9,8 @@ import {
   imageAssets
 } from './libs/kontra';
 import {
+  NUM_ROWS,
+  NUM_COLS,
   GAME_WIDTH,
   GAME_HEIGHT,
   GRID_SIZE,
@@ -31,8 +33,6 @@ const { canvas, context } = init();
 
 canvas.width = GAME_WIDTH;
 canvas.height = GAME_HEIGHT;
-const numRows = GAME_HEIGHT / GRID_SIZE;
-const numCols = GAME_WIDTH / GRID_SIZE;
 
 initKeys();
 const pointer = initPointer();
@@ -45,9 +45,9 @@ const wallDirs = {
 
 load('tilesheet.webp', 'tilemap.webp').then(() => {
   // fill the grid with walls
-  for (let row = 0; row < numRows; row++) {
-    for (let col = 0; col < numCols; col++) {
-      const tile = layers[0].data[row * numCols + col];
+  for (let row = 0; row < NUM_ROWS; row++) {
+    for (let col = 0; col < NUM_COLS; col++) {
+      const tile = layers[0].data[row * NUM_COLS + col];
       if (tile && tile !== 11) {
         // 11 = minable floor
         grid.add({

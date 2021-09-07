@@ -1,6 +1,9 @@
 export const GRID_SIZE = 16;
-export const GAME_WIDTH = GRID_SIZE * 64;
-export const GAME_HEIGHT = GRID_SIZE * 36;
+export const NUM_ROWS = 36;
+export const NUM_COLS = 64;
+export const GAME_WIDTH = GRID_SIZE * NUM_COLS;
+export const GAME_HEIGHT = GRID_SIZE * NUM_ROWS;
+
 export const TYPES = {
   WALL: 0,
   BELT: 1,

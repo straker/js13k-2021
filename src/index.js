@@ -174,8 +174,6 @@ load('tilesheet.webp', 'tilemap.webp').then(() => {
           const items = grid.getAll(cursorPos);
           const manager = managers[name];
 
-          // console.log({ r, c });
-
           if (manager?.canPlace(cursorPos, items)) {
             gameHistory.push({
               time: gameTimer,

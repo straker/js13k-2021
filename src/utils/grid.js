@@ -1,5 +1,4 @@
 import { GRID_SIZE, GAME_WIDTH, GAME_HEIGHT } from '../constants';
-import { getWorldRect } from '../libs/kontra';
 
 const objects = [];
 const tiles = [];
@@ -18,19 +17,6 @@ export function toGrid(value) {
   return (value / GRID_SIZE) | 0;
 }
 
-// return start and end row/col
-function getBoundingBox(obj) {
-  const { x, y, width, height } = getWorldRect(obj);
-  return {
-    startRow: toGrid(y),
-    startCol: toGrid(x),
-    // subtract 1 since a 32x32 obj should occupy one tile
-    // now two (32 / 32 = 1)
-    endRow: toGrid(y + height - 1),
-    endCol: toGrid(x + width - 1)
-  };
-}
-
 // loop over each tile an object occupies
 function forEachTile([startRow, startCol, endRow, endCol], cb) {
   for (let row = startRow; row <= endRow; row++) {
@@ -43,33 +29,17 @@ function forEachTile([startRow, startCol, endRow, endCol], cb) {
 const grid = {
   objects,
 
-  add(obj, toObjects = true) {
-    const { startRow, startCol, endRow, endCol } = getBoundingBox(obj);
+  add(obj) {
+    // always add from the bottom-right corner
+    // subtract 1 since a 32x32 obj should occupy one tile
+    // not two (32 / 32 = 1)
+    const startRow = obj.row - toGrid(obj.height - 1);
+    const startCol = obj.col - toGrid(obj.width - 1);
 
-    if (!obj.row) {
-      obj.row = toGrid(obj.y);
-      obj.col = toGrid(obj.x);
-    }
+    forEachTile([startRow, startCol, obj.row, obj.col], tile => tile.push(obj));
 
-    forEachTile([startRow, startCol, endRow, endCol], tile => tile.push(obj));
-
-    if (toObjects) {
-      objects.push(obj);
-    }
+    objects.push(obj);
   },
-
-  // remove(obj, fromObjects = true) {
-  //   const { startRow, startCol, endRow, endCol } = getBoundingBox(obj);
-
-  //   obj.row = obj.col = null;
-
-  //   // remove object to all spaces it occupies
-  //   forEachTile([startRow, startCol, endRow, endCol], (tile) => tile.splice(tile.indexOf(obj), 1));
-
-  //   if (fromObjects) {
-  //     objects.splice(objets.indexOf(obj), 1);
-  //   }
-  // },
 
   get(pos) {
     const row = pos.row ?? (pos.y / GRID_SIZE) | 0;
@@ -83,9 +53,10 @@ const grid = {
 
   getAll(obj) {
     const objs = [];
-    const { startRow, startCol, endRow, endCol } = getBoundingBox(obj);
+    const startRow = obj.row - toGrid(obj.height - 1);
+    const startCol = obj.col - toGrid(obj.width - 1);
 
-    forEachTile([startRow, startCol, endRow, endCol], tile =>
+    forEachTile([startRow, startCol, obj.row, obj.col], tile =>
       objs.push(...tile)
     );
 
@@ -94,31 +65,7 @@ const grid = {
 
   update() {
     objects.forEach(obj => {
-      // const {
-      //   startRow: prevStartRow,
-      //   startCol: prevStartCol,
-      //   endRow: prevEndRow,
-      //   endCol: prevEndCol
-      // } = getBoundingBox(obj);
-
       obj.update();
-
-      // const { startRow, startCol, endRow, endCol } = getBoundingBox(obj);
-
-      // // update object grid position
-      // if (
-      //   prevStartRow !== startRow ||
-      //   prevStartCol !== startCol ||
-      //   prevEndRow !== endRow ||
-      //   prevEndCol !== endCol
-      // ) {
-      //   forEachTile([prevStartRow, prevStartCol, prevEndRow, prevEndCol], (tile) => tile.splice(tile.indexOf(obj), 1));
-
-      //   this.add(obj, false)
-      // }
-
-      // obj.row = toGrid(obj.y);
-      // obj.col = toGrid(obj.x);
     });
   },
 

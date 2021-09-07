@@ -8,17 +8,15 @@ export default class GameObject extends Sprite.class {
       properties.anchor = { x: 0.5, y: 0.5 };
     }
 
-    if (!properties.x) {
-      properties.x =
-        properties.col * GRID_SIZE + GRID_SIZE * properties.anchor.x;
-      properties.y =
-        properties.row * GRID_SIZE + GRID_SIZE * properties.anchor.y;
-    }
-
     const atlas = tileatlas[properties.name];
     if (atlas) {
       properties.width = atlas.width * GRID_SIZE;
       properties.height = atlas.height * GRID_SIZE;
+
+      if (!properties.x) {
+        properties.x = (properties.col + (1 - 0.5 * atlas.width)) * GRID_SIZE;
+        properties.y = (properties.row + +(1 - 0.5 * atlas.height)) * GRID_SIZE;
+      }
     }
 
     super(properties);

@@ -64,13 +64,6 @@ class Cursor extends GameObject {
     const atlas = tileatlas[this.name] ?? { width: 1, height: 1 };
     const pointer = getPointer();
 
-    this.prevPos = {
-      x: this.x,
-      y: this.y,
-      row: this.row,
-      col: this.col
-    };
-
     this.x = (toGrid(pointer.x) + (1 - 0.5 * atlas.width)) * GRID_SIZE;
     this.y = (toGrid(pointer.y) + (1 - 0.5 * atlas.height)) * GRID_SIZE;
     this.row = toGrid(this.y);

@@ -3,13 +3,10 @@ import {
   initKeys,
   initPointer,
   GameLoop,
-  pointerPressed,
   bindKeys,
   emit,
   load,
-  imageAssets,
-  onPointerDown,
-  onPointerUp
+  imageAssets
 } from './libs/kontra';
 import {
   GAME_WIDTH,
@@ -20,12 +17,12 @@ import {
   TICK_DURATION
 } from './constants';
 import grid, { toGrid } from './utils/grid';
-import { rotate } from './utils';
 
 import componentManager from './managers/component-manager';
 import beltManager from './managers/belt-manager';
 import minerManager from './managers/miner-manager';
 import moverManager from './managers/mover-manager';
+import cursorManager from './managers/cursor-manager';
 import cursor from './ui/cursor';
 import { layers } from './assets/tilemap.json';
 import selectMenu from './ui/select-menu';
@@ -39,15 +36,6 @@ const numCols = GAME_WIDTH / GRID_SIZE;
 
 initKeys();
 const pointer = initPointer();
-
-const managers = {
-  BELT: beltManager,
-  EXPORT: beltManager,
-  IMPORT: beltManager,
-  MINER: minerManager,
-  MOVER: moverManager
-};
-
 const wallDirs = {
   33: DIRS.RIGHT,
   42: DIRS.DOWN,
@@ -83,6 +71,7 @@ load('tilesheet.webp', 'tilemap.webp').then(() => {
   componentManager.init();
   beltManager.init();
   minerManager.init();
+  cursorManager.init();
 
   selectMenu.init();
 
@@ -93,7 +82,6 @@ load('tilesheet.webp', 'tilemap.webp').then(() => {
   const sprites = [];
 
   let counter = 0;
-  let pointerStart;
   const loop = GameLoop({
     blur: true,
     update(dt) {
@@ -103,6 +91,7 @@ load('tilesheet.webp', 'tilemap.webp').then(() => {
 
       cursor.update();
       selectMenu.update();
+      cursorManager.update();
 
       // update all game logic every 200 ms (200ms / 1000 ms = 0.2)
       counter += dt;
@@ -130,92 +119,6 @@ load('tilesheet.webp', 'tilemap.webp').then(() => {
               break;
           }
         }
-      } else if (cursor.y < GAME_HEIGHT - GRID_SIZE * 3) {
-        // try to place items in a straight line from where the
-        // user started dragging
-        const { row: startRow, col: startCol } = pointerStart ?? {};
-        const { name, row, col, rotation, dir, width, height } = cursor;
-
-        if (pointerPressed('left')) {
-          const diffRow = row - startRow;
-          const diffCol = col - startCol;
-          const absDiffRow = Math.abs(diffRow);
-          const absDiffCol = Math.abs(diffCol);
-
-          let endRow;
-          let endCol;
-
-          // moving up/down
-          if (absDiffRow > absDiffCol) {
-            // once set don't change pointer direction
-            pointerStart.dir =
-              pointerStart.dir ?? (diffRow < 0 ? DIRS.UP : DIRS.DOWN);
-            endRow = row;
-            endCol = startCol;
-          }
-          // moving left/right
-          else if (absDiffCol > absDiffRow) {
-            pointerStart.dir =
-              pointerStart.dir ?? (diffCol < 0 ? DIRS.LEFT : DIRS.RIGHT);
-            endRow = startRow;
-            endCol = col;
-          }
-
-          function callback(cursorRow, cursorCol) {
-            const cursorPos = {
-              dir,
-              rotation,
-              row: cursorRow,
-              col: cursorCol,
-              width,
-              height
-            };
-            const items = grid.getAll(cursorPos);
-            const manager = managers[name];
-
-            if (manager?.canPlace(cursorPos, items)) {
-              gameHistory.push({
-                time: gameTimer,
-                type: TYPES[name],
-                row: cursorRow,
-                col: cursorCol,
-                rotation
-              });
-
-              grid.add(manager.add(cursorPos));
-            }
-          }
-
-          if (pointerStart.dir?.row) {
-            for (
-              let r = startRow;
-              pointerStart.dir.row < 0 ? r >= endRow : r <= endRow;
-              r += pointerStart.dir.row
-            ) {
-              callback(r, startCol);
-            }
-          } else if (pointerStart.dir?.col) {
-            for (
-              let c = startCol;
-              pointerStart.dir.col < 0 ? c >= endCol : c <= endCol;
-              c += pointerStart.dir.col
-            ) {
-              callback(startRow, c);
-            }
-          } else {
-            callback(startRow, startCol);
-          }
-        }
-        // check valid cursor placement
-        else {
-          const items = grid.getAll(cursor);
-          const manager = managers[name];
-          if (manager?.canPlace(cursor, items)) {
-            cursor.valid = true;
-          } else {
-            cursor.valid = false;
-          }
-        }
       }
     },
     render() {
@@ -223,31 +126,12 @@ load('tilesheet.webp', 'tilemap.webp').then(() => {
       grid.render();
       componentManager.render();
       sprites.forEach(sprite => sprite.render());
-      cursor.render();
+      cursorManager.render();
 
       selectMenu.render();
     }
   });
   loop.start();
-
-  bindKeys(
-    'r',
-    () => {
-      cursor.rotation = rotate(cursor, 90);
-    },
-    { preventDefault: false }
-  );
-
-  onPointerDown(() => {
-    pointerStart = {
-      row: cursor.row,
-      col: cursor.col
-    };
-  });
-
-  onPointerUp(() => {
-    pointerStart = null;
-  });
 
   // key s places a component on a belt
   bindKeys('s', () => {

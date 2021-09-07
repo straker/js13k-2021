@@ -147,6 +147,8 @@ const beltManager = {
         items.every(
           item =>
             item.type === TYPES.WALL &&
+            item.dir &&
+            cursor.dir &&
             (item.dir === cursor.dir || item.dir === DIRS[rotate(cursor, 180)])
         ))
     );

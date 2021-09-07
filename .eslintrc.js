@@ -12,7 +12,8 @@ module.exports = {
     game: 'readonly'
   },
   rules: {
-    'no-debugger': 0
+    'no-debugger': 0,
+    'no-inner-declarations': 0
   },
   overrides: [
     {

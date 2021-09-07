@@ -65,7 +65,7 @@ class Cursor extends GameObject {
     const pointer = getPointer();
 
     this.x = (toGrid(pointer.x) + (1 - 0.5 * atlas.width)) * GRID_SIZE;
-    this.y = (toGrid(pointer.y) + (1 - 0.5 * atlas.width)) * GRID_SIZE;
+    this.y = (toGrid(pointer.y) + (1 - 0.5 * atlas.height)) * GRID_SIZE;
     this.row = toGrid(this.y);
     this.col = toGrid(this.x);
 

@@ -140,11 +140,14 @@ load('tilesheet.webp', 'tilemap.webp').then(() => {
         const { name, row, col, rotation, dir, width, height } = cursor;
         const diffRow = row - startRow;
         const diffCol = col - startCol;
+        const absDiffRow = Math.abs(diffRow);
+        const absDiffCol = Math.abs(diffCol);
 
-        // moving up/down
         let endRow;
         let endCol;
-        if (Math.abs(diffRow) > Math.abs(diffCol)) {
+
+        // moving up/down
+        if (absDiffRow > absDiffCol) {
           // once set don't change pointer direction
           pointerStart.dir =
             pointerStart.dir ?? (diffRow < 0 ? DIRS.UP : DIRS.DOWN);
@@ -152,7 +155,7 @@ load('tilesheet.webp', 'tilemap.webp').then(() => {
           endCol = startCol;
         }
         // moving left/right
-        else if (Math.abs(diffCol) > Math.abs(diffRow)) {
+        else if (absDiffCol > absDiffRow) {
           pointerStart.dir =
             pointerStart.dir ?? (diffCol < 0 ? DIRS.LEFT : DIRS.RIGHT);
           endRow = startRow;

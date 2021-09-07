@@ -130,81 +130,91 @@ load('tilesheet.webp', 'tilemap.webp').then(() => {
               break;
           }
         }
-      } else if (
-        pointerPressed('left') &&
-        cursor.y < GAME_HEIGHT - GRID_SIZE * 3
-      ) {
+      } else if (cursor.y < GAME_HEIGHT - GRID_SIZE * 3) {
         // try to place items in a straight line from where the
         // user started dragging
-        const { row: startRow, col: startCol } = pointerStart;
+        const { row: startRow, col: startCol } = pointerStart ?? {};
         const { name, row, col, rotation, dir, width, height } = cursor;
-        const diffRow = row - startRow;
-        const diffCol = col - startCol;
-        const absDiffRow = Math.abs(diffRow);
-        const absDiffCol = Math.abs(diffCol);
 
-        let endRow;
-        let endCol;
+        if (pointerPressed('left')) {
+          const diffRow = row - startRow;
+          const diffCol = col - startCol;
+          const absDiffRow = Math.abs(diffRow);
+          const absDiffCol = Math.abs(diffCol);
 
-        // moving up/down
-        if (absDiffRow > absDiffCol) {
-          // once set don't change pointer direction
-          pointerStart.dir =
-            pointerStart.dir ?? (diffRow < 0 ? DIRS.UP : DIRS.DOWN);
-          endRow = row;
-          endCol = startCol;
-        }
-        // moving left/right
-        else if (absDiffCol > absDiffRow) {
-          pointerStart.dir =
-            pointerStart.dir ?? (diffCol < 0 ? DIRS.LEFT : DIRS.RIGHT);
-          endRow = startRow;
-          endCol = col;
-        }
+          let endRow;
+          let endCol;
 
-        function callback(cursorRow, cursorCol) {
-          const cursorPos = {
-            dir,
-            rotation,
-            row: cursorRow,
-            col: cursorCol,
-            width,
-            height
-          };
-          const items = grid.getAll(cursorPos);
-          const manager = managers[name];
+          // moving up/down
+          if (absDiffRow > absDiffCol) {
+            // once set don't change pointer direction
+            pointerStart.dir =
+              pointerStart.dir ?? (diffRow < 0 ? DIRS.UP : DIRS.DOWN);
+            endRow = row;
+            endCol = startCol;
+          }
+          // moving left/right
+          else if (absDiffCol > absDiffRow) {
+            pointerStart.dir =
+              pointerStart.dir ?? (diffCol < 0 ? DIRS.LEFT : DIRS.RIGHT);
+            endRow = startRow;
+            endCol = col;
+          }
 
-          if (manager?.canPlace(cursorPos, items)) {
-            gameHistory.push({
-              time: gameTimer,
-              type: TYPES[name],
+          function callback(cursorRow, cursorCol) {
+            const cursorPos = {
+              dir,
+              rotation,
               row: cursorRow,
               col: cursorCol,
-              rotation
-            });
+              width,
+              height
+            };
+            const items = grid.getAll(cursorPos);
+            const manager = managers[name];
 
-            grid.add(manager.add(cursorPos));
+            if (manager?.canPlace(cursorPos, items)) {
+              gameHistory.push({
+                time: gameTimer,
+                type: TYPES[name],
+                row: cursorRow,
+                col: cursorCol,
+                rotation
+              });
+
+              grid.add(manager.add(cursorPos));
+            }
+          }
+
+          if (pointerStart.dir?.row) {
+            for (
+              let r = startRow;
+              pointerStart.dir.row < 0 ? r >= endRow : r <= endRow;
+              r += pointerStart.dir.row
+            ) {
+              callback(r, startCol);
+            }
+          } else if (pointerStart.dir?.col) {
+            for (
+              let c = startCol;
+              pointerStart.dir.col < 0 ? c >= endCol : c <= endCol;
+              c += pointerStart.dir.col
+            ) {
+              callback(startRow, c);
+            }
+          } else {
+            callback(startRow, startCol);
           }
         }
-
-        if (pointerStart.dir?.row) {
-          for (
-            let r = startRow;
-            pointerStart.dir.row < 0 ? r >= endRow : r <= endRow;
-            r += pointerStart.dir.row
-          ) {
-            callback(r, startCol);
+        // check valid cursor placement
+        else {
+          const items = grid.getAll(cursor);
+          const manager = managers[name];
+          if (manager?.canPlace(cursor, items)) {
+            cursor.valid = true;
+          } else {
+            cursor.valid = false;
           }
-        } else if (pointerStart.dir?.col) {
-          for (
-            let c = startCol;
-            pointerStart.dir.col < 0 ? c >= endCol : c <= endCol;
-            c += pointerStart.dir.col
-          ) {
-            callback(startRow, c);
-          }
-        } else {
-          callback(startRow, startCol);
         }
       }
     },

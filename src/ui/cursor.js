@@ -1,4 +1,4 @@
-import { GRID_SIZE, TYPES, DIRS } from '../constants';
+import { GRID_SIZE, TYPES, DIRS, COLORS } from '../constants';
 import GameObject from '../utils/game-object';
 import { getPointer, imageAssets } from '../libs/kontra';
 import grid, { toGrid } from '../utils/grid';
@@ -54,7 +54,7 @@ class Cursor extends GameObject {
   }
 
   show() {
-    if (this.y < menuY - gameRect.y) {
+    if (this.y < menuY - gameRect?.y) {
       game.style.cursor = 'none';
       cursor.hidden = false;
     }
@@ -89,7 +89,7 @@ class Cursor extends GameObject {
   }
 
   draw() {
-    const { context, scaleSize, name } = this;
+    const { context, scaleSize, name, width, height } = this;
     const atlas = tileatlas.CURSOR;
 
     if (!name || this.hidden) return;
@@ -97,6 +97,11 @@ class Cursor extends GameObject {
     context.save();
     context.globalAlpha = 0.6;
     super.draw();
+
+    if (!this.valid) {
+      context.fillStyle = COLORS.RED;
+      context.fillRect(0, 0, width, height);
+    }
     context.restore();
 
     context.scale(scaleSize, scaleSize);

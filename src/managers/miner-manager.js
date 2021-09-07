@@ -1,5 +1,7 @@
 import { on } from '../libs/kontra';
 import Miner from '../buildings/miner';
+import { layers } from '../assets/tilemap.json';
+import { NUM_COLS } from '../constants';
 
 const miners = [];
 
@@ -23,7 +25,8 @@ const minerManager = {
 
   // miner can only be placed on empty spots
   canPlace(cursor, items) {
-    return !items.length;
+    const tile = layers[0].data[cursor.row * NUM_COLS + cursor.col];
+    return !items.length && tile === 11;
   },
 
   render() {

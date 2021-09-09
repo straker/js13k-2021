@@ -18,9 +18,8 @@ function showHideCursor(evt) {
     gameRect = game.getBoundingClientRect();
     menuY = gameRect.y + gameRect.height - GRID_SIZE * 3;
   }
-  const atlas = tileatlas[cursor.name];
 
-  if (!atlas || evt.clientY > menuY) {
+  if (evt.clientY > menuY) {
     cursor.hide();
   } else {
     cursor.show();
@@ -41,11 +40,9 @@ class Cursor extends GameObject {
     const atlas = tileatlas[name];
     this.name = name;
 
-    if (!atlas) return;
-
-    this.scaleSize = atlas.width;
-    this.width = atlas.width * GRID_SIZE;
-    this.height = atlas.height * GRID_SIZE;
+    this.rotation = 0;
+    this.width = (atlas?.width ?? 1) * GRID_SIZE;
+    this.height = (atlas?.height ?? 1) * GRID_SIZE;
   }
 
   hide() {
@@ -55,8 +52,14 @@ class Cursor extends GameObject {
 
   show() {
     if (this.y < menuY - gameRect?.y) {
-      game.style.cursor = 'none';
       cursor.hidden = false;
+
+      const atlas = tileatlas[this.name];
+      if (atlas) {
+        game.style.cursor = 'none';
+      } else {
+        game.style.cursor = 'default';
+      }
     }
   }
 
@@ -88,34 +91,67 @@ class Cursor extends GameObject {
     }
   }
 
-  draw() {
-    const { context, scaleSize, name, width, height } = this;
+  drawOutline({ row = this.row, col = this.col, width, height }) {
+    const { context, row: thisRow, col: thisCol } = this;
     const atlas = tileatlas.CURSOR;
+    for (let i = 0; i < 4; i++) {
+      const sx =
+        i % 2 === 1 ? (atlas.col + 1) * GRID_SIZE - 4 : atlas.col * GRID_SIZE;
+      const sy =
+        i >= 2 ? (atlas.row + 1) * GRID_SIZE - 4 : atlas.row * GRID_SIZE;
+      const x = i % 2 === 1 ? width - 4 : 0;
+      const y = i >= 2 ? height - 4 : 0;
 
-    if (!name || this.hidden) return;
-
-    context.save();
-    context.globalAlpha = 0.6;
-    super.draw();
-
-    if (!this.valid) {
-      context.fillStyle = COLORS.RED;
-      context.fillRect(0, 0, width, height);
+      context.drawImage(
+        imageAssets.tilesheet,
+        sx,
+        sy,
+        4,
+        4,
+        (col - thisCol) * GRID_SIZE + x,
+        (row - thisRow) * GRID_SIZE + y,
+        4,
+        4
+      );
     }
-    context.restore();
+  }
 
-    context.scale(scaleSize, scaleSize);
-    context.drawImage(
-      imageAssets.tilesheet,
-      atlas.col * GRID_SIZE,
-      atlas.row * GRID_SIZE,
-      GRID_SIZE,
-      GRID_SIZE,
-      0,
-      0,
-      GRID_SIZE,
-      GRID_SIZE
-    );
+  draw() {
+    const items = grid.getAll(this);
+
+    if (this.hidden) return;
+
+    if (this.name) {
+      const { context, width, height } = this;
+
+      context.save();
+      context.globalAlpha = 0.6;
+      super.draw();
+
+      if (!this.valid) {
+        context.fillStyle = COLORS.RED;
+        context.fillRect(0, 0, width, height);
+      }
+      context.restore();
+
+      this.drawOutline({ width, height });
+    } else if (items.length) {
+      const item = items.find(item => item.type !== TYPES.WALL);
+
+      if (item) {
+        let { row, col, width, height } = item;
+
+        // item position is from the bottom-right corner
+        if (height > GRID_SIZE) {
+          row--;
+        }
+        if (width > GRID_SIZE) {
+          col--;
+        }
+
+        this.drawOutline({ row, col, width, height });
+      }
+    }
   }
 }
 

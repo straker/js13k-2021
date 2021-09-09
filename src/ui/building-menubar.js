@@ -63,7 +63,6 @@ function createButton(properties) {
 
       if (this.child) {
         cursor.setImage(this.name.split('_')[0]);
-        cursor.rotation = 0;
       } else {
         cursor.setImage('');
       }
@@ -205,10 +204,12 @@ const buildingMenuBar = {
       }
     });
     bindKeys('esc', () => {
-      closeMenu(openedMenu.name);
-      openedMenu = null;
-      cursor.setImage('');
-      cursor.hide();
+      if (openedMenu) {
+        closeMenu(openedMenu.name);
+        openedMenu = null;
+        cursor.setImage('');
+        cursor.hide();
+      }
     });
   },
 

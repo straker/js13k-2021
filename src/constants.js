@@ -8,7 +8,8 @@ export const TYPES = {
   WALL: 0,
   BELT: 1,
   COMPONENT: 2,
-  MOVER: 3
+  MOVER: 3,
+  ASSEMBLER: 4
 };
 // dir values by name, degree, and radian
 const RIGHT = { row: 0, col: 1 };

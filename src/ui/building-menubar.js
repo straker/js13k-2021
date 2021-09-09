@@ -3,7 +3,7 @@ import { GRID_SIZE, GAME_HEIGHT, COLORS } from '../constants';
 import tileatlas from '../assets/tileatlas.json';
 import cursor from './cursor';
 
-let menu;
+let menubar;
 let openedMenu;
 const menuHierarchy = {};
 
@@ -101,42 +101,39 @@ function createButton(properties) {
   });
 }
 
-const selectMenu = {
+const buildingMenuBar = {
   init() {
     const beltMenu = createButton({
       name: 'BELT_MENU'
     });
-    beltMenu._dn.setAttribute('aria-label', 'Belt Menu');
     const beltMenuItem = createButton({
       name: 'BELT_MENU_ITEM',
       child: true
     });
-    beltMenuItem._dn.setAttribute('aria-label', 'Belt');
     const moverMenuItem = createButton({
       name: 'MOVER_MENU_ITEM',
       child: true
     });
-    moverMenuItem._dn.setAttribute('aria-label', 'Mover');
 
     const minerMenu = createButton({
       name: 'MINER_MENU'
     });
-    minerMenu._dn.setAttribute('aria-label', 'Miner Menu');
     const minerMenuItem = createButton({
       name: 'MINER_MENU_ITEM',
       child: true
     });
-    minerMenuItem._dn.setAttribute('aria-label', 'Metal Miner');
 
     const assemblerMenu = createButton({
       name: 'ASSEMBLER_MENU'
     });
-    assemblerMenu._dn.setAttribute('aria-label', 'Assembler Menu');
+    const assemblerMenuItem = createButton({
+      name: 'ASSEMBLER_MENU_ITEM',
+      child: true
+    });
 
     const deleteMenu = createButton({
       name: 'DELETE_MENU'
     });
-    deleteMenu._dn.setAttribute('aria-label', 'Delete Tool');
 
     const beltMenuGrid = Grid({
       flow: 'row',
@@ -154,11 +151,11 @@ const selectMenu = {
     });
     const assmeblerMenuGrid = Grid({
       flow: 'row',
-      children: [assemblerMenu],
+      children: [assemblerMenu, assemblerMenuItem],
       colGap: GRID_SIZE / 1.5
     });
 
-    menu = Grid({
+    menubar = Grid({
       x: GRID_SIZE,
       y: GAME_HEIGHT - GRID_SIZE * 2,
       flow: 'row',
@@ -179,11 +176,12 @@ const selectMenu = {
     menuHierarchy.ASSEMBLER_MENU = {
       grid: assmeblerMenuGrid,
       parent: assemblerMenu,
-      children: []
+      children: [assemblerMenuItem]
     };
 
     closeMenu('BELT_MENU');
     closeMenu('MINER_MENU');
+    closeMenu('ASSEMBLER_MENU');
 
     bindKeys(['1', '2', '3', '4', '5'], evt => {
       const key = +evt.key - 1;
@@ -191,13 +189,13 @@ const selectMenu = {
       // first open menu
       if (!openedMenu) {
         if (
-          menu.children[key]?.children &&
-          menu.children[key]?.children[0].focus
+          menubar.children[key]?.children &&
+          menubar.children[key]?.children[0].focus
         ) {
-          menu.children[key]?.children[0].focus();
-        } else if (menu.children[key]) {
+          menubar.children[key]?.children[0].focus();
+        } else if (menubar.children[key]) {
           cursor.show();
-          menu.children[key].focus();
+          menubar.children[key].focus();
         }
       }
       // focus submenu item
@@ -215,11 +213,11 @@ const selectMenu = {
   },
 
   update() {
-    menu.update();
+    menubar.update();
   },
 
   render() {
-    menu.render();
+    menubar.render();
   }
 };
-export default selectMenu;
+export default buildingMenuBar;

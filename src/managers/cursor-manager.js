@@ -12,13 +12,15 @@ import { GAME_HEIGHT, GRID_SIZE, DIRS } from '../constants';
 import beltManager from './belt-manager';
 import minerManager from './miner-manager';
 import moverManager from './mover-manager';
+import assemblerManager from './assembler-manager';
 
 const managers = {
   BELT: beltManager,
   EXPORT: beltManager,
   IMPORT: beltManager,
   MINER: minerManager,
-  MOVER: moverManager
+  MOVER: moverManager,
+  ASSEMBLER: assemblerManager
 };
 let pointerStart;
 

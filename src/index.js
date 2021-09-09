@@ -24,10 +24,11 @@ import componentManager from './managers/component-manager';
 import beltManager from './managers/belt-manager';
 import minerManager from './managers/miner-manager';
 import moverManager from './managers/mover-manager';
+import assemblerManager from './managers/assembler-manager';
 import cursorManager from './managers/cursor-manager';
 import cursor from './ui/cursor';
 import { layers } from './assets/tilemap.json';
-import selectMenu from './ui/select-menu';
+import buildingMenubar from './ui/building-menubar';
 
 const { canvas, context } = init();
 
@@ -71,9 +72,10 @@ load('tilesheet.webp', 'tilemap.webp').then(() => {
   componentManager.init();
   beltManager.init();
   minerManager.init();
+  assemblerManager.init();
   cursorManager.init();
 
-  selectMenu.init();
+  buildingMenubar.init();
 
   // to help debug problems with belts
   let gameHistory = [];
@@ -90,7 +92,7 @@ load('tilesheet.webp', 'tilemap.webp').then(() => {
       grid.update();
 
       cursor.update();
-      selectMenu.update();
+      buildingMenubar.update();
       cursorManager.update();
 
       // update all game logic every 200 ms (200ms / 1000 ms = 0.2)
@@ -128,7 +130,7 @@ load('tilesheet.webp', 'tilemap.webp').then(() => {
       sprites.forEach(sprite => sprite.render());
       cursorManager.render();
 
-      selectMenu.render();
+      buildingMenubar.render();
     }
   });
   loop.start();

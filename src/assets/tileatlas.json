@@ -89,6 +89,12 @@
     "width": 2,
     "height": 2
   },
+  "ASSEMBLER_MENU_ITEM": {
+    "row": 5,
+    "col": 2,
+    "width": 2,
+    "height": 2
+  },
   "DELETE_MENU": {
     "row": 5,
     "col": 8,

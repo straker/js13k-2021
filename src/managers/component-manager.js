@@ -4,6 +4,7 @@ import { easeLinear } from '../utils';
 import grid from '../utils/grid';
 import { TICK_DURATION, TYPES } from '../constants';
 import Component from '../components/component';
+import componentStroage from '../components/storage';
 
 const components = [];
 const moveComponents = [];
@@ -45,6 +46,7 @@ const componentManager = {
         component.y = belt.y;
 
         if (belt.name === 'EXIT') {
+          componentStroage.add(component);
           components.splice(components.indexOf(component), 1);
         }
       });

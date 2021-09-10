@@ -1,4 +1,4 @@
-import { GRID_SIZE, TYPES, DIRS, BELT } from '../constants';
+import { GRID_SIZE, TYPES, BELT } from '../constants';
 import GameObject from '../utils/game-object';
 
 export default class Belt extends GameObject {
@@ -6,7 +6,6 @@ export default class Belt extends GameObject {
     properties.width = properties.height = GRID_SIZE;
     properties.type = TYPES.BELT;
     properties.name = 'BELT';
-    properties.dir = DIRS[properties.rotation];
     properties.speed = BELT.SPEED[0]; // dx/y of the belt and items
     properties.lastFedDir = null; // direction of last item fed into the belt
 

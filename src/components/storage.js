@@ -8,7 +8,7 @@ const componentStorage = {
     this[name] += value;
   },
 
-  get(name, value) {
+  get(name, value = 1) {
     if (this[name] >= value) {
       this[name] -= value;
 

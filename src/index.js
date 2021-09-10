@@ -70,13 +70,18 @@ load('tilesheet.webp', 'tilemap.webp').then(() => {
   // order here is important and determines the order in which
   // these managers run (so a mover will move a component off a
   // belt before it moves along the belt)
+  // general order:
+  // 1. production
+  // 2. mover
+  // 3. belts
+  minerManager.init();
+  assemblerManager.init();
   moverManager.init();
   componentManager.init();
   beltManager.init();
-  minerManager.init();
-  assemblerManager.init();
-  cursorManager.init();
 
+  // uis
+  cursorManager.init();
   componentDisplay.init();
   buildingMenubar.init();
 

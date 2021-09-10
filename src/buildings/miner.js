@@ -7,6 +7,8 @@ export default class Miner extends GameObject {
     properties.type = TYPES.MINER;
     properties.name = 'MINER';
     properties.componentName = 'COPPER';
+    properties.components = [];
+    properties.maxComponents = 5;
     properties.timer = 0;
 
     super(properties);

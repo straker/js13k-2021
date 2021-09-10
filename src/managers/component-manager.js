@@ -171,6 +171,13 @@ const componentManager = {
     return component;
   },
 
+  remove(component) {
+    const index = components.indexOf(component);
+    if (index !== -1) {
+      components.splice(index, 1);
+    }
+  },
+
   render() {
     components.forEach(component => component.render());
   }

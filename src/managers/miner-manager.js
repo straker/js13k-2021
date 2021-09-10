@@ -10,10 +10,14 @@ const minerManager = {
     on('gameTick', () => {
       miners.forEach(miner => {
         // miners produce every 10 game ticks
-        if (++miner.timer % 10 === 0) {
-          miner.component = {
+        if (
+          ++miner.timer % 10 === 0 &&
+          miner.components.length < miner.maxComponents
+        ) {
+          miner.timer = 0;
+          miner.components.push({
             name: miner.componentName
-          };
+          });
         }
       });
     });

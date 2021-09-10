@@ -17,31 +17,48 @@ const moverManager = {
           const toRow = mover.row + mover.dir.row;
           const toCol = mover.col + mover.dir.col;
 
-          const from = grid.get({ row: fromRow, col: fromCol })[0];
-          const to = grid.getByType({ row: toRow, col: toCol }, TYPES.BELT)[0];
-          const component = from?.component;
-
-          // if (component) debugger;
+          const from = grid
+            .get({ row: fromRow, col: fromCol })
+            .find(item => item.type !== TYPES.WALL);
+          const to = grid
+            .get({ row: toRow, col: toCol })
+            .find(item => item.type !== TYPES.WALL);
+          const component = from?.components?.[0] ?? from?.component;
 
           if (
             component &&
             !component.updated &&
             to &&
-            to.takesComponent(component)
+            to.canTakeComponent(component)
           ) {
             mover.lastMove = 0;
 
-            if (from.type !== TYPES.BELT) {
+            if (from.type === TYPES.BELT && to.type === TYPES.BELT) {
+              moveComponent({ component, belt: to });
+            } else if (to.type === TYPES.BELT) {
               componentManager.add({
                 row: toRow,
                 col: toCol,
                 name: component.name
               });
             } else {
-              moveComponent({ component, belt: to });
+              // never push onto the components array, only
+              // an input array
+              if (to.inputs) {
+                to.inputs.push(component);
+              } else {
+                to.component = component;
+              }
+
+              componentManager.remove(component);
             }
 
-            from.component = false;
+            if (from.components) {
+              from.components.splice(from.components.indexOf(component), 1);
+            } else {
+              from.component = false;
+            }
+
             mover.name = 'MOVER_END';
           }
         } else {

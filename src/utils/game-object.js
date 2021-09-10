@@ -34,7 +34,7 @@ export default class GameObject extends Sprite.class {
     this._pc();
   }
 
-  takesComponent() {
+  canTakeComponent() {
     return false;
   }
 

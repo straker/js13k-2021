@@ -12,7 +12,7 @@ export default class Belt extends GameObject {
     super(properties);
   }
 
-  takesComponent() {
+  canTakeComponent() {
     return !this.component;
   }
 

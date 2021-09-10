@@ -11,7 +11,9 @@ const minerManager = {
       miners.forEach(miner => {
         // miners produce every 10 game ticks
         if (++miner.timer % 10 === 0) {
-          miner.component = true;
+          miner.component = {
+            name: miner.componentName
+          };
         }
       });
     });

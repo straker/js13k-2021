@@ -5,13 +5,13 @@
     "width": 1,
     "height": 1
   },
-  "YELLOW": {
+  "COPPER": {
     "row": 0,
     "col": 1,
     "width": 1,
     "height": 1
   },
-  "BLUE": {
+  "IRON": {
     "row": 0,
     "col": 2,
     "width": 1,

@@ -4,6 +4,7 @@ import { easeLinear } from '../utils';
 import grid from '../utils/grid';
 import { TICK_DURATION, TYPES } from '../constants';
 import Component from '../components/component';
+import componentStroage from '../components/storage';
 
 const components = [];
 const moveComponents = [];
@@ -17,6 +18,8 @@ on('update', () => {
 
     if (belt.name === 'EXIT') {
       component.opacity = easeLinear(time, 1, -1, TICK_DURATION);
+    } else if (component.opacity < 1) {
+      component.opacity = easeLinear(time, 0, 1, TICK_DURATION);
     }
   });
 });
@@ -44,7 +47,12 @@ const componentManager = {
         component.x = belt.x;
         component.y = belt.y;
 
+        if (component.opacity !== 1) {
+          component.opacity = 1;
+        }
+
         if (belt.name === 'EXIT') {
+          componentStroage.add(component);
           components.splice(components.indexOf(component), 1);
         }
       });
@@ -106,7 +114,8 @@ const componentManager = {
 
           let belt = segment.end;
           while (belt) {
-            const { component, nextBelt } = belt;
+            let { component, nextBelt } = belt;
+
             if (
               component &&
               !component.updated &&
@@ -115,6 +124,22 @@ const componentManager = {
             ) {
               belt.component = null;
               moveComponent({ component, belt: nextBelt });
+            }
+
+            if (belt.name === 'IMPORT' && !belt.component) {
+              const comp = componentStroage.get(belt.filter);
+              if (comp) {
+                component = this.add(
+                  {
+                    row: belt.row - belt.dir.row,
+                    col: belt.col - belt.dir.col,
+                    opacity: 0,
+                    ...comp
+                  },
+                  belt.prevBelt
+                );
+                moveComponent({ component, belt });
+              }
             }
 
             if (belt === segment.start) {
@@ -136,9 +161,9 @@ const componentManager = {
     });
   },
 
-  add(properties) {
+  add(properties, belt) {
     const { row, col } = properties;
-    const belt = grid.getByType({ row, col }, TYPES.BELT)[0];
+    belt = belt ?? grid.getByType({ row, col }, TYPES.BELT)[0];
     const component = new Component(properties);
     belt.component = component;
 

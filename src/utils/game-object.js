@@ -19,6 +19,8 @@ export default class GameObject extends Sprite.class {
       }
     }
 
+    properties.dir = DIRS[properties.rotation];
+
     super(properties);
   }
 

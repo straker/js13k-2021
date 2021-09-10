@@ -28,6 +28,8 @@ import assemblerManager from './managers/assembler-manager';
 import cursorManager from './managers/cursor-manager';
 import cursor from './ui/cursor';
 import { layers } from './assets/tilemap.json';
+
+import componentDisplay from './ui/component-display';
 import buildingMenubar from './ui/building-menubar';
 
 const { canvas, context } = init();
@@ -75,6 +77,7 @@ load('tilesheet.webp', 'tilemap.webp').then(() => {
   assemblerManager.init();
   cursorManager.init();
 
+  componentDisplay.init();
   buildingMenubar.init();
 
   // to help debug problems with belts
@@ -130,6 +133,7 @@ load('tilesheet.webp', 'tilemap.webp').then(() => {
       sprites.forEach(sprite => sprite.render());
       cursorManager.render();
 
+      componentDisplay.render();
       buildingMenubar.render();
     }
   });

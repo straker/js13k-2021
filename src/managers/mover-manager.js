@@ -32,7 +32,11 @@ const moverManager = {
             mover.lastMove = 0;
 
             if (from.type !== TYPES.BELT) {
-              componentManager.add({ row: toRow, col: toCol });
+              componentManager.add({
+                row: toRow,
+                col: toCol,
+                name: component.name
+              });
             } else {
               moveComponent({ component, belt: to });
             }

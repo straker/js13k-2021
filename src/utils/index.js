@@ -23,3 +23,11 @@ export function easeLinear(t, b, c, d) {
 export function rotate(obj, deg) {
   return (obj.rotation + degToRad(deg)) % (Math.PI * 2);
 }
+
+export function displayComponentValue(value) {
+  if (value < 1000) {
+    return ('' + value).padEnd(4, ' ');
+  }
+
+  return `${(value / 1000) | 0}K`.padEnd(4, ' ');
+}

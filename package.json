@@ -29,6 +29,7 @@
     "gulp-better-rollup": "^4.0.1",
     "gulp-concat-util": "^0.5.5",
     "gulp-cwebp": "^4.0.2",
+    "gulp-debug": "^4.0.0",
     "gulp-htmlmin": "^5.0.1",
     "gulp-intermediate": "^5.0.0",
     "gulp-sourcemaps": "^3.0.0",

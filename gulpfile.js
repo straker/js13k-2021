@@ -19,6 +19,7 @@ const intermediate = require('gulp-intermediate');
 const through2 = require('through2');
 const childProcess = require('child_process');
 const PluginError = require('plugin-error');
+const debug = require('gulp-debug');
 const { name: pkgName } = require('./package.json');
 
 // a gulp plugin for ect based on gulp-advzip. ect can help save bytes
@@ -145,7 +146,8 @@ function dist() {
 }
 
 function zip() {
-  return src('dist/index.html', 'dist/*.png')
+  return src(['dist/index.html', 'dist/*.webp'])
+    .pipe(debug())
     .pipe(gulpZip(`${pkgName}.zip`))
     .pipe(
       advzip({

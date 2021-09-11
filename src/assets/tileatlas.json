@@ -53,9 +53,27 @@
     "width": 1,
     "height": 1
   },
+  "REPAIRER": {
+    "row": 1,
+    "col": 7,
+    "width": 1,
+    "height": 1
+  },
+  "REPAIRER_END": {
+    "row": 1,
+    "col": 8,
+    "width": 1,
+    "height": 1
+  },
   "BELT_MENU": {
     "row": 5,
     "col": 6,
+    "width": 2,
+    "height": 2
+  },
+  "REPAIRER_MENU_ITEM": {
+    "row": 7,
+    "col": 4,
     "width": 2,
     "height": 2
   },
@@ -110,6 +128,12 @@
   "ASSEMBLER": {
     "row": 5,
     "col": 2,
+    "width": 2,
+    "height": 2
+  },
+  "SHIP": {
+    "row": 7,
+    "col": 0,
     "width": 2,
     "height": 2
   }

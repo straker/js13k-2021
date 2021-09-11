@@ -9,17 +9,17 @@ import componentStroage from '../components/storage';
 const components = [];
 const moveComponents = [];
 
-let time = 0;
+let timer = 0;
 on('update', () => {
-  time = (time + 1 / 60) % TICK_DURATION;
+  timer = (timer + 1 / 60) % TICK_DURATION;
   moveComponents.forEach(({ x, y, component, belt }) => {
-    component.x = easeLinear(time, x, belt.x - x, TICK_DURATION);
-    component.y = easeLinear(time, y, belt.y - y, TICK_DURATION);
+    component.x = easeLinear(timer, x, belt.x - x, TICK_DURATION);
+    component.y = easeLinear(timer, y, belt.y - y, TICK_DURATION);
 
-    if (belt.name === 'EXIT') {
-      component.opacity = easeLinear(time, 1, -1, TICK_DURATION);
+    if (['EXIT', 'SHIP'].includes(belt.name)) {
+      component.opacity = easeLinear(timer, 1, -1, TICK_DURATION);
     } else if (component.opacity < 1) {
-      component.opacity = easeLinear(time, 0, 1, TICK_DURATION);
+      component.opacity = easeLinear(timer, 0, 1, TICK_DURATION);
     }
   });
 });
@@ -40,7 +40,7 @@ export function moveComponent({ component, belt }) {
 const componentManager = {
   init() {
     on('preGameTick', () => {
-      time = 0;
+      timer = 0;
       components.forEach(component => (component.updated = false));
       beltSegments.forEach(beltSegments => (beltSegments.updated = false));
       moveComponents.forEach(({ component, belt }) => {
@@ -53,6 +53,8 @@ const componentManager = {
 
         if (belt.name === 'EXIT') {
           componentStroage.add(component);
+          components.splice(components.indexOf(component), 1);
+        } else if (belt.name === 'SHIP') {
           components.splice(components.indexOf(component), 1);
         }
       });

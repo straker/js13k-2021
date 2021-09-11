@@ -138,7 +138,7 @@ class Cursor extends GameObject {
 
       this.drawOutline({ width, height });
     } else if (items.length) {
-      const item = items.find(item => item.type !== TYPES.WALL);
+      const item = items.find(item => item.type && item.type !== TYPES.WALL);
 
       if (item) {
         let { row, col, width, height } = item;

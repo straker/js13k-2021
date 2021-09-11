@@ -113,6 +113,10 @@ const buildingMenuBar = {
       name: 'MOVER_MENU_ITEM',
       child: true
     });
+    const repairerMenuItem = createButton({
+      name: 'REPAIRER_MENU_ITEM',
+      child: true
+    });
 
     const minerMenu = createButton({
       name: 'MINER_MENU'
@@ -140,7 +144,7 @@ const buildingMenuBar = {
       jusify: 'start',
       // for some reason the menu items have to start in the
       // grid, otherwise they can't be clicked on
-      children: [beltMenu, beltMenuItem, moverMenuItem],
+      children: [beltMenu, beltMenuItem, moverMenuItem, repairerMenuItem],
       colGap: GRID_SIZE / 1.5
     });
     const minerMenuGrid = Grid({
@@ -165,7 +169,7 @@ const buildingMenuBar = {
     menuHierarchy.BELT_MENU = {
       grid: beltMenuGrid,
       parent: beltMenu,
-      children: [beltMenuItem, moverMenuItem]
+      children: [beltMenuItem, moverMenuItem, repairerMenuItem]
     };
     menuHierarchy.MINER_MENU = {
       grid: minerMenuGrid,

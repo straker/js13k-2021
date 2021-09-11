@@ -3,7 +3,6 @@ import {
   initKeys,
   initPointer,
   GameLoop,
-  bindKeys,
   emit,
   load,
   imageAssets
@@ -18,14 +17,16 @@ import {
   DIRS,
   TICK_DURATION
 } from './constants';
-import grid, { toGrid } from './utils/grid';
+import grid from './utils/grid';
 
 import componentManager from './managers/component-manager';
 import beltManager from './managers/belt-manager';
 import minerManager from './managers/miner-manager';
 import moverManager from './managers/mover-manager';
+import repairerManager from './managers/repairer-manager';
 import assemblerManager from './managers/assembler-manager';
 import cursorManager from './managers/cursor-manager';
+import shipManager from './managers/ship-manager';
 import cursor from './ui/cursor';
 import { layers } from './assets/tilemap.json';
 
@@ -38,15 +39,19 @@ canvas.width = GAME_WIDTH;
 canvas.height = GAME_HEIGHT;
 
 initKeys();
-const pointer = initPointer();
-const wallDirs = {
-  33: DIRS.RIGHT,
-  42: DIRS.DOWN,
-  31: DIRS.LEFT,
-  22: DIRS.UP
+initPointer();
+const wallInfo = {
+  33: { dir: DIRS.RIGHT, type: TYPES.WALL },
+  42: { dir: DIRS.DOWN, type: TYPES.WALL },
+  31: { dir: DIRS.LEFT, type: TYPES.WALL },
+  22: { dir: DIRS.UP, type: TYPES.WALL },
+  29: { dir: DIRS.RIGHT },
+  30: { dir: DIRS.DOWN },
+  39: { dir: DIRS.LEFT },
+  40: { dir: DIRS.UP }
 };
 
-load('tilesheet.webp', 'tilemap.webp').then(() => {
+load('tilesheet.webp', 'tilemap.webp', 'stars.webp').then(() => {
   // fill the grid with walls
   for (let row = 0; row < NUM_ROWS; row++) {
     for (let col = 0; col < NUM_COLS; col++) {
@@ -54,12 +59,12 @@ load('tilesheet.webp', 'tilemap.webp').then(() => {
       if (tile && tile !== 11) {
         // 11 = minable floor
         grid.add({
-          type: TYPES.WALL,
+          ...wallInfo[tile],
+          tile,
           row,
           col,
           width: GRID_SIZE,
           height: GRID_SIZE,
-          dir: wallDirs[tile],
           render() {},
           update() {}
         });
@@ -77,25 +82,21 @@ load('tilesheet.webp', 'tilemap.webp').then(() => {
   minerManager.init();
   assemblerManager.init();
   moverManager.init();
+  repairerManager.init();
   componentManager.init();
   beltManager.init();
+
+  shipManager.init();
 
   // uis
   cursorManager.init();
   componentDisplay.init();
   buildingMenubar.init();
 
-  // to help debug problems with belts
-  let gameHistory = [];
-  let gameTimer = 0;
-  let replay = false;
-  const sprites = [];
-
   let counter = 0;
   const loop = GameLoop({
     blur: true,
     update(dt) {
-      gameTimer += dt;
       emit('update');
       grid.update();
 
@@ -107,35 +108,22 @@ load('tilesheet.webp', 'tilemap.webp').then(() => {
       counter += dt;
       if (counter >= TICK_DURATION) {
         counter -= TICK_DURATION;
-        emit('preGameTick', TICK_DURATION);
-        emit('gameTick', TICK_DURATION);
-      }
-
-      if (replay) {
-        const item = gameHistory[0];
-        if (!item) {
-          replay = false;
-        } else if (gameTimer >= item.time) {
-          gameHistory.shift();
-          const { type, row, col, rotation } = item;
-
-          switch (type) {
-            case TYPES.BELT:
-              beltManager.add({ row, col, rotation });
-              break;
-
-            case TYPES.COMPONENT:
-              componentManager.add({ row, col });
-              break;
-          }
-        }
+        emit('preGameTick');
+        emit('gameTick');
       }
     },
     render() {
+      context.drawImage(
+        imageAssets.stars,
+        GRID_SIZE * 6,
+        GRID_SIZE * 25,
+        GRID_SIZE * 4,
+        GRID_SIZE * 2
+      );
+      shipManager.render();
       context.drawImage(imageAssets.tilemap, 0, 0, GAME_WIDTH, GAME_HEIGHT);
       grid.render();
       componentManager.render();
-      sprites.forEach(sprite => sprite.render());
       cursorManager.render();
 
       componentDisplay.render();
@@ -143,24 +131,4 @@ load('tilesheet.webp', 'tilemap.webp').then(() => {
     }
   });
   loop.start();
-
-  // key s places a component on a belt
-  bindKeys('s', () => {
-    if (replay) return;
-    const row = toGrid(pointer.y);
-    const col = toGrid(pointer.x);
-    const belt = grid.getByType({ row, col }, TYPES.BELT)[0];
-    if (belt && !belt.component) {
-      gameHistory.push({ time: gameTimer, type: TYPES.COMPONENT, row, col });
-      componentManager.add({ row, col });
-    }
-  });
-
-  window.grid = grid;
-  window.replayHistory = function (history) {
-    replay = true;
-    gameHistory = history;
-    gameTimer = 0;
-  };
-  window.gameHistory = gameHistory;
 });

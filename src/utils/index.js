@@ -15,8 +15,31 @@ export function getDy(dir, speed) {
 
 // current time (t) to move from point b to point c in a certain
 // duration (d)
+// @see http://gizma.com/easing/#l
 export function easeLinear(t, b, c, d) {
   return (c * t) / d + b;
+}
+
+export function easeInQuad(t, b, c, d) {
+  t /= d;
+  return c * t * t + b;
+}
+
+export function easeOutQuad(t, b, c, d) {
+  t /= d;
+  return -c * t * (t - 2) + b;
+}
+
+export function easeInOutQuad(t, b, c, d) {
+  t /= d / 2;
+  if (t < 1) return (c / 2) * t * t + b;
+  t--;
+  return (-c / 2) * (t * (t - 2) - 1) + b;
+}
+
+export function easeInCubic(t, b, c, d) {
+  t /= d;
+  return c * t * t * t + b;
 }
 
 // rotation between 0-360 but don't go outside that range

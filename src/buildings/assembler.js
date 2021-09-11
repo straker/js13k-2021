@@ -11,13 +11,13 @@ export default class Miner extends GameObject {
       inputs: [
         {
           name: 'COPPER',
-          number: 1
+          total: 1
         }
       ],
       outputs: [
         {
           name: 'IRON',
-          number: 1
+          total: 1
         }
       ],
       duration: 1 // game ticks
@@ -37,7 +37,7 @@ export default class Miner extends GameObject {
     return (
       input &&
       this.inputs.filter(comp => comp.name === component.name).length <
-        this.maxComponents * input.number
+        this.maxComponents * input.total
     );
   }
 }

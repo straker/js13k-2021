@@ -4,7 +4,7 @@ import {
   initPointer,
   GameLoop,
   emit,
-  load,
+  loadImage,
   imageAssets
 } from './libs/kontra';
 import {
@@ -51,7 +51,11 @@ const wallInfo = {
   40: { dir: DIRS.UP }
 };
 
-load('tilesheet.webp', 'tilemap.webp', 'stars.webp').then(() => {
+Promise.all([
+  loadImage('tilesheet.webp'),
+  loadImage('tilemap.webp'),
+  loadImage('stars.webp')
+]).then(() => {
   // fill the grid with walls
   for (let row = 0; row < NUM_ROWS; row++) {
     for (let col = 0; col < NUM_COLS; col++) {

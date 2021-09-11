@@ -11,6 +11,7 @@ const merge = require('merge-stream');
 const cwebp = require('gulp-cwebp');
 const concat = require('gulp-concat-util');
 const terser = require('gulp-terser');
+const kontra = require('rollup-plugin-kontra');
 const { Packer } = require('roadroller');
 const htmlmin = require('gulp-htmlmin');
 const gulpZip = require('gulp-zip');
@@ -21,6 +22,28 @@ const childProcess = require('child_process');
 const PluginError = require('plugin-error');
 const debug = require('gulp-debug');
 const { name: pkgName } = require('./package.json');
+
+const rollupConfig = {
+  plugins: [
+    nodeResolve(),
+    json(),
+    // currently something is needed as grid isn't collapsing
+    // the children when removed
+
+    // kontra({
+    //   gameObject: {
+    //     anchor: true,
+    //     group: true,
+    //     opacity: true,
+    //     rotation: true,
+    //     scale: true
+    //   },
+    //   sprite: {
+    //     image: true
+    //   }
+    // })
+  ]
+};
 
 // a gulp plugin for ect based on gulp-advzip. ect can help save bytes
 // when using zip
@@ -65,12 +88,7 @@ function build() {
   const jsStream = src('src/index.js')
     .pipe(sourcemaps.init())
     .pipe(
-      rollup(
-        {
-          plugins: [nodeResolve(), json()]
-        },
-        'iife'
-      )
+      rollup(rollupConfig, 'iife')
     )
     .pipe(sourcemaps.write());
 
@@ -89,12 +107,7 @@ function build() {
 function dist() {
   const jsStream = src('src/index.js')
     .pipe(
-      rollup(
-        {
-          plugins: [nodeResolve(), json()]
-        },
-        'iife'
-      )
+      rollup(rollupConfig, 'iife')
     )
     // will gain more savings later when using preprocess on the kontra code
     // @see https://github.com/straker/rollup-plugin-kontra

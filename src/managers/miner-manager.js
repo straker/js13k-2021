@@ -32,10 +32,6 @@ const minerManager = {
   canPlace(cursor, items) {
     const tile = layers[0].data[cursor.row * NUM_COLS + cursor.col];
     return !items.length && tile === 11;
-  },
-
-  render() {
-    miners.forEach(miner => miner.render());
   }
 };
 

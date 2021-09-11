@@ -77,10 +77,6 @@ const moverManager = {
   // mover can only be placed on empty spots
   canPlace(cursor, items) {
     return !items.length;
-  },
-
-  render() {
-    movers.forEach(mover => mover.render());
   }
 };
 

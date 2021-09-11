@@ -10,7 +10,8 @@ export const TYPES = {
   COMPONENT: 2,
   MOVER: 3,
   MINER: 4,
-  ASSEMBLER: 5
+  ASSEMBLER: 5,
+  SHIP: 6
 };
 export const COMPONENTS = ['COPPER', 'IRON'];
 // dir values by name, degree, and radian
@@ -40,7 +41,8 @@ export const COLORS = {
   RED: '#e6482e',
   YELLOW: '#f4b41b',
   GREEN: '#38d973',
-  BROWN: '#bf7958'
+  BROWN: '#bf7958',
+  PURPLE: '#472d3c'
 };
 // 200 ms (200ms / 1000 ms = 0.2)
 export const TICK_DURATION = 0.2;

@@ -13,6 +13,7 @@ import beltManager from './belt-manager';
 import minerManager from './miner-manager';
 import moverManager from './mover-manager';
 import assemblerManager from './assembler-manager';
+import repairerManager from './repairer-manager';
 
 const managers = {
   BELT: beltManager,
@@ -20,7 +21,8 @@ const managers = {
   IMPORT: beltManager,
   MINER: minerManager,
   MOVER: moverManager,
-  ASSEMBLER: assemblerManager
+  ASSEMBLER: assemblerManager,
+  REPAIRER: repairerManager
 };
 let pointerStart;
 

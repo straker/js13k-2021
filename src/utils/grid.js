@@ -41,6 +41,23 @@ const grid = {
     objects.push(obj);
   },
 
+  remove(obj) {
+    const startRow = obj.row - toGrid(obj.height - 1);
+    const startCol = obj.col - toGrid(obj.width - 1);
+
+    forEachTile([startRow, startCol, obj.row, obj.col], tile => {
+      const index = tile.indexOf(obj);
+      if (index) {
+        tile.splice(index, 1);
+      }
+    });
+
+    const index = objects.indexOf(obj);
+    if (index) {
+      objects.splice(index, 1);
+    }
+  },
+
   get(pos) {
     const row = pos.row ?? (pos.y / GRID_SIZE) | 0;
     const col = pos.col ?? (pos.x / GRID_SIZE) | 0;

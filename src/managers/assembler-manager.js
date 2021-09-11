@@ -63,10 +63,6 @@ const assemblerManager = {
   // assembler can only be placed on empty spots
   canPlace(cursor, items) {
     return !items.length;
-  },
-
-  render() {
-    assemblers.forEach(assembler => assembler.render());
   }
 };
 

@@ -7,27 +7,12 @@ const assemblerManager = {
   init() {
     on('gameTick', () => {
       assemblers.forEach(assembler => {
-        const { inputs, recipe, components, producing, timer, maxComponents } =
-          assembler;
+        const { inputs, recipe, components, producing, timer } = assembler;
 
         if (!producing && timer === 0) {
-          const canProduce = recipe.outputs.every(output => {
-            return (
-              components.filter(comp => comp.name === output.name).length +
-                output.number <=
-              maxComponents
-            );
-          });
-          const hasRequiredInputs = recipe.inputs.every(input => {
-            return (
-              inputs.filter(comp => comp.name === input.name).length >=
-              input.number
-            );
-          });
-
-          if (canProduce && hasRequiredInputs) {
+          if (assembler.canProduce() && assembler.hasRequiredInputs()) {
             recipe.inputs.forEach(input => {
-              for (let i = 0; i < input.number; i++) {
+              for (let i = 0; i < input.total; i++) {
                 inputs.splice(
                   inputs.findIndex(comp => comp.name === input.name),
                   1
@@ -43,7 +28,7 @@ const assemblerManager = {
           assembler.timer = 0;
           assembler.producing = false;
           recipe.outputs.forEach(output => {
-            for (let i = 0; i < output.number; i++) {
+            for (let i = 0; i < output.total; i++) {
               components.push({
                 name: output.name
               });

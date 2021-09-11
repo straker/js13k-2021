@@ -29,6 +29,25 @@ export default class Miner extends GameObject {
     super(properties);
   }
 
+  canProduce() {
+    return this.recipe.outputs.every(output => {
+      return (
+        this.components.filter(comp => comp.name === output.name).length +
+          output.total <=
+        this.maxComponents
+      );
+    });
+  }
+
+  hasRequiredInputs() {
+    return this.recipe.inputs.every(input => {
+      return (
+        this.inputs.filter(comp => comp.name === input.name).length >=
+        input.total
+      );
+    });
+  }
+
   canTakeComponent(component) {
     const input = this.recipe?.inputs.find(
       input => input.name === component.name

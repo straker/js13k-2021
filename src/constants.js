@@ -16,7 +16,7 @@ export const TYPES = {
   FILTER: 10,
   RECIPE: 11
 };
-export const COMPONENTS = ['COPPER', 'IRON'];
+export const COMPONENTS = ['COPPER', 'IRON', 'WIRE', 'CIRCUIT'];
 // dir values by name, degree, and radian
 const RIGHT = { row: 0, col: 1 };
 const DOWN = { row: 1, col: 0 };
@@ -68,7 +68,7 @@ export const RECIPES = [
     ]
   },
   {
-    name: 'IRON',
+    name: 'WIRE',
     inputs: [
       {
         name: 'COPPER',
@@ -78,12 +78,35 @@ export const RECIPES = [
     ],
     outputs: [
       {
+        name: 'WIRE',
+        total: 2,
+        has: 0
+      }
+    ],
+    duration: 5 // game ticks
+  },
+  {
+    name: 'CIRCUIT',
+    inputs: [
+      {
+        name: 'WIRE',
+        total: 2,
+        has: 0
+      },
+      {
         name: 'IRON',
         total: 1,
         has: 0
       }
     ],
-    duration: 1 // game ticks
+    outputs: [
+      {
+        name: 'CIRCUIT',
+        total: 1,
+        has: 0
+      }
+    ],
+    duration: 5 // game ticks
   }
 ];
 const beltCost = [
@@ -116,6 +139,16 @@ export const COSTS = {
     {
       name: 'COPPER',
       total: 10
+    }
+  ],
+  ASSEMBLER: [
+    {
+      name: 'COPPER',
+      total: 25
+    },
+    {
+      name: 'IRON',
+      total: 25
     }
   ]
 };

@@ -60,3 +60,7 @@ export function titleCase(str) {
     return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
   });
 }
+
+export function deepCopy(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}

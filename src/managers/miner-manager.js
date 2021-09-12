@@ -1,13 +1,15 @@
 import { on } from '../libs/kontra';
 import CopperMiner from '../buildings/copper-miner';
 import IronMiner from '../buildings/iron-miner';
+import TitaniumMiner from '../buildings/titanium-miner';
 import { layers } from '../assets/tilemap.json';
 import { NUM_COLS } from '../constants';
 
 const miners = [];
 const Constructors = {
   'COPPER-MINER': CopperMiner,
-  'IRON-MINER': IronMiner
+  'IRON-MINER': IronMiner,
+  'TITANIUM-MINER': TitaniumMiner
 };
 
 const minerManager = {

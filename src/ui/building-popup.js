@@ -33,7 +33,6 @@ function getRecipe(recipe) {
         width: GRID_SIZE,
         height: GRID_SIZE
       });
-      btn.disable();
 
       if (total) {
         btn.addChild(
@@ -80,7 +79,6 @@ function getRecipe(recipe) {
         width: GRID_SIZE,
         height: GRID_SIZE
       });
-      btn.disable();
 
       if (total) {
         btn.addChild(

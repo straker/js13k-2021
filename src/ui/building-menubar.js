@@ -2,6 +2,7 @@ import { Grid, bindKeys, emit } from '../libs/kontra';
 import { GRID_SIZE, GAME_HEIGHT } from '../constants';
 import cursor from './cursor';
 import ImageButton from './image-button';
+import storage from '../components/storage';
 
 let menubar;
 let openedMenu;
@@ -52,7 +53,13 @@ function createButton(properties) {
             openedMenu = hierarchy.parent;
             hierarchy.parent.opened = true;
             hierarchy.grid.children = [hierarchy.parent, ...hierarchy.children];
-            hierarchy.children.forEach(child => child.enable());
+            hierarchy.children.forEach(child => {
+              if (storage.canBuy(child.name.split('_')[0])) {
+                child.enable();
+              } else {
+                child.disable();
+              }
+            });
           }
         }
         // focus parent when child is selected
@@ -184,6 +191,23 @@ const buildingMenuBar = {
   },
 
   update() {
+    const hierarchy = menuHierarchy[openedMenu?.name];
+    hierarchy?.children.forEach(child => {
+      if (storage.canBuy(child.name.split('_')[0])) {
+        child.enable();
+      } else {
+        child.disable();
+
+        // keyboard events won't propagate on disabled buttons
+        // so we need to move focus off a button if the user
+        // is currently focused on it
+        if (child.focused) {
+          child.blur();
+          hierarchy.parent.focus();
+        }
+      }
+    });
+
     menubar.update();
   },
 

@@ -35,9 +35,6 @@ export const DIRS = {
   [Math.PI * 1.5]: UP,
   270: UP
 };
-export const BELT = {
-  SPEED: [0.75]
-};
 export const COLORS = {
   WHITE: '#cfc6b8',
   BLACK: '#333333',
@@ -89,3 +86,30 @@ export const RECIPES = [
     duration: 1 // game ticks
   }
 ];
+const beltCost = [
+  {
+    name: 'IRON',
+    total: 1
+  }
+];
+export const COSTS = {
+  BELT: beltCost,
+  IMPORT: beltCost,
+  EXPORT: beltCost,
+  MOVER: [
+    {
+      name: 'COPPER',
+      total: 2
+    },
+    {
+      name: 'IRON',
+      total: 2
+    }
+  ],
+  MINER: [
+    {
+      name: 'IRON',
+      total: 5
+    }
+  ]
+};

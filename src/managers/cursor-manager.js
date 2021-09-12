@@ -8,6 +8,7 @@ import cursor from '../ui/cursor';
 import grid from '../utils/grid';
 import { rotate } from '../utils';
 import { GAME_HEIGHT, GRID_SIZE, DIRS, TYPES } from '../constants';
+import storage from '../components/storage';
 
 import beltManager from './belt-manager';
 import minerManager from './miner-manager';
@@ -104,8 +105,12 @@ const cursorManager = {
         const items = grid.getAll(cursorPos);
         const manager = managers[name];
 
-        if (manager?.canPlace(cursorPos, items)) {
+        if (
+          manager?.canPlace(cursorPos, items) &&
+          storage.canBuy(cursor.name)
+        ) {
           grid.add(manager.add(cursorPos));
+          storage.buy(cursor.name);
         }
       }
 
@@ -133,7 +138,7 @@ const cursorManager = {
     else {
       const items = grid.getAll(cursor);
       const manager = managers[name];
-      if (manager?.canPlace(cursor, items)) {
+      if (manager?.canPlace(cursor, items) && storage.canBuy(cursor.name)) {
         cursor.valid = true;
       } else {
         cursor.valid = false;

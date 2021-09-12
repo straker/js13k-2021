@@ -27,7 +27,7 @@ const repairerManager = {
 
           if (component && ship?.canTakeComponent(component)) {
             repairer.lastMove = 0;
-            ship.repair(component);
+            ship.addComponent(component);
 
             moveComponent({
               component,

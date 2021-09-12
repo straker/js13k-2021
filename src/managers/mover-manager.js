@@ -42,10 +42,8 @@ const moverManager = {
                 name: component.name
               });
             } else {
-              // never push onto the components array, only
-              // an input array
-              if (to.inputs) {
-                to.inputs.push(component);
+              if (to.addComponent) {
+                to.addComponent(component);
               } else {
                 to.component = component;
               }

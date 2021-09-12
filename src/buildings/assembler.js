@@ -1,4 +1,4 @@
-import { GRID_SIZE, TYPES } from '../constants';
+import { GRID_SIZE, TYPES, RECIPES } from '../constants';
 import GameObject from '../utils/game-object';
 
 export default class Assembler extends GameObject {
@@ -7,22 +7,7 @@ export default class Assembler extends GameObject {
     properties.type = TYPES.ASSEMBLER;
     properties.name = 'ASSEMBLER';
     properties.timer = 0;
-    properties.recipe = {
-      inputs: [
-        {
-          name: 'COPPER',
-          total: 1
-        }
-      ],
-      outputs: [
-        {
-          name: 'IRON',
-          total: 1
-        }
-      ],
-      duration: 1 // game ticks
-    };
-    properties.inputs = [];
+    properties.recipe = RECIPES[0];
     properties.components = [];
     properties.maxComponents = 2; // max input and output number multiplier
     properties.menuType = TYPES.RECIPE;
@@ -30,10 +15,28 @@ export default class Assembler extends GameObject {
     super(properties);
   }
 
+  setRecipe(recipe) {
+    this.components = [];
+    this.recipe.inputs?.forEach(input => {
+      input.has = 0;
+    });
+    this.recipe = recipe;
+  }
+
+  getInput(component) {
+    return this.recipe.inputs?.find(input => input.name === component.name);
+  }
+
+  addComponent(component) {
+    const input = this.getInput(component);
+    input.has++;
+  }
+
   canProduce() {
-    return this.recipe.outputs.every(output => {
+    return this.recipe.outputs?.every(output => {
       return (
-        this.components.filter(comp => comp.name === output.name).length +
+        this.components.filter(component => component.name === output.name)
+          .length +
           output.total <=
         this.maxComponents
       );
@@ -41,23 +44,13 @@ export default class Assembler extends GameObject {
   }
 
   hasRequiredInputs() {
-    return this.recipe.inputs.every(input => {
-      return (
-        this.inputs.filter(comp => comp.name === input.name).length >=
-        input.total
-      );
+    return this.recipe.inputs?.every(input => {
+      return input.has >= input.total;
     });
   }
 
   canTakeComponent(component) {
-    const input = this.recipe?.inputs.find(
-      input => input.name === component.name
-    );
-
-    return (
-      input &&
-      this.inputs.filter(comp => comp.name === component.name).length <
-        this.maxComponents * input.total
-    );
+    const input = this.getInput(component);
+    return input?.has < this.maxComponents * input?.total;
   }
 }

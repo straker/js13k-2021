@@ -1,11 +1,22 @@
-import { getContext, Text, Grid } from '../libs/kontra';
-import { COLORS, GRID_SIZE, TEXT_PROPS, TYPES, COMPONENTS } from '../constants';
+import { getContext, Text, Grid, on } from '../libs/kontra';
+import {
+  COLORS,
+  GRID_SIZE,
+  TEXT_PROPS,
+  TYPES,
+  COMPONENTS,
+  RECIPES,
+  GAME_WIDTH,
+  GAME_HEIGHT,
+  TICK_DURATION
+} from '../constants';
 import { titleCase } from '../utils';
 import tileatlas from '../assets/tileatlas.json';
 import ImageButton from './image-button';
 import GameObject from '../utils/game-object';
 
 let popupGrid;
+let recipeGrid;
 let name;
 let closeBtn;
 
@@ -14,9 +25,87 @@ const textProps = {
   font: '14px Arial'
 };
 
+function getRecipe(recipe) {
+  const inputs =
+    recipe.inputs?.map(({ name, total }) => {
+      const btn = new ImageButton({
+        name,
+        width: GRID_SIZE,
+        height: GRID_SIZE
+      });
+      btn.disable();
+
+      if (total) {
+        btn.addChild(
+          Text({
+            ...textProps,
+            font: '12px Arial',
+            anchor: { x: 0.5, y: 0 },
+            strokeColor: COLORS.BLACK,
+            x: GRID_SIZE - 4,
+            y: GRID_SIZE * 1.75,
+            text: `0/${total}`
+          })
+        );
+      }
+
+      return btn;
+    }) ?? [];
+
+  const arrow = Text({
+    ...textProps,
+    font: '18px Arial',
+    anchor: { x: 0.5, y: 0.5 },
+    text: '→'
+  });
+  if (recipe.duration) {
+    const duration = Text({
+      ...textProps,
+      font: '12px Arial',
+      anchor: { x: 0.5, y: 0 },
+      strokeColor: COLORS.BLACK,
+      x: GRID_SIZE - 12,
+      y: GRID_SIZE - 4,
+      text: (recipe.duration * TICK_DURATION).toFixed(1) + 's'
+    });
+    arrow.addChild(duration);
+  }
+  // account for unicode character having lots of spacing
+  arrow.width -= 7;
+
+  const outputs =
+    recipe.outputs?.map(({ name, total }) => {
+      const btn = new ImageButton({
+        name,
+        width: GRID_SIZE,
+        height: GRID_SIZE
+      });
+      btn.disable();
+
+      if (total) {
+        btn.addChild(
+          Text({
+            ...textProps,
+            font: '12px Arial',
+            anchor: { x: 0.5, y: 0 },
+            strokeColor: COLORS.BLACK,
+            x: GRID_SIZE - 4,
+            y: GRID_SIZE * 1.75,
+            text: `0/${total}`
+          })
+        );
+      }
+
+      return btn;
+    }) ?? [];
+
+  return [...inputs, arrow, ...outputs];
+}
+
 const buildingPopup = {
   hidden: true,
   width: GRID_SIZE * 10,
+  height: GRID_SIZE * 10,
   padding: GRID_SIZE * 0.35,
 
   init() {
@@ -40,11 +129,21 @@ const buildingPopup = {
       rowGap: GRID_SIZE / 2,
       colGap: GRID_SIZE
     });
-    window.popupGrid = popupGrid;
+    recipeGrid = Grid({
+      flow: 'row',
+      align: 'center',
+      colGap: GRID_SIZE
+    });
+
+    on('esc', () => {
+      this.hide();
+    });
   },
 
   show(building) {
+    this.for = building;
     this.hidden = false;
+    recipeGrid.children = [];
 
     const atlas = tileatlas[building.name];
     const buildingName =
@@ -52,15 +151,6 @@ const buildingPopup = {
       (building.type === TYPES.BELT && building.name !== 'BELT' ? ' BELT' : '');
 
     name.text = titleCase(buildingName);
-    this.x = (building.col + 2) * GRID_SIZE;
-    this.y = (building.row - 0.5 * (atlas.height - 1)) * GRID_SIZE;
-
-    const { x, y, width } = this;
-    name.x = popupGrid.x = x;
-    name.y = y + GRID_SIZE * 0.35;
-    closeBtn.x = x + width - GRID_SIZE / 4;
-    closeBtn.y = y - GRID_SIZE * 0.15;
-    popupGrid.y = y + GRID_SIZE * 1.5;
 
     // filter menu
     switch (building.menuType) {
@@ -111,14 +201,81 @@ const buildingPopup = {
         popupGrid.children = [title, ...children];
         break;
       }
+
+      case TYPES.RECIPE: {
+        popupGrid.numCols = 5;
+        recipeGrid.children = getRecipe(building.recipe);
+        recipeGrid._p();
+
+        const title = Text({
+          ...textProps,
+          colSpan: popupGrid.numCols,
+          text: 'Recipe:'
+        });
+        const components = [...RECIPES].map(recipe => {
+          return new ImageButton({
+            name: recipe.name,
+            width: GRID_SIZE,
+            height: GRID_SIZE,
+            selected: recipe.name === building.recipe.name,
+            onDown() {
+              building.setRecipe(recipe);
+              recipeGrid.children = getRecipe(recipe);
+              components.forEach(component => (component.selected = false));
+              this.selected = true;
+            }
+          });
+        });
+        popupGrid.children = [title, ...components];
+        break;
+      }
+    }
+
+    const sx = (building.col + 2) * GRID_SIZE;
+    const sy = (building.row - 0.5 * (atlas.height - 1)) * GRID_SIZE;
+    this.x =
+      sx + this.width < GAME_WIDTH ? sx : sx - 4 * GRID_SIZE - this.width;
+    this.y = sy + this.height < GAME_HEIGHT ? sy : sy - this.height;
+
+    const { x, y, width } = this;
+    name.x = popupGrid.x = recipeGrid.x = x;
+    name.y = y + GRID_SIZE * 0.35;
+    closeBtn.x = x + width - GRID_SIZE / 4;
+    closeBtn.y = y - GRID_SIZE * 0.15;
+
+    if (recipeGrid.children.length) {
+      recipeGrid.y = y + GRID_SIZE * 1.5;
+      popupGrid.y = recipeGrid.y + recipeGrid.height + GRID_SIZE * 2;
+    } else {
+      popupGrid.y = y + GRID_SIZE * 1.5;
     }
 
     popupGrid._p();
-    this.height = popupGrid.height + GRID_SIZE * 2;
+    this.height = popupGrid.y + popupGrid.height - this.y + GRID_SIZE * 0.5;
   },
 
   hide() {
     this.hidden = true;
+  },
+
+  update() {
+    let type = 'inputs';
+    recipeGrid.children?.forEach(child => {
+      if (child.name && child.name !== 'NONE') {
+        this.for.recipe[type]?.forEach(recipe => {
+          const has =
+            type === 'inputs'
+              ? recipe.has
+              : this.for.components.filter(
+                  component => component.name === child.name
+                ).length;
+
+          child.children[1].text = `${has}/${recipe.total}`;
+        });
+      } else {
+        type = 'outputs';
+      }
+    });
   },
 
   render() {
@@ -143,6 +300,7 @@ const buildingPopup = {
     name.render();
     closeBtn.render();
 
+    recipeGrid.render();
     popupGrid.render();
   }
 };

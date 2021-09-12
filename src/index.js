@@ -107,6 +107,7 @@ Promise.all([
       grid.update();
 
       cursor.update();
+      buildingPopup.update();
       buildingMenubar.update();
       cursorManager.update();
 

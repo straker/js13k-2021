@@ -41,6 +41,7 @@ export const BELT = {
 export const COLORS = {
   WHITE: '#cfc6b8',
   BLACK: '#333333',
+  GREY: '#777777',
   RED: '#e6482e',
   YELLOW: '#f4b41b',
   GREEN: '#38d973',
@@ -55,3 +56,36 @@ export const TEXT_PROPS = {
   color: COLORS.WHITE,
   anchor: { x: 0, y: 0.5 }
 };
+export const RECIPES = [
+  {
+    name: 'NONE',
+    inputs: [
+      {
+        name: 'NONE'
+      }
+    ],
+    outputs: [
+      {
+        name: 'NONE'
+      }
+    ]
+  },
+  {
+    name: 'IRON',
+    inputs: [
+      {
+        name: 'COPPER',
+        total: 1,
+        has: 0
+      }
+    ],
+    outputs: [
+      {
+        name: 'IRON',
+        total: 1,
+        has: 0
+      }
+    ],
+    duration: 1 // game ticks
+  }
+];

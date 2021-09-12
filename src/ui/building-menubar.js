@@ -1,4 +1,4 @@
-import { Grid, bindKeys } from '../libs/kontra';
+import { Grid, bindKeys, emit } from '../libs/kontra';
 import { GRID_SIZE, GAME_HEIGHT } from '../constants';
 import cursor from './cursor';
 import ImageButton from './image-button';
@@ -173,6 +173,7 @@ const buildingMenuBar = {
       }
     });
     bindKeys('esc', () => {
+      emit('esc');
       if (openedMenu) {
         closeMenu(openedMenu.name);
         openedMenu = null;

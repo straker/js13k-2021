@@ -7,20 +7,14 @@ const assemblerManager = {
   init() {
     on('gameTick', () => {
       assemblers.forEach(assembler => {
-        const { inputs, recipe, components, producing, timer } = assembler;
+        const { recipe, components, producing, timer } = assembler;
 
         if (!producing && timer === 0) {
           if (assembler.canProduce() && assembler.hasRequiredInputs()) {
-            recipe.inputs.forEach(input => {
-              for (let i = 0; i < input.total; i++) {
-                inputs.splice(
-                  inputs.findIndex(comp => comp.name === input.name),
-                  1
-                );
-              }
-            });
-
             assembler.producing = true;
+            recipe.inputs.forEach(input => {
+              input.has -= input.total;
+            });
           }
         }
 

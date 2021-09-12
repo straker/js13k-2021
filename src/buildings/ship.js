@@ -26,16 +26,20 @@ export default class Ship extends GameObject {
     super(properties);
   }
 
+  getInput(component) {
+    return this.inputs.find(input => input.name === component.name);
+  }
+
+  addComponent(component) {
+    this.getInput(component).has++;
+  }
+
   isRepaired() {
     return this.inputs.every(input => input.has >= input.total);
   }
 
-  repair(component) {
-    this.inputs.find(input => input.name === component.name).has++;
-  }
-
   canTakeComponent(component) {
-    const input = this.inputs.find(input => input.name === component.name);
-    return input && input.has <= input.total;
+    const input = this.getInput(component);
+    return input?.has <= input?.total;
   }
 }

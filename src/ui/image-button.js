@@ -26,6 +26,8 @@ export default class ImageButton extends Button.class {
 
     if (this.focused || this.selected) {
       context.strokeStyle = COLORS.YELLOW;
+    } else if (this.disabled) {
+      context.strokeStyle = COLORS.GREY;
     } else {
       context.strokeStyle = COLORS.WHITE;
     }

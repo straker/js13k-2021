@@ -1,18 +1,29 @@
 import { on } from '../libs/kontra';
-import Miner from '../buildings/miner';
+import CopperMiner from '../buildings/copper-miner';
+import IronMiner from '../buildings/iron-miner';
 import { layers } from '../assets/tilemap.json';
 import { NUM_COLS } from '../constants';
 
 const miners = [];
+const Constructors = {
+  'COPPER-MINER': CopperMiner,
+  'IRON-MINER': IronMiner
+};
 
 const minerManager = {
   init() {
     on('gameTick', () => {
       miners.forEach(miner => {
-        const { components, maxComponents } = miner;
+        const { name, components, maxComponents } = miner;
+        miner.timer = ++miner.timer % miner.duration;
 
-        // miners produce every 10 game ticks
-        if (++miner.timer % 10 === 0 && components.length < maxComponents) {
+        if (miner.timer % 2) {
+          miner.name = name + '_END';
+        } else {
+          miner.name = name.split('_')[0];
+        }
+
+        if (miner.timer === 0 && components.length < maxComponents) {
           miner.timer = 0;
           components.push({
             name: miner.componentName
@@ -23,7 +34,7 @@ const minerManager = {
   },
 
   add(properties) {
-    const miner = new Miner(properties);
+    const miner = new Constructors[properties.name](properties);
     miners.push(miner);
     return miner;
   },

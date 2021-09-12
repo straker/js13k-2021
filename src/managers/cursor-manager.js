@@ -22,7 +22,8 @@ const managers = {
   BELT: beltManager,
   EXPORT: beltManager,
   IMPORT: beltManager,
-  MINER: minerManager,
+  'COPPER-MINER': minerManager,
+  'IRON-MINER': minerManager,
   MOVER: moverManager,
   ASSEMBLER: assemblerManager,
   REPAIRER: repairerManager
@@ -95,6 +96,7 @@ const cursorManager = {
 
       function callback(cursorRow, cursorCol) {
         const cursorPos = {
+          name,
           dir,
           rotation,
           row: cursorRow,

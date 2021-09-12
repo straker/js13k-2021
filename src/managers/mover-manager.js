@@ -28,6 +28,7 @@ const moverManager = {
           if (
             component &&
             !component.updated &&
+            (mover.filter === component.name || mover.filter === 'NONE') &&
             to &&
             to.canTakeComponent(component)
           ) {

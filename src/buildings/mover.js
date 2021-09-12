@@ -7,6 +7,8 @@ export default class Mover extends GameObject {
     properties.type = TYPES.MOVER;
     properties.name = 'MOVER';
     properties.lastMove = 0;
+    properties.menuType = TYPES.FILTER;
+    properties.filter = 'NONE';
 
     super(properties);
   }

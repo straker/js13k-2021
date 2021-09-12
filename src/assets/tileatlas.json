@@ -1,4 +1,10 @@
 {
+  "NONE": {
+    "row": -1,
+    "col": -1,
+    "width": 1,
+    "height": 1
+  },
   "BELT": {
     "row": 0,
     "col": 0,

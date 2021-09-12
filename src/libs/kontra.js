@@ -1,6 +1,8 @@
 /**
  * NOTE: Modified kontra library. Changes:
  * - account for world width/height for grid (see https://github.com/straker/kontra/issues/238)
+ * - allow grid to dynamically update children (see https://github.com/straker/kontra/issues/218#issuecomment-917512214)
+ * - fix colSpan for grid (https://github.com/straker/kontra/issues/240)
  */
 
 /**
@@ -1782,7 +1784,7 @@ class GameObject extends Updatable {
     ...props
   } = {}) {
     // @ifdef GAMEOBJECT_GROUP
-    this.children = [];
+    this._c = [];
     // @endif
 
     // by setting defaults to the parameters and passing them into
@@ -2029,6 +2031,17 @@ class GameObject extends Updatable {
   set height(value) {
     this._h = value;
     this._pc();
+  }
+
+  set children(value) {
+    while (this._c.length) {
+      this.removeChild(this._c[0]);
+    }
+    value.map(value => this.addChild(value));
+  }
+
+  get children() {
+    return this._c;
   }
 
   /**
@@ -4041,13 +4054,14 @@ class Grid extends factory$2.class {
 
       let spans = child.colSpan || 1;
       let colSpan = spans;
+
       do {
         colWidths[col] = Math.max(
           colWidths[col] || 0,
           child.world.width / colSpan
         );
         grid[row][col] = child;
-      } while (colSpan + col++ <= numCols && --spans);
+      } while (col++ <= numCols && --spans);
 
       if (col >= numCols) {
         col = 0;

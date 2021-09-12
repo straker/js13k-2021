@@ -79,7 +79,7 @@ const shipManager = {
         shipTimer += TICK_DURATION;
 
         // a will arrive every 2 minutes
-        if (shipTimer >= 20) {
+        if (shipTimer >= 2) {
           console.log('ship arrives');
           shipTimer = 0;
           timer = 0;

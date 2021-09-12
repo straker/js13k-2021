@@ -54,3 +54,9 @@ export function displayComponentValue(value) {
 
   return `${(value / 1000) | 0}K`.padEnd(4, ' ');
 }
+
+export function titleCase(str) {
+  return str.replace(/\w\S*/g, function (txt) {
+    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+  });
+}

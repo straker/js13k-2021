@@ -42,6 +42,12 @@ class Cursor extends GameObject {
     const atlas = tileatlas[name];
     this.name = name;
 
+    if (name) {
+      this.state = 'building';
+    } else {
+      this.state = 'cursor';
+    }
+
     this.rotation = 0;
     this.width = (atlas?.width ?? 1) * GRID_SIZE;
     this.height = (atlas?.height ?? 1) * GRID_SIZE;
@@ -140,7 +146,7 @@ class Cursor extends GameObject {
     } else if (items.length) {
       const item = items.find(item => item.type && item.type !== TYPES.WALL);
 
-      if (item) {
+      if (item?.menuType) {
         let { row, col, width, height } = item;
 
         // item position is from the bottom-right corner

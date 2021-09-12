@@ -3,11 +3,13 @@ import GameObject from '../utils/game-object';
 
 let inputIndex = 0;
 const inputs = [
-  [{
-    name: 'COPPER',
-    total: 10,
-    has: 0
-  }]
+  [
+    {
+      name: 'COPPER',
+      total: 10,
+      has: 0
+    }
+  ]
 ];
 
 export default class Ship extends GameObject {
@@ -19,6 +21,7 @@ export default class Ship extends GameObject {
     properties.col = 5;
     properties.inputs = inputs[inputIndex++] ?? inputs[0];
     properties.state = 'enter';
+    properties.menuType = TYPES.SHIP;
 
     super(properties);
   }

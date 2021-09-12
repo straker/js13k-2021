@@ -1,16 +1,8 @@
 import { Grid, Text } from '../libs/kontra';
-import { COMPONENTS, GRID_SIZE, COLORS } from '../constants';
+import { COMPONENTS, GRID_SIZE, TEXT_PROPS } from '../constants';
 import Component from '../components/component';
 import componentStorage from '../components/storage';
 import { displayComponentValue } from '../utils';
-
-window.componentStorage = componentStorage;
-
-const textProps = {
-  font: `${GRID_SIZE}px Arial`,
-  color: COLORS.WHITE,
-  anchor: { x: 0, y: 0.5 }
-};
 
 let grid;
 const componentDisplay = {
@@ -21,7 +13,7 @@ const componentDisplay = {
       children.push(
         new Component({ name }),
         Text({
-          ...textProps,
+          ...TEXT_PROPS,
           name,
           text: displayComponentValue(0)
         })

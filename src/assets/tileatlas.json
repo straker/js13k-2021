@@ -29,6 +29,18 @@
     "width": 1,
     "height": 1
   },
+  "WIRE": {
+    "row": 0,
+    "col": 4,
+    "width": 1,
+    "height": 1
+  },
+  "CIRCUIT": {
+    "row": 0,
+    "col": 5,
+    "width": 1,
+    "height": 1
+  },
   "CURSOR": {
     "row": 1,
     "col": 2,

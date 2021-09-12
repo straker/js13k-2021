@@ -14,15 +14,8 @@ const minerManager = {
   init() {
     on('gameTick', () => {
       miners.forEach(miner => {
-        const { name, components, maxComponents } = miner;
+        const { components, maxComponents } = miner;
         miner.timer = ++miner.timer % miner.duration;
-
-        if (miner.timer % 2) {
-          miner.name = name + '_END';
-        } else {
-          miner.name = name.split('_')[0];
-        }
-
         if (miner.timer === 0 && components.length < maxComponents) {
           miner.timer = 0;
           components.push({

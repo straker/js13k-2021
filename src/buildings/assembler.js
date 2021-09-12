@@ -1,5 +1,6 @@
 import { GRID_SIZE, TYPES, RECIPES } from '../constants';
 import GameObject from '../utils/game-object';
+import { deepCopy } from '../utils';
 
 export default class Assembler extends GameObject {
   constructor(properties) {
@@ -20,7 +21,7 @@ export default class Assembler extends GameObject {
     this.recipe.inputs?.forEach(input => {
       input.has = 0;
     });
-    this.recipe = recipe;
+    this.recipe = deepCopy(recipe);
   }
 
   getInput(component) {

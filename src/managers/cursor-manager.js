@@ -2,7 +2,8 @@ import {
   onPointerDown,
   onPointerUp,
   bindKeys,
-  pointerPressed
+  pointerPressed,
+  collides
 } from '../libs/kontra';
 import cursor from '../ui/cursor';
 import grid from '../utils/grid';
@@ -38,7 +39,12 @@ const cursorManager = {
         col: cursor.col
       };
 
-      if (cursor.state !== 'building') {
+      // don't open the building menu if the user clicked on it
+      // but there was a building behind it
+      if (
+        (cursor.state !== 'building') &
+        (buildingPopup.hidden || !collides(cursor, buildingPopup))
+      ) {
         const item = grid
           .get(cursor)
           .filter(item => item.type && item.type !== TYPES.WALL)[0];

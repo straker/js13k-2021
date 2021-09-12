@@ -3,6 +3,8 @@ import { COSTS } from '../constants';
 const componentStorage = {
   COPPER: 10,
   IRON: 50,
+  WIRE: 0,
+  CIRCUIT: 0,
 
   add({ name, value = 1 }) {
     this[name] += value;

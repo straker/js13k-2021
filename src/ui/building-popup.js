@@ -260,16 +260,20 @@ const buildingPopup = {
     let type = 'inputs';
     recipeGrid.children?.forEach(child => {
       if (child.name && child.name !== 'NONE') {
-        this.for.recipe[type]?.forEach(recipe => {
-          const has =
-            type === 'inputs'
-              ? recipe.has
-              : this.for.components.filter(
-                  component => component.name === child.name
-                ).length;
-
-          child.children[1].text = `${has}/${recipe.total}`;
+        const recipe = this.for.recipe[type]?.find(recipe => {
+          return recipe.name === child.name;
         });
+        const has =
+          type === 'inputs'
+            ? recipe.has
+            : this.for.components.filter(
+                component => component.name === child.name
+              ).length;
+
+        const text = `${has}/${recipe.total}`;
+        if (child.children[1].text !== text) {
+          child.children[1].text = text;
+        }
       } else {
         type = 'outputs';
       }

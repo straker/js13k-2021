@@ -1,7 +1,7 @@
-import { Grid, Button, imageAssets, bindKeys } from '../libs/kontra';
-import { GRID_SIZE, GAME_HEIGHT, COLORS } from '../constants';
-import tileatlas from '../assets/tileatlas.json';
+import { Grid, bindKeys } from '../libs/kontra';
+import { GRID_SIZE, GAME_HEIGHT } from '../constants';
 import cursor from './cursor';
+import ImageButton from './image-button';
 
 let menubar;
 let openedMenu;
@@ -22,7 +22,7 @@ function createButton(properties) {
   properties.width = properties.height = GRID_SIZE * 2;
   properties.scaleX = properties.scaleY = properties.child ? 0.6 : 0.75;
 
-  return Button({
+  return new ImageButton({
     ...properties,
     onDown() {
       if (openedMenu === this) {
@@ -66,36 +66,6 @@ function createButton(properties) {
       } else {
         cursor.setImage('');
       }
-    },
-    render() {
-      const { name, context, width, height } = this;
-      const atlas = tileatlas[name];
-      const start = -GRID_SIZE / 4;
-      const end = GRID_SIZE * 2.5;
-
-      context.fillStyle = COLORS.BLACK;
-      context.fillRect(start, start, end, end);
-
-      context.drawImage(
-        imageAssets.tilesheet,
-        atlas.col * GRID_SIZE,
-        atlas.row * GRID_SIZE,
-        GRID_SIZE * 2,
-        GRID_SIZE * 2,
-        0,
-        0,
-        width,
-        height
-      );
-      context.lineWidth = 2;
-
-      if (this.focused) {
-        context.strokeStyle = COLORS.YELLOW;
-      } else {
-        context.strokeStyle = COLORS.WHITE;
-      }
-
-      context.strokeRect(start, start, end, end);
     }
   });
 }
@@ -142,19 +112,14 @@ const buildingMenuBar = {
       flow: 'row',
       align: 'start',
       jusify: 'start',
-      // for some reason the menu items have to start in the
-      // grid, otherwise they can't be clicked on
-      children: [beltMenu, beltMenuItem, moverMenuItem, repairerMenuItem],
       colGap: GRID_SIZE / 1.5
     });
     const minerMenuGrid = Grid({
       flow: 'row',
-      children: [minerMenu, minerMenuItem],
       colGap: GRID_SIZE / 1.5
     });
     const assmeblerMenuGrid = Grid({
       flow: 'row',
-      children: [assemblerMenu, assemblerMenuItem],
       colGap: GRID_SIZE / 1.5
     });
 

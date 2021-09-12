@@ -1,7 +1,7 @@
 import { GRID_SIZE, TYPES } from '../constants';
 import GameObject from '../utils/game-object';
 
-export default class Miner extends GameObject {
+export default class Assembler extends GameObject {
   constructor(properties) {
     properties.width = properties.height = GRID_SIZE * 2;
     properties.type = TYPES.ASSEMBLER;
@@ -25,6 +25,7 @@ export default class Miner extends GameObject {
     properties.inputs = [];
     properties.components = [];
     properties.maxComponents = 2; // max input and output number multiplier
+    properties.menuType = TYPES.RECIPE;
 
     super(properties);
   }

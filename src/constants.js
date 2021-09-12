@@ -11,7 +11,10 @@ export const TYPES = {
   MOVER: 3,
   MINER: 4,
   ASSEMBLER: 5,
-  SHIP: 6
+  SHIP: 6,
+
+  FILTER: 10,
+  RECIPE: 11
 };
 export const COMPONENTS = ['COPPER', 'IRON'];
 // dir values by name, degree, and radian
@@ -41,8 +44,14 @@ export const COLORS = {
   RED: '#e6482e',
   YELLOW: '#f4b41b',
   GREEN: '#38d973',
+  BLUE: '#3cacd7',
   BROWN: '#bf7958',
   PURPLE: '#472d3c'
 };
 // 200 ms (200ms / 1000 ms = 0.2)
 export const TICK_DURATION = 0.2;
+export const TEXT_PROPS = {
+  font: `${GRID_SIZE}px Arial`,
+  color: COLORS.WHITE,
+  anchor: { x: 0, y: 0.5 }
+};

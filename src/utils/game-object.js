@@ -15,7 +15,7 @@ export default class GameObject extends Sprite.class {
 
       if (!properties.x) {
         properties.x = (properties.col + (1 - 0.5 * atlas.width)) * GRID_SIZE;
-        properties.y = (properties.row + +(1 - 0.5 * atlas.height)) * GRID_SIZE;
+        properties.y = (properties.row + (1 - 0.5 * atlas.height)) * GRID_SIZE;
       }
     }
 

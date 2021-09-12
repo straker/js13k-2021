@@ -28,6 +28,7 @@ import assemblerManager from './managers/assembler-manager';
 import cursorManager from './managers/cursor-manager';
 import shipManager from './managers/ship-manager';
 import cursor from './ui/cursor';
+import buildingPopup from './ui/building-popup';
 import { layers } from './assets/tilemap.json';
 
 import componentDisplay from './ui/component-display';
@@ -41,14 +42,14 @@ canvas.height = GAME_HEIGHT;
 initKeys();
 initPointer();
 const wallInfo = {
-  33: { dir: DIRS.RIGHT, type: TYPES.WALL },
-  42: { dir: DIRS.DOWN, type: TYPES.WALL },
-  31: { dir: DIRS.LEFT, type: TYPES.WALL },
-  22: { dir: DIRS.UP, type: TYPES.WALL },
-  29: { dir: DIRS.RIGHT },
-  30: { dir: DIRS.DOWN },
-  39: { dir: DIRS.LEFT },
-  40: { dir: DIRS.UP }
+  33: { dir: DIRS.RIGHT },
+  42: { dir: DIRS.DOWN },
+  31: { dir: DIRS.LEFT },
+  22: { dir: DIRS.UP },
+  29: { dir: DIRS.RIGHT, type: null },
+  30: { dir: DIRS.DOWN, type: null },
+  39: { dir: DIRS.LEFT, type: null },
+  40: { dir: DIRS.UP, type: null }
 };
 
 Promise.all([
@@ -63,6 +64,7 @@ Promise.all([
       if (tile && tile !== 11) {
         // 11 = minable floor
         grid.add({
+          type: TYPES.WALL,
           ...wallInfo[tile],
           tile,
           row,
@@ -83,6 +85,7 @@ Promise.all([
   // 1. production
   // 2. mover
   // 3. belts
+  shipManager.init();
   minerManager.init();
   assemblerManager.init();
   moverManager.init();
@@ -90,9 +93,8 @@ Promise.all([
   componentManager.init();
   beltManager.init();
 
-  shipManager.init();
-
   // uis
+  buildingPopup.init();
   cursorManager.init();
   componentDisplay.init();
   buildingMenubar.init();

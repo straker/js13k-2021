@@ -7,13 +7,15 @@ import {
 import cursor from '../ui/cursor';
 import grid from '../utils/grid';
 import { rotate } from '../utils';
-import { GAME_HEIGHT, GRID_SIZE, DIRS } from '../constants';
+import { GAME_HEIGHT, GRID_SIZE, DIRS, TYPES } from '../constants';
 
 import beltManager from './belt-manager';
 import minerManager from './miner-manager';
 import moverManager from './mover-manager';
 import assemblerManager from './assembler-manager';
 import repairerManager from './repairer-manager';
+
+import buildingPopup from '../ui/building-popup';
 
 const managers = {
   BELT: beltManager,
@@ -33,6 +35,15 @@ const cursorManager = {
         row: cursor.row,
         col: cursor.col
       };
+
+      if (cursor.state !== 'building') {
+        const item = grid
+          .get(cursor)
+          .filter(item => item.type && item.type !== TYPES.WALL)[0];
+        if (item?.menuType) {
+          buildingPopup.show(item);
+        }
+      }
     });
 
     onPointerUp(() => {
@@ -132,6 +143,7 @@ const cursorManager = {
 
   render() {
     cursor.render();
+    buildingPopup.render();
   }
 };
 export default cursorManager;

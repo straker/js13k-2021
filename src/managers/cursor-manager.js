@@ -25,6 +25,7 @@ const managers = {
   IMPORT: beltManager,
   'COPPER-MINER': minerManager,
   'IRON-MINER': minerManager,
+  'TITANIUM-MINER': minerManager,
   MOVER: moverManager,
   ASSEMBLER: assemblerManager,
   REPAIRER: repairerManager

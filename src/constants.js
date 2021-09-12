@@ -16,7 +16,7 @@ export const TYPES = {
   FILTER: 10,
   RECIPE: 11
 };
-export const COMPONENTS = ['COPPER', 'IRON', 'WIRE', 'CIRCUIT'];
+export const COMPONENTS = ['COPPER', 'IRON', 'TITANIUM', 'WIRE', 'CIRCUIT'];
 // dir values by name, degree, and radian
 const RIGHT = { row: 0, col: 1 };
 const DOWN = { row: 1, col: 0 };
@@ -139,6 +139,20 @@ export const COSTS = {
     {
       name: 'COPPER',
       total: 10
+    }
+  ],
+  'TITANIUM-MINER': [
+    {
+      name: 'COPPER',
+      total: 50
+    },
+    {
+      name: 'IRON',
+      total: 25
+    },
+    {
+      name: 'CIRCUIT',
+      total: 25
     }
   ],
   ASSEMBLER: [

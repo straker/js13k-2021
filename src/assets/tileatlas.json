@@ -23,7 +23,7 @@
     "width": 1,
     "height": 1
   },
-  "RED": {
+  "TITANIUM": {
     "row": 0,
     "col": 3,
     "width": 1,
@@ -163,6 +163,18 @@
   },
   "IRON-MINER_MENU_ITEM": {
     "row": 7,
+    "col": 2,
+    "width": 2,
+    "height": 2
+  },
+  "TITANIUM-MINER": {
+    "row": 9,
+    "col": 2,
+    "width": 2,
+    "height": 2
+  },
+  "TITANIUM-MINER_MENU_ITEM": {
+    "row": 9,
     "col": 2,
     "width": 2,
     "height": 2

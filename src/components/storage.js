@@ -3,6 +3,7 @@ import { COSTS } from '../constants';
 const componentStorage = {
   COPPER: 10,
   IRON: 50,
+  TITANIUM: 0,
   WIRE: 0,
   CIRCUIT: 0,
 

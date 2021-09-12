@@ -106,6 +106,10 @@ const buildingMenuBar = {
       name: 'IRON-MINER_MENU_ITEM',
       child: true
     });
+    const titaniumMinerMenuItem = createButton({
+      name: 'TITANIUM-MINER_MENU_ITEM',
+      child: true
+    });
 
     const assemblerMenu = createButton({
       name: 'ASSEMBLER_MENU'
@@ -150,7 +154,7 @@ const buildingMenuBar = {
     menuHierarchy.MINER_MENU = {
       grid: minerMenuGrid,
       parent: minerMenu,
-      children: [copperMinerMenuItem, ironMinerMenuItem]
+      children: [copperMinerMenuItem, ironMinerMenuItem, titaniumMinerMenuItem]
     };
     menuHierarchy.ASSEMBLER_MENU = {
       grid: assmeblerMenuGrid,

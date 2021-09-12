@@ -3,6 +3,16 @@ import { GRID_SIZE, COLORS } from '../constants';
 import tileatlas from '../assets/tileatlas.json';
 
 export default class ImageButton extends Button.class {
+  constructor(properties) {
+    super(properties);
+
+    if (properties.onDown) {
+      this.hasDown = true;
+    } else {
+      this.disable();
+    }
+  }
+
   draw() {
     const { name, context, width, height } = this;
     const atlas = tileatlas[name];
@@ -26,12 +36,18 @@ export default class ImageButton extends Button.class {
 
     if (this.focused || this.selected) {
       context.strokeStyle = COLORS.YELLOW;
-    } else if (this.disabled) {
+    } else if (!this.hasDown || this.disabled) {
       context.strokeStyle = COLORS.GREY;
     } else {
       context.strokeStyle = COLORS.WHITE;
     }
 
     context.strokeRect(0, 0, end, end);
+
+    if (this.hasDown && this.disabled) {
+      context.globalAlpha = 0.6;
+      context.fillStyle = COLORS.RED;
+      context.fillRect(0, 0, end, end);
+    }
   }
 }

@@ -106,10 +106,16 @@ export const COSTS = {
       total: 2
     }
   ],
-  MINER: [
+  'COPPER-MINER': [
     {
       name: 'IRON',
       total: 5
+    }
+  ],
+  'IRON-MINER': [
+    {
+      name: 'COPPER',
+      total: 10
     }
   ]
 };

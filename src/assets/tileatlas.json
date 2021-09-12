@@ -101,7 +101,7 @@
     "width": 2,
     "height": 2
   },
-  "MINER_MENU_ITEM": {
+  "COPPER-MINER_MENU_ITEM": {
     "row": 5,
     "col": 0,
     "width": 2,
@@ -125,7 +125,7 @@
     "width": 2,
     "height": 2
   },
-  "MINER": {
+  "COPPER-MINER": {
     "row": 5,
     "col": 0,
     "width": 2,
@@ -140,6 +140,18 @@
   "SHIP": {
     "row": 7,
     "col": 0,
+    "width": 2,
+    "height": 2
+  },
+  "IRON-MINER": {
+    "row": 7,
+    "col": 2,
+    "width": 2,
+    "height": 2
+  },
+  "IRON-MINER_MENU_ITEM": {
+    "row": 7,
+    "col": 2,
     "width": 2,
     "height": 2
   }

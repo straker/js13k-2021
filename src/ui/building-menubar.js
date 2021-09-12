@@ -98,8 +98,12 @@ const buildingMenuBar = {
     const minerMenu = createButton({
       name: 'MINER_MENU'
     });
-    const minerMenuItem = createButton({
-      name: 'MINER_MENU_ITEM',
+    const copperMinerMenuItem = createButton({
+      name: 'COPPER-MINER_MENU_ITEM',
+      child: true
+    });
+    const ironMinerMenuItem = createButton({
+      name: 'IRON-MINER_MENU_ITEM',
       child: true
     });
 
@@ -146,7 +150,7 @@ const buildingMenuBar = {
     menuHierarchy.MINER_MENU = {
       grid: minerMenuGrid,
       parent: minerMenu,
-      children: [minerMenuItem]
+      children: [copperMinerMenuItem, ironMinerMenuItem]
     };
     menuHierarchy.ASSEMBLER_MENU = {
       grid: assmeblerMenuGrid,

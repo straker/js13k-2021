@@ -27,15 +27,23 @@ const textProps = {
   font: '14px Arial'
 };
 
+function minerText(name) {
+  return `Produces 1 ${titleCase(name)} every ${
+    MINER_DURATIONS[name]
+  } seconds. Can only be placed in rooms with a minable resource tile.`;
+}
+
 const uiText = {
   BELT: 'Moves items along a path. Place on a wall at the end of a path to export items from a room, place on a wall at the start of a path to import items into a room. Select an import belt once placed to filter which items are imported into the room.',
   MOVER:
     'Moves items from behind the Mover to the building or belt in front of it. Select once placed to filter which items it moves.',
   REPAIRER:
     'Moves items from behind the Repairer to the docked ship. Can only be placed on the tiles next to the ship docking station.',
-  'COPPER-MINER': `Produces 1 Copper every ${MINER_DURATIONS.COPPER} seconds. Can only be placed in rooms with a minable resource tile.`,
-  'IRON-MINER': `Produces 1 Iron every ${MINER_DURATIONS.IRON} seconds. Can only be placed in rooms with a minable resource tile.`,
-  'TITANIUM-MINER': `Produces 1 Titanium every ${MINER_DURATIONS.TITANIUM} seconds. Can only be placed in rooms with a minable resource tile.`,
+  'COPPER-MINER': minerText('COPPER'),
+  'IRON-MINER': minerText('IRON'),
+  'TITANIUM-MINER': minerText('TITANIUM'),
+  'HYDROGEN-EXTRACTOR': minerText('HYDROGEN'),
+  'OXYGEN-EXTRACTOR': minerText('OXYGEN'),
   ASSEMBLER:
     'Crafts items into more advanced items. Select once placed to choose which recipe to craft.'
 };

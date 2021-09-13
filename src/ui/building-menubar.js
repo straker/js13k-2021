@@ -131,15 +131,23 @@ const buildingMenuBar = {
       name: 'MINER_MENU'
     });
     const copperMinerMenuItem = createButton({
-      name: 'COPPER-MINER_MENU_ITEM',
+      name: 'COPPER-MINER',
       child: true
     });
     const ironMinerMenuItem = createButton({
-      name: 'IRON-MINER_MENU_ITEM',
+      name: 'IRON-MINER',
       child: true
     });
     const titaniumMinerMenuItem = createButton({
-      name: 'TITANIUM-MINER_MENU_ITEM',
+      name: 'TITANIUM-MINER',
+      child: true
+    });
+    const hydrogenMinerMenuItem = createButton({
+      name: 'HYDROGEN-EXTRACTOR',
+      child: true
+    });
+    const oxygenMinerMenuItem = createButton({
+      name: 'OXYGEN-EXTRACTOR',
       child: true
     });
 
@@ -147,7 +155,7 @@ const buildingMenuBar = {
       name: 'ASSEMBLER_MENU'
     });
     const assemblerMenuItem = createButton({
-      name: 'ASSEMBLER_MENU_ITEM',
+      name: 'ASSEMBLER_MENU',
       child: true
     });
 
@@ -188,7 +196,13 @@ const buildingMenuBar = {
     menuHierarchy.MINER_MENU = {
       grid: minerMenuGrid,
       parent: minerMenu,
-      children: [copperMinerMenuItem, ironMinerMenuItem, titaniumMinerMenuItem]
+      children: [
+        copperMinerMenuItem,
+        ironMinerMenuItem,
+        titaniumMinerMenuItem,
+        hydrogenMinerMenuItem,
+        oxygenMinerMenuItem
+      ]
     };
     menuHierarchy.ASSEMBLER_MENU = {
       grid: assmeblerMenuGrid,

@@ -27,6 +27,8 @@ const managers = {
   'COPPER-MINER': minerManager,
   'IRON-MINER': minerManager,
   'TITANIUM-MINER': minerManager,
+  'HYDROGEN-EXTRACTOR': minerManager,
+  'OXYGEN-EXTRACTOR': minerManager,
   MOVER: moverManager,
   ASSEMBLER: assemblerManager,
   REPAIRER: repairerManager

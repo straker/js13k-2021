@@ -1,11 +1,10 @@
-import { COSTS } from '../constants';
+import { COSTS, COMPONENTS } from '../constants';
 
 const componentStorage = {
+  // turn an array into object keys with value 0
+  ...COMPONENTS.reduce((acc, curr) => ((acc[curr] = 0), acc), {}),
   COPPER: 10,
   IRON: 50,
-  TITANIUM: 0,
-  WIRE: 0,
-  CIRCUIT: 0,
 
   add({ name, value = 1 }) {
     this[name] += value;

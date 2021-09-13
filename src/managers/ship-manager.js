@@ -1,4 +1,4 @@
-import { on, getContext } from '../libs/kontra';
+import { on, getContext, emit } from '../libs/kontra';
 import { TICK_DURATION, GRID_SIZE, COLORS } from '../constants';
 import Ship from '../buildings/ship';
 import { easeLinear, easeOutQuad, easeInOutQuad, easeInCubic } from '../utils';
@@ -13,6 +13,85 @@ const duration = TICK_DURATION * 8;
 const phases = [
   ['enter_x', 'enter_y'],
   ['exit_y', 'exit_x']
+];
+
+let inputIndex = 0;
+const inputs = [
+  [
+    {
+      name: 'COPPER',
+      total: 100,
+      has: 0
+    },
+    {
+      name: 'IRON',
+      total: 100,
+      has: 0
+    }
+  ],
+  [
+    {
+      name: 'TITANIUM',
+      total: 100,
+      has: 0
+    },
+    {
+      name: 'CIRCUIT',
+      total: 100,
+      has: 0
+    }
+  ],
+  [
+    {
+      name: 'OXYGEN',
+      total: 100,
+      has: 0
+    },
+    {
+      name: 'WIRE',
+      total: 100,
+      has: 0
+    },
+    {
+      name: 'CIRCUIT',
+      total: 250,
+      has: 0
+    }
+  ],
+  [
+    {
+      name: 'IRON',
+      total: 250,
+      has: 0
+    },
+    {
+      name: 'TITANIUM',
+      total: 250,
+      has: 0
+    },
+    {
+      name: 'HYDROGEN',
+      total: 100,
+      has: 0
+    }
+  ],
+  [
+    {
+      name: 'COPPER',
+      total: 500,
+      has: 0
+    },
+    {
+      name: 'WATER',
+      total: 100,
+      has: 0
+    },
+    {
+      name: 'FUEL',
+      total: 100,
+      has: 0
+    }
+  ]
 ];
 
 on('update', () => {
@@ -31,6 +110,11 @@ on('update', () => {
         return;
       } else if (ship.state === 'exit') {
         ship = null;
+        if (!inputs[inputIndex]) {
+          alert('All ships repaired! GG');
+          emit('over');
+        }
+
         return;
       }
     }
@@ -78,12 +162,12 @@ const shipManager = {
       if (!ship) {
         shipTimer += TICK_DURATION;
 
-        // a will arrive every 2 minutes
-        if (shipTimer >= 2) {
-          console.log('ship arrives');
+        // a will arrive every half minute
+        if (shipTimer >= 30) {
           shipTimer = 0;
           timer = 0;
           ship = new Ship({
+            inputs: inputs[inputIndex++],
             phaseIndex: 0,
             index: 0,
             phase: phases[0][0]

@@ -4,6 +4,7 @@ import {
   initPointer,
   GameLoop,
   emit,
+  on,
   loadImage,
   imageAssets
 } from './libs/kontra';
@@ -189,4 +190,8 @@ loadImage('tilesheet.webp').then(() => {
     }
   });
   loop.start();
+
+  on('over', () => {
+    loop.stop();
+  });
 });

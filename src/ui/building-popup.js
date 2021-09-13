@@ -222,6 +222,7 @@ const buildingPopup = {
           });
           const text = Text({
             ...textProps,
+            name: input.name,
             colSpan: popupGrid.numCols - 1,
             text: `0 / ${input.total}`
           });
@@ -344,29 +345,41 @@ const buildingPopup = {
   },
 
   update() {
-    if (this.menuType !== TYPES.RECIPE) return;
-
-    let type = 'inputs';
-    recipeGrid.children?.forEach(child => {
-      if (child.name && child.name !== 'NONE') {
-        const recipe = this.for.recipe[type]?.find(recipe => {
-          return recipe.name === child.name;
+    if (this.menuType === TYPES.SHIP) {
+      popupGrid.children.forEach(child => {
+        const input = this.for.inputs.find(input => {
+          return input.name === child.name;
         });
-        const has =
-          type === 'inputs'
-            ? recipe.has
-            : this.for.components.filter(
-                component => component.name === child.name
-              ).length;
+        if (!input || !child.text) return;
 
-        const text = `${has}/${recipe.total}`;
-        if (child.children[1].text !== text) {
-          child.children[1].text = text;
+        const text = `${input.has}/${input.total}`;
+        if (child.text !== text) {
+          child.text = text;
         }
-      } else {
-        type = 'outputs';
-      }
-    });
+      });
+    } else if (this.menuType === TYPES.RECIPE) {
+      let type = 'inputs';
+      recipeGrid.children?.forEach(child => {
+        if (child.name && child.name !== 'NONE') {
+          const recipe = this.for.recipe[type]?.find(recipe => {
+            return recipe.name === child.name;
+          });
+          const has =
+            type === 'inputs'
+              ? recipe.has
+              : this.for.components.filter(
+                  component => component.name === child.name
+                ).length;
+
+          const text = `${has}/${recipe.total}`;
+          if (child.children[1].text !== text) {
+            child.children[1].text = text;
+          }
+        } else {
+          type = 'outputs';
+        }
+      });
+    }
   },
 
   render() {

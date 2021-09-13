@@ -1,6 +1,6 @@
 export const GRID_SIZE = 16;
 export const NUM_ROWS = 36;
-export const NUM_COLS = 48;
+export const NUM_COLS = 34;
 export const GAME_WIDTH = GRID_SIZE * NUM_COLS;
 export const GAME_HEIGHT = GRID_SIZE * NUM_ROWS;
 
@@ -197,11 +197,11 @@ export const COSTS = {
   ],
   REPAIRER: [
     {
-      name: 'TITANIUM',
+      name: 'IRON',
       total: 50
     },
     {
-      name: 'CIRCUIT',
+      name: 'COPPER',
       total: 50
     }
   ],
@@ -242,7 +242,7 @@ export const COSTS = {
     },
     {
       name: 'CIRCUIT',
-      total: 25
+      total: 100
     }
   ],
   'OXYGEN-EXTRACTOR': [
@@ -256,7 +256,7 @@ export const COSTS = {
     },
     {
       name: 'CIRCUIT',
-      total: 25
+      total: 100
     }
   ],
   ASSEMBLER: [

@@ -15,8 +15,8 @@ export default class GameObject extends Sprite.class {
       properties.height = atlasHeight * GRID_SIZE;
 
       if (!properties.x) {
-	properties.x = (properties.col + (1 - 0.5 * atlasWidth)) * GRID_SIZE;
-	properties.y = (properties.row + (1 - 0.5 * atlasHeight)) * GRID_SIZE;
+        properties.x = (properties.col + (1 - 0.5 * atlasWidth)) * GRID_SIZE;
+        properties.y = (properties.row + (1 - 0.5 * atlasHeight)) * GRID_SIZE;
       }
     }
 
@@ -46,8 +46,8 @@ export default class GameObject extends Sprite.class {
       let [ atlasRow, atlasCol ] = atlas;
       context.drawImage(
         imageAssets.tilesheet,
-	atlasCol * GRID_SIZE,
-	atlasRow * GRID_SIZE,
+        atlasCol * GRID_SIZE,
+        atlasRow * GRID_SIZE,
         width,
         height,
         0,

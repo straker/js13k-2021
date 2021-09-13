@@ -8,7 +8,7 @@ let assemblerManager = {
   init() {
     on('gameTick', () => {
       assemblers.forEach(assembler => {
-	let { recipe, components, producing, timer } = assembler;
+        let { recipe, components, producing, timer } = assembler;
 
         if (!producing && timer === 0) {
           if (assembler.canProduce() && assembler.hasRequiredInputs()) {

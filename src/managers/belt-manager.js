@@ -102,7 +102,7 @@ let beltManager = {
       // merge segments if going the same direction
       if (nextSameDir) {
         if (belt.segment) {
-	  let removeSegment = nextBelt.segment;
+          let removeSegment = nextBelt.segment;
 
           belt.segment.end = nextBelt.segment.end;
           let b = nextBelt;

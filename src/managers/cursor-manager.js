@@ -124,7 +124,7 @@ let cursorManager = {
       }
 
       function callback(cursorRow, cursorCol) {
-	let cursorPos = {
+        let cursorPos = {
           name,
           dir,
           rotation,
@@ -133,8 +133,8 @@ let cursorManager = {
           width,
           height
         };
-	let items = grid.getAll(cursorPos);
-	let manager = managers[name];
+        let items = grid.getAll(cursorPos);
+        let manager = managers[name];
 
         if (
           manager?.canPlace(cursorPos, items) &&
@@ -148,7 +148,7 @@ let cursorManager = {
               item => item.type && ![TYPES.SHIP, TYPES.WALL].includes(item.type)
             )
             .forEach(item => {
-	      let deleteManager = managers[item.name.split('_')[0]];
+              let deleteManager = managers[item.name.split('_')[0]];
               deleteManager.remove(item);
 
               // remove components from belts

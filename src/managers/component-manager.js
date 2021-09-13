@@ -74,7 +74,7 @@ let componentManager = {
           segment = currSegment;
           if (segment.updated) return;
 
-	  let visitedSegments = [segment];
+          let visitedSegments = [segment];
           while (
             !visitedSegments.includes(segment.end.nextBelt?.segment) &&
             segment.end.nextBelt?.segment?.updated === false
@@ -93,7 +93,7 @@ let componentManager = {
             segment.end.component &&
             segment.end.nextBelt.component
           ) {
-	    let startBelt = segment.end.nextBelt;
+            let startBelt = segment.end.nextBelt;
             let belt = startBelt.nextBelt;
             let emptyBelt = false;
             while (belt !== startBelt) {
@@ -129,7 +129,7 @@ let componentManager = {
             }
 
             if (belt.name === 'IMPORT' && !belt.component) {
-	      let comp = componentStroage.get(belt.filter);
+              let comp = componentStroage.get(belt.filter);
               if (comp) {
                 component = this.add(
                   {

@@ -21,7 +21,7 @@ let minerManager = {
   init() {
     on('gameTick', () => {
       miners.forEach(miner => {
-	let { components, maxComponents } = miner;
+        let { components, maxComponents } = miner;
         miner.timer = ++miner.timer % miner.duration;
         if (miner.timer === 0 && components.length < maxComponents) {
           miner.timer = 0;

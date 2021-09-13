@@ -83,9 +83,9 @@ class Cursor extends GameObject {
     let [ atlasRow, atlasCol ] = tileatlas.CURSOR;
     for (let i = 0; i < 4; i++) {
       let sx =
-	i % 2 === 1 ? (atlasCol + 1) * GRID_SIZE - 4 : atlasCol * GRID_SIZE;
+        i % 2 === 1 ? (atlasCol + 1) * GRID_SIZE - 4 : atlasCol * GRID_SIZE;
       let sy =
-	i >= 2 ? (atlasRow + 1) * GRID_SIZE - 4 : atlasRow * GRID_SIZE;
+        i >= 2 ? (atlasRow + 1) * GRID_SIZE - 4 : atlasRow * GRID_SIZE;
       let x = i % 2 === 1 ? width - 4 : 0;
       let y = i >= 2 ? height - 4 : 0;
 

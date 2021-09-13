@@ -35,7 +35,7 @@ let componentDisplay = {
       if (child.text) {
         // save some processing power by not updating the text value
         // if it hasn't chaned
-	let value = displayComponentValue(componentStorage[child.name]);
+        let value = displayComponentValue(componentStorage[child.name]);
         if (child.text !== value) {
           child.text = value;
         }

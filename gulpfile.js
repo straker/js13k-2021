@@ -29,21 +29,21 @@ const rollupConfig = {
     json(),
     kontra({
       gameObject: {
-	anchor: true,
-	group: true,
-	opacity: true,
-	rotation: true,
-	scale: true,
-	// for some reason this is needed by the building menubar
-	// grid to correctly update the width of the top-level
-	// menu items and the expanded the submenu
-	velocity: true
+        anchor: true,
+        group: true,
+        opacity: true,
+        rotation: true,
+        scale: true,
+        // for some reason this is needed by the building menubar
+        // grid to correctly update the width of the top-level
+        // menu items and the expanded the submenu
+        velocity: true
       },
       sprite: {
-	image: true
+        image: true
       },
       text: {
-	autoNewline: true
+        autoNewline: true
       }
     })
   ]

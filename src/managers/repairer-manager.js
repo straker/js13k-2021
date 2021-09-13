@@ -13,16 +13,16 @@ let repairerManager = {
       repairers.forEach(repairer => {
         // repairers move every 2 game ticks
         if (++repairer.lastMove >= 2) {
-	  let fromRow = repairer.row - repairer.dir.row;
-	  let fromCol = repairer.col - repairer.dir.col;
-	  let toRow = repairer.row + repairer.dir.row;
-	  let toCol = repairer.col + repairer.dir.col;
+          let fromRow = repairer.row - repairer.dir.row;
+          let fromCol = repairer.col - repairer.dir.col;
+          let toRow = repairer.row + repairer.dir.row;
+          let toCol = repairer.col + repairer.dir.col;
 
-	  let from = grid
+          let from = grid
             .get({ row: fromRow, col: fromCol })
             .find(item => item.type !== TYPES.WALL);
-	  let component = from?.components?.[0] ?? from?.component;
-	  let ship = grid
+          let component = from?.components?.[0] ?? from?.component;
+          let ship = grid
             .get({ row: 26, col: 8 })
             .filter(item => item.type === TYPES.SHIP)[0];
 

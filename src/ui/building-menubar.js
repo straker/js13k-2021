@@ -63,7 +63,7 @@ function createButton(properties) {
     },
     onFocus() {
       Object.keys(menuHierarchy).forEach(menuName => {
-	let hierarchy = menuHierarchy[menuName];
+        let hierarchy = menuHierarchy[menuName];
 
         if (!this.child) {
           if (hierarchy.parent !== this) {

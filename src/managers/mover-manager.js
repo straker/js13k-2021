@@ -13,18 +13,18 @@ let moverManager = {
       movers.forEach(mover => {
         // movers move every 2 game ticks
         if (++mover.lastMove >= 2) {
-	  let fromRow = mover.row - mover.dir.row;
-	  let fromCol = mover.col - mover.dir.col;
-	  let toRow = mover.row + mover.dir.row;
-	  let toCol = mover.col + mover.dir.col;
+          let fromRow = mover.row - mover.dir.row;
+          let fromCol = mover.col - mover.dir.col;
+          let toRow = mover.row + mover.dir.row;
+          let toCol = mover.col + mover.dir.col;
 
-	  let from = grid
+          let from = grid
             .get({ row: fromRow, col: fromCol })
             .find(item => item.type !== TYPES.WALL);
-	  let to = grid
+          let to = grid
             .get({ row: toRow, col: toCol })
             .find(item => item.type !== TYPES.WALL);
-	  let component = from?.components?.[0] ?? from?.component;
+          let component = from?.components?.[0] ?? from?.component;
 
           if (
             component &&

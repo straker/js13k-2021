@@ -186,12 +186,12 @@ let buildingPopup = {
     switch (building.menuType) {
       case TYPES.FILTER: {
         popupGrid.numCols = 5;
-	let title = Text({
+        let title = Text({
           ...textProps,
           colSpan: popupGrid.numCols,
           text: 'Filter:'
         });
-	let components = ['NONE', ...COMPONENTS].map(name => {
+        let components = ['NONE', ...COMPONENTS].map(name => {
           return new ImageButton({
             name,
             width: GRID_SIZE,
@@ -210,17 +210,17 @@ let buildingPopup = {
 
       case TYPES.SHIP: {
         popupGrid.numCols = 10;
-	let title = Text({
+        let title = Text({
           ...textProps,
           colSpan: popupGrid.numCols,
           text: 'Needed for Repairs:'
         });
-	let children = [];
+        let children = [];
         building.inputs.forEach(input => {
-	  let component = new GameObject({
+          let component = new GameObject({
             name: input.name
           });
-	  let text = Text({
+          let text = Text({
             ...textProps,
             name: input.name,
             colSpan: popupGrid.numCols - 1,
@@ -238,12 +238,12 @@ let buildingPopup = {
         recipeGrid.children = getRecipe(building.recipe);
         recipeGrid._p();
 
-	let title = Text({
+        let title = Text({
           ...textProps,
           colSpan: popupGrid.numCols,
           text: 'Recipe:'
         });
-	let components = [...RECIPES].map(recipe => {
+        let components = [...RECIPES].map(recipe => {
           return new ImageButton({
             name: recipe.name,
             width: GRID_SIZE,
@@ -269,15 +269,15 @@ let buildingPopup = {
 
       case TYPES.INFO: {
         popupGrid.numCols = 5;
-	let title = Text({
+        let title = Text({
           ...textProps,
           colSpan: recipeGrid.numCols,
           text: 'Cost:'
         });
-	let recipe = {
+        let recipe = {
           inputs: COSTS[buildingName]
         };
-	let info = Text({
+        let info = Text({
           ...textProps,
           width: this.width,
           colSpan: popupGrid.numCols,
@@ -309,7 +309,7 @@ let buildingPopup = {
     this.y =
       sy + this.height < GAME_HEIGHT
         ? sy
-	: sy - this.height + atlasHeight * GRID_SIZE * 0.5;
+        : sy - this.height + atlasHeight * GRID_SIZE * 0.5;
     if (this.menuType === TYPES.INFO) {
       this.y -= GRID_SIZE * 2.5;
     } else if (this.menuType === TYPES.TIP) {
@@ -347,12 +347,12 @@ let buildingPopup = {
   update() {
     if (this.menuType === TYPES.SHIP) {
       popupGrid.children.forEach(child => {
-	let input = this.for.inputs.find(input => {
+        let input = this.for.inputs.find(input => {
           return input.name === child.name;
         });
         if (!input || !child.text) return;
 
-	let text = `${input.has}/${input.total}`;
+        let text = `${input.has}/${input.total}`;
         if (child.text !== text) {
           child.text = text;
         }
@@ -361,17 +361,17 @@ let buildingPopup = {
       let type = 'inputs';
       recipeGrid.children?.forEach(child => {
         if (child.name && child.name !== 'NONE') {
-	  let recipe = this.for.recipe[type]?.find(recipe => {
+          let recipe = this.for.recipe[type]?.find(recipe => {
             return recipe.name === child.name;
           });
-	  let has =
+          let has =
             type === 'inputs'
               ? recipe.has
               : this.for.components.filter(
                   component => component.name === child.name
                 ).length;
 
-	  let text = `${has}/${recipe.total}`;
+          let text = `${has}/${recipe.total}`;
           if (child.children[1].text !== text) {
             child.children[1].text = text;
           }

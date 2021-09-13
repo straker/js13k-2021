@@ -113,21 +113,21 @@ function dist() {
     // @see https://github.com/straker/rollup-plugin-kontra
     .pipe(
       terser({
-	ecma: 2016,
-	module: true,
-	toplevel: true,
-	compress: {
-	  keep_fargs: false,
-	  passes: 4,
-	  pure_funcs: ['assert', 'debug'],
-	  pure_getters: true,
-	  unsafe: true,
-	  unsafe_arrows: true,
-	  unsafe_comps: true,
-	  unsafe_math: true,
-	  unsafe_methods: true,
-	},
-	mangle: true
+        ecma: 2016,
+        module: true,
+        toplevel: true,
+        compress: {
+          keep_fargs: false,
+          passes: 4,
+          pure_funcs: ['assert', 'debug'],
+          pure_getters: true,
+          unsafe: true,
+          unsafe_arrows: true,
+          unsafe_comps: true,
+          unsafe_math: true,
+          unsafe_methods: true,
+        },
+        mangle: true
       })
     )
     // compress js even further before zip

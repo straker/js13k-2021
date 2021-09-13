@@ -1,8 +1,9 @@
 import { Grid, bindKeys, emit } from '../libs/kontra';
-import { GRID_SIZE, GAME_HEIGHT } from '../constants';
+import { GRID_SIZE, GAME_HEIGHT, TYPES } from '../constants';
 import cursor from './cursor';
 import ImageButton from './image-button';
 import storage from '../components/storage';
+import buildingPopup from './building-popup';
 
 let menubar;
 let openedMenu;
@@ -17,9 +18,15 @@ function closeMenu(name) {
     child.blur();
     child.disable();
   });
+  buildingPopup.hide();
 }
 
 function createButton(properties) {
+  if (properties.child) {
+    properties.menuType = TYPES.INFO;
+  } else {
+    properties.menuType = TYPES.TIP;
+  }
   properties.width = properties.height = GRID_SIZE * 2;
   properties.scaleX = properties.scaleY = properties.child ? 0.6 : 0.75;
 
@@ -33,6 +40,16 @@ function createButton(properties) {
         cursor.hide();
       } else {
         this.focus();
+      }
+    },
+    onOver() {
+      buildingPopup.show(this, false);
+      this.popup = true;
+    },
+    onOut() {
+      if (this.popup) {
+        this.popup = false;
+        buildingPopup.hide();
       }
     },
     onFocus() {

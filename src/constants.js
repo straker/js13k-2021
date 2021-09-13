@@ -14,7 +14,9 @@ export const TYPES = {
   SHIP: 6,
 
   FILTER: 10,
-  RECIPE: 11
+  RECIPE: 11,
+  TIP: 12,
+  INFO: 13
 };
 export const COMPONENTS = ['COPPER', 'IRON', 'TITANIUM', 'WIRE', 'CIRCUIT'];
 // dir values by name, degree, and radian
@@ -52,6 +54,12 @@ export const TEXT_PROPS = {
   font: `${GRID_SIZE}px Arial`,
   color: COLORS.WHITE,
   anchor: { x: 0, y: 0.5 }
+};
+// miner produce every n game ticks
+export const MINER_DURATIONS = {
+  COPPER: 10,
+  IRON: 10,
+  TITANIUM: 10
 };
 export const RECIPES = [
   {

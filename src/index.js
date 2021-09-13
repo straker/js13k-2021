@@ -15,7 +15,8 @@ import {
   GRID_SIZE,
   TYPES,
   DIRS,
-  TICK_DURATION
+  TICK_DURATION,
+  COLORS
 } from './constants';
 import grid from './utils/grid';
 
@@ -52,17 +53,68 @@ const wallInfo = {
   40: { dir: DIRS.UP, type: null }
 };
 
-Promise.all([
-  loadImage('tilesheet.webp'),
-  loadImage('tilemap.webp'),
-  loadImage('stars.webp')
-]).then(() => {
+loadImage('tilesheet.webp').then(() => {
+  const tilesheetCols = imageAssets.tilesheet.width / GRID_SIZE;
+
+  const tileCanvas = document.createElement('canvas');
+  const tileContext = tileCanvas.getContext('2d');
+  tileCanvas.width = GAME_WIDTH;
+  tileCanvas.height = GAME_HEIGHT;
+  tileContext.fillStyle = COLORS.PURPLE;
+
+  const starsCanvas = document.createElement('canvas');
+  const starsContext = starsCanvas.getContext('2d');
+  starsCanvas.width = GRID_SIZE * 4;
+  starsCanvas.height = GRID_SIZE * 2;
+  let starIndex = 0;
+
   // fill the grid with walls
   for (let row = 0; row < NUM_ROWS; row++) {
     for (let col = 0; col < NUM_COLS; col++) {
       const tile = layers[0].data[row * NUM_COLS + col];
+
+      // don't draw the stars on the tilesheet
+      if (![27, 28, 37, 38].includes(tile)) {
+        // start with a filled background
+        tileContext.fillRect(
+          col * GRID_SIZE,
+          row * GRID_SIZE,
+          GRID_SIZE,
+          GRID_SIZE
+        );
+
+        if (tile) {
+          tileContext.drawImage(
+            imageAssets.tilesheet,
+            // Tiled indices add 1 to the tilesheet
+            ((tile - 1) % tilesheetCols) * GRID_SIZE,
+            (((tile - 1) / tilesheetCols) | 0) * GRID_SIZE,
+            GRID_SIZE,
+            GRID_SIZE,
+            col * GRID_SIZE,
+            row * GRID_SIZE,
+            GRID_SIZE,
+            GRID_SIZE
+          );
+        }
+      } else {
+        starsContext.drawImage(
+          imageAssets.tilesheet,
+          // Tiled indices add 1 to the tilesheet
+          ((tile - 1) % tilesheetCols) * GRID_SIZE,
+          (((tile - 1) / tilesheetCols) | 0) * GRID_SIZE,
+          GRID_SIZE,
+          GRID_SIZE,
+          (starIndex % 4) * GRID_SIZE,
+          ((starIndex / 4) | 0) * GRID_SIZE,
+          GRID_SIZE,
+          GRID_SIZE
+        );
+        starIndex++;
+      }
+
+      // 11 = minable floor
       if (tile && tile !== 11) {
-        // 11 = minable floor
         grid.add({
           type: TYPES.WALL,
           ...wallInfo[tile],
@@ -119,16 +171,18 @@ Promise.all([
     },
     render() {
       context.drawImage(
-        imageAssets.stars,
+        starsCanvas,
         GRID_SIZE * 6,
         GRID_SIZE * 25,
         GRID_SIZE * 4,
         GRID_SIZE * 2
       );
       shipManager.render();
-      context.drawImage(imageAssets.tilemap, 0, 0, GAME_WIDTH, GAME_HEIGHT);
+      context.drawImage(tileCanvas, 0, 0, GAME_WIDTH, GAME_HEIGHT);
+
       grid.render();
       componentManager.render();
+
       componentDisplay.render();
       buildingMenubar.render();
       cursorManager.render();

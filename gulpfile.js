@@ -36,10 +36,17 @@ const rollupConfig = {
     //     group: true,
     //     opacity: true,
     //     rotation: true,
-    //     scale: true
+    //     scale: true,
+    //     // for some reason this is needed by the building menubar
+    //     // grid to correctly update the width of the top-level
+    //     // menu items and the expanded the submenu
+    //     velocity: true
     //   },
     //   sprite: {
     //     image: true
+    //   },
+    //   text: {
+    //     autoNewline: true
     //   }
     // })
   ]

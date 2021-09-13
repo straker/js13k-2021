@@ -3,7 +3,7 @@
  <editorsettings>
   <export target="tilemap.json" format="json"/>
  </editorsettings>
- <tileset firstgid="1" name="tilesheet" tilewidth="16" tileheight="16" tilecount="200" columns="10">
+ <tileset firstgid="1" name="tilesheet" tilewidth="16" tileheight="16" tilecount="110" columns="10">
   <image source="tilesheet.png" width="160" height="176"/>
  </tileset>
  <layer id="1" name="map" width="48" height="36">

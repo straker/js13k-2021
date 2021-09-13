@@ -39,7 +39,7 @@
          "margin":0,
          "name":"tilesheet",
          "spacing":0,
-         "tilecount":200,
+         "tilecount":110,
          "tileheight":16,
          "tilewidth":16
         }],

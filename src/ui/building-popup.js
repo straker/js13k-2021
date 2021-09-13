@@ -142,6 +142,7 @@ const buildingPopup = {
     });
     popupGrid = Grid({
       flow: 'grid',
+      rowGap: [GRID_SIZE / 2, GRID_SIZE],
       colGap: GRID_SIZE
     });
     recipeGrid = Grid({
@@ -166,7 +167,6 @@ const buildingPopup = {
     const atlas = tileatlas[building.name];
     this.hasClose = hasClose;
     popupGrid.hidden = false;
-    popupGrid.rowGap = [GRID_SIZE / 2, GRID_SIZE];
 
     const buildingName =
       building.name.split('_')[0] +
@@ -274,7 +274,6 @@ const buildingPopup = {
           colSpan: popupGrid.numCols,
           text: uiText[buildingName]
         });
-        // popupGrid.rowGap = [GRID_SIZE];
         recipeGrid.children = [title, ...getRecipe(recipe)];
         recipeGrid._p();
         popupGrid.children = [info];

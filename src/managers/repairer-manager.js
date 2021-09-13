@@ -3,6 +3,7 @@ import grid from '../utils/grid';
 import { on } from '../libs/kontra';
 import { moveComponent } from './component-manager';
 import Repairer from '../buildings/repairer';
+import { removeFromArray } from '../utils';
 
 const repairers = [];
 
@@ -47,6 +48,10 @@ const repairerManager = {
     const repairer = new Repairer(properties);
     repairers.push(repairer);
     return repairer;
+  },
+
+  remove(repairer) {
+    removeFromArray(repairers, repairer);
   },
 
   // repairer can only be placed on empty spots next to the ship

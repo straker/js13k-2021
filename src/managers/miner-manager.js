@@ -4,6 +4,7 @@ import IronMiner from '../buildings/iron-miner';
 import TitaniumMiner from '../buildings/titanium-miner';
 import { layers } from '../assets/tilemap.json';
 import { NUM_COLS } from '../constants';
+import { removeFromArray } from '../utils';
 
 const miners = [];
 const Constructors = {
@@ -32,6 +33,10 @@ const minerManager = {
     const miner = new Constructors[properties.name](properties);
     miners.push(miner);
     return miner;
+  },
+
+  remove(miner) {
+    removeFromArray(miners, miner);
   },
 
   // miner can only be placed on empty spots

@@ -1,6 +1,6 @@
 import { TYPES, DIRS } from '../constants';
 import grid from '../utils/grid';
-import { rotate } from '../utils';
+import { rotate, removeFromArray } from '../utils';
 import Belt from '../buildings/belt';
 import ExportBelt from '../buildings/export-belt';
 import ImportBelt from '../buildings/import-belt';
@@ -93,49 +93,119 @@ const beltManager = {
     if (!prevBelt && !nextBelt) {
       belt.segment = { start: belt, end: belt };
       beltSegments.push(belt.segment);
-
-      // should not get here
-      if (!beltSegments.includes(belt.segment)) debugger;
     } else {
       // join segments if going the same direction
       if (prevSameDir) {
         belt.segment = prevBelt.segment;
-        prevBelt.segment.end = belt;
-
-        // should not get here
-        if (!beltSegments.includes(belt.segment)) debugger;
+        belt.segment.end = belt;
       }
-
       // merge segments if going the same direction
       if (nextSameDir) {
-        // should not get here
-        if (belt.segment && !beltSegments.includes(belt.segment)) debugger;
-
         if (belt.segment) {
-          const segment = nextBelt.segment;
-          nextBelt.segment = belt.segment;
-          belt.segment.end = segment.end;
-          beltSegments.splice(beltSegments.indexOf(segment), 1);
+          const removeSegment = nextBelt.segment;
+
+          belt.segment.end = nextBelt.segment.end;
+          let b = nextBelt;
+          while (b && b.segment === removeSegment) {
+            b.segment = belt.segment;
+            b = b.nextBelt;
+          }
+
+          removeFromArray(beltSegments, removeSegment);
         } else {
           belt.segment = nextBelt.segment;
-          nextBelt.segment.start = belt;
+          belt.segment.start = belt;
         }
-
-        // should not get here
-        if (!beltSegments.includes(belt.segment)) debugger;
       }
 
       // belts not going the same direction start a new segment
       if (!prevSameDir && !nextSameDir) {
         belt.segment = { start: belt, end: belt };
         beltSegments.push(belt.segment);
-
-        // should not get here
-        if (!beltSegments.includes(belt.segment)) debugger;
       }
     }
 
     return belt;
+  },
+
+  remove(belt) {
+    // get neighboring belts
+    const { row, col, dir, segment, prevBelt, nextBelt } = belt;
+    const sideBelt1 = grid.getByType(
+      {
+        row: row + dir.col,
+        col: col + dir.row
+      },
+      TYPES.BELT
+    )[0];
+    const sideBelt2 = grid.getByType(
+      {
+        row: row - dir.col,
+        col: col - dir.row
+      },
+      TYPES.BELT
+    )[0];
+
+    // only belt in the segment
+    if (segment.start === belt && segment.start === segment.end) {
+      removeFromArray(beltSegments, segment);
+    }
+
+    // split a belt segment in half
+    if (prevBelt?.segment === segment && nextBelt?.segment === segment) {
+      const prevSegment = {
+        start: segment.start,
+        end: prevBelt,
+        updated: segment.updated
+      };
+      const nextSegment = {
+        start: nextBelt,
+        end: segment.end,
+        updated: segment.updated
+      };
+
+      let b = prevBelt;
+      while (b && b.segment === segment) {
+        b.segment = prevSegment;
+        b = b.prevBelt;
+      }
+      b = nextBelt;
+      while (b && b.segment === segment) {
+        b.segment = nextSegment;
+        b = b.nextBelt;
+      }
+
+      // inject new segments into the place of the old one so
+      // update / render order remains the same
+      const index = removeFromArray(beltSegments, segment);
+      if (index > -1) {
+        beltSegments.splice(index, 0, ...[prevSegment, nextSegment]);
+      }
+    }
+
+    if (prevBelt?.segment === segment) {
+      prevBelt.segment.end = prevBelt;
+    }
+    if (nextBelt?.segment === segment) {
+      nextBelt.segment.start = nextBelt;
+    }
+
+    // remove belt references
+    if (prevBelt?.nextBelt === belt) {
+      prevBelt.nextBelt = null;
+    }
+    if (nextBelt?.prevBelt === belt) {
+      nextBelt.prevBelt = null;
+    }
+    if (sideBelt1?.nextBelt === belt) {
+      sideBelt1.nextBelt = null;
+    }
+    if (sideBelt2?.nextBelt === belt) {
+      sideBelt2.nextBelt = null;
+    }
+
+    belt.prevBelt = null;
+    belt.nextBelt = null;
   },
 
   canPlace(cursor, items) {

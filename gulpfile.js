@@ -91,9 +91,7 @@ function clean(cb) {
 function build() {
   const jsStream = src('src/index.js')
     .pipe(sourcemaps.init())
-    .pipe(
-      rollup(rollupConfig, 'iife')
-    )
+    .pipe(rollup(rollupConfig, 'iife'))
     .pipe(sourcemaps.write());
 
   const htmlStream = src('src/index.html').pipe(
@@ -110,9 +108,7 @@ function build() {
 
 function dist() {
   const jsStream = src('src/index.js')
-    .pipe(
-      rollup(rollupConfig, 'iife')
-    )
+    .pipe(rollup(rollupConfig, 'iife'))
     .pipe(
       terser({
         ecma: 2016,
@@ -127,31 +123,31 @@ function dist() {
           unsafe_arrows: true,
           unsafe_comps: true,
           unsafe_math: true,
-          unsafe_methods: true,
+          unsafe_methods: true
         },
         mangle: true
       })
     )
     // compress js even further before zip
     // @see https://github.com/lifthrasiir/roadroller
-    // .pipe(
-    //   through2.obj(async function (file, _, cb) {
-    //     if (file.isBuffer()) {
-    //       const inputs = [
-    //         {
-    //           data: file.contents.toString(),
-    //           type: 'js',
-    //           action: 'eval'
-    //         }
-    //       ];
-    //       const packer = new Packer(inputs);
-    //       await packer.optimize();
-    //       const { firstLine, secondLine } = packer.makeDecoder();
-    //       file.contents = Buffer.from(firstLine + '\n' + secondLine);
-    //     }
-    //     cb(null, file);
-    //   })
-    // );
+    .pipe(
+      through2.obj(async function (file, _, cb) {
+        if (file.isBuffer()) {
+          const inputs = [
+            {
+              data: file.contents.toString(),
+              type: 'js',
+              action: 'eval'
+            }
+          ];
+          const packer = new Packer(inputs);
+          await packer.optimize();
+          const { firstLine, secondLine } = packer.makeDecoder();
+          file.contents = Buffer.from(firstLine + '\n' + secondLine);
+        }
+        cb(null, file);
+      })
+    );
 
   const assetStream = src('src/assets/*.png')
     .pipe(cwebp({ z: 9 }))

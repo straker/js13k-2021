@@ -1,4 +1,4 @@
-import { GRID_SIZE, GAME_WIDTH, GAME_HEIGHT } from '../constants';
+import { GRID_SIZE, GAME_WIDTH, GAME_HEIGHT, TYPES } from '../constants';
 import { removeFromArray } from './index';
 
 const objects = [];
@@ -39,7 +39,9 @@ const grid = {
 
     forEachTile([startRow, startCol, obj.row, obj.col], tile => tile.push(obj));
 
-    objects.push(obj);
+    if (obj.type && obj.type !== TYPES.WALL) {
+      objects.push(obj);
+    }
   },
 
   remove(obj) {

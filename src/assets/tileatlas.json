@@ -137,12 +137,6 @@
     "width": 2,
     "height": 2
   },
-  "DELETE": {
-    "row": 4,
-    "col": 6,
-    "width": 1,
-    "height": 1
-  },
   "COPPER-MINER": {
     "row": 5,
     "col": 0,

@@ -3,6 +3,7 @@ import grid from '../utils/grid';
 import { on } from '../libs/kontra';
 import componentManager, { moveComponent } from './component-manager';
 import Mover from '../buildings/mover';
+import { removeFromArray } from '../utils';
 
 const movers = [];
 
@@ -71,6 +72,10 @@ const moverManager = {
     const mover = new Mover(properties);
     movers.push(mover);
     return mover;
+  },
+
+  remove(mover) {
+    removeFromArray(movers, mover);
   },
 
   // mover can only be placed on empty spots

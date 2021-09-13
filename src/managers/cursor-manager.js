@@ -11,6 +11,7 @@ import { rotate } from '../utils';
 import { GAME_HEIGHT, GRID_SIZE, DIRS, TYPES } from '../constants';
 import storage from '../components/storage';
 
+import componentManager from './component-manager';
 import beltManager from './belt-manager';
 import minerManager from './miner-manager';
 import moverManager from './mover-manager';
@@ -59,18 +60,18 @@ const cursorManager = {
         col: cursor.col
       };
 
+      const item = grid
+        .get(cursor)
+        .filter(item => item.type && item.type !== TYPES.WALL)[0];
+
       // don't open the building menu if the user clicked on it
       // but there was a building behind it
       if (
-        (cursor.state !== 'building') &
-        (buildingPopup.hidden || !collides(cursor, buildingPopup))
+        cursor.state === 'cursor' &&
+        (buildingPopup.hidden || !collides(cursor, buildingPopup)) &&
+        item?.menuType
       ) {
-        const item = grid
-          .get(cursor)
-          .filter(item => item.type && item.type !== TYPES.WALL)[0];
-        if (item?.menuType) {
-          buildingPopup.show(item);
-        }
+        buildingPopup.show(item);
       }
     });
 
@@ -139,6 +140,23 @@ const cursorManager = {
         ) {
           grid.add(manager.add(cursorPos));
           storage.buy(cursor.name);
+        } else if (cursor.state === 'delete') {
+          items
+            .filter(
+              item => item.type && ![TYPES.SHIP, TYPES.WALL].includes(item.type)
+            )
+            .forEach(item => {
+              const deleteManager = managers[item.name];
+              deleteManager.remove(item);
+
+              // remove components from belts
+              if (item.component) {
+                componentManager.remove(item.component);
+              }
+
+              grid.remove(item);
+              storage.refund(item.name);
+            });
         }
       }
 

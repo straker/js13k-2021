@@ -67,3 +67,11 @@ export function titleCase(str) {
 export function deepCopy(obj) {
   return JSON.parse(JSON.stringify(obj));
 }
+
+export function removeFromArray(array, item) {
+  const index = array.indexOf(item);
+  if (index > -1) {
+    array.splice(index, 1);
+  }
+  return index;
+}

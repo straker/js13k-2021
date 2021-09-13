@@ -1,6 +1,6 @@
 import { on } from '../libs/kontra';
 import { beltSegments } from './belt-manager';
-import { easeLinear } from '../utils';
+import { easeLinear, removeFromArray } from '../utils';
 import grid from '../utils/grid';
 import { TICK_DURATION, TYPES } from '../constants';
 import Component from '../components/component';
@@ -174,10 +174,7 @@ const componentManager = {
   },
 
   remove(component) {
-    const index = components.indexOf(component);
-    if (index !== -1) {
-      components.splice(index, 1);
-    }
+    removeFromArray(components, component);
   },
 
   render() {

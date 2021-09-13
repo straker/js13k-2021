@@ -9,6 +9,15 @@ let menubar;
 let openedMenu;
 const menuHierarchy = {};
 
+function closeOpenMenu() {
+  if (openedMenu) {
+    closeMenu(openedMenu.name);
+    openedMenu = null;
+    cursor.setImage('');
+    cursor.hide();
+  }
+}
+
 function closeMenu(name) {
   const hierarchy = menuHierarchy[name];
   hierarchy.parent.opened = false;
@@ -87,6 +96,10 @@ function createButton(properties) {
 
       if (this.child) {
         cursor.setImage(this.name.split('_')[0]);
+      } else if (this.name === 'DELETE_MENU') {
+        cursor.setImage('');
+        cursor.state = 'delete';
+        game.style.cursor = 'no-drop';
       } else {
         cursor.setImage('');
       }
@@ -96,6 +109,8 @@ function createButton(properties) {
 
 const buildingMenuBar = {
   init() {
+    window.addEventListener('blur', closeOpenMenu);
+
     const beltMenu = createButton({
       name: 'BELT_MENU'
     });
@@ -142,8 +157,6 @@ const buildingMenuBar = {
 
     const beltMenuGrid = Grid({
       flow: 'row',
-      align: 'start',
-      jusify: 'start',
       colGap: GRID_SIZE / 1.5
     });
     const minerMenuGrid = Grid({
@@ -154,13 +167,17 @@ const buildingMenuBar = {
       flow: 'row',
       colGap: GRID_SIZE / 1.5
     });
+    const deleteMenuGrid = Grid({
+      flow: 'row',
+      colGap: GRID_SIZE / 1.5
+    });
 
     menubar = Grid({
       x: GRID_SIZE,
       y: GAME_HEIGHT - GRID_SIZE * 2,
       flow: 'row',
       colGap: GRID_SIZE * 1.25,
-      children: [beltMenuGrid, minerMenuGrid, assmeblerMenuGrid, deleteMenu]
+      children: [beltMenuGrid, minerMenuGrid, assmeblerMenuGrid, deleteMenuGrid]
     });
 
     menuHierarchy.BELT_MENU = {
@@ -178,10 +195,16 @@ const buildingMenuBar = {
       parent: assemblerMenu,
       children: [assemblerMenuItem]
     };
+    menuHierarchy.DELETE_MENU = {
+      grid: deleteMenuGrid,
+      parent: deleteMenu,
+      children: []
+    };
 
     closeMenu('BELT_MENU');
     closeMenu('MINER_MENU');
     closeMenu('ASSEMBLER_MENU');
+    closeMenu('DELETE_MENU');
 
     bindKeys(['1', '2', '3', '4', '5'], evt => {
       const key = +evt.key - 1;
@@ -206,12 +229,7 @@ const buildingMenuBar = {
     });
     bindKeys('esc', () => {
       emit('esc');
-      if (openedMenu) {
-        closeMenu(openedMenu.name);
-        openedMenu = null;
-        cursor.setImage('');
-        cursor.hide();
-      }
+      closeOpenMenu();
     });
   },
 

@@ -1,4 +1,5 @@
 import { on } from '../libs/kontra';
+import { removeFromArray } from '../utils';
 import Assembler from '../buildings/assembler';
 
 const assemblers = [];
@@ -37,6 +38,10 @@ const assemblerManager = {
     const assembler = new Assembler(properties);
     assemblers.push(assembler);
     return assembler;
+  },
+
+  remove(assembler) {
+    removeFromArray(assemblers, assembler);
   },
 
   // assembler can only be placed on empty spots

@@ -70,9 +70,7 @@ Promise.all([
           row,
           col,
           width: GRID_SIZE,
-          height: GRID_SIZE,
-          render() {},
-          update() {}
+          height: GRID_SIZE
         });
       }
     }

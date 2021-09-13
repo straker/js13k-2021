@@ -29,6 +29,12 @@ const componentStorage = {
     COSTS[buildingName]?.forEach(({ name, total }) => {
       this[name] -= total;
     });
+  },
+
+  refund(buildingName) {
+    COSTS[buildingName]?.forEach(({ name, total }) => {
+      this[name] += total;
+    });
   }
 };
 

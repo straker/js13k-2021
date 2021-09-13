@@ -43,6 +43,8 @@ class Cursor extends GameObject {
     const atlas = tileatlas[this.name];
     if (atlas) {
       game.style.cursor = 'none';
+    } else if (this.state === 'delete') {
+      game.style.cursor = 'no-drop';
     } else {
       game.style.cursor = 'default';
     }
@@ -123,7 +125,10 @@ class Cursor extends GameObject {
     } else if (items.length) {
       const item = items.find(item => item.type && item.type !== TYPES.WALL);
 
-      if (item?.menuType) {
+      if (
+        (item?.menuType && this.state !== 'delete') ||
+        (item && this.state === 'delete' && item.type !== TYPES.SHIP)
+      ) {
         let { row, col, width, height } = item;
 
         // item position is from the bottom-right corner

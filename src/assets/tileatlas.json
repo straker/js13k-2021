@@ -41,6 +41,30 @@
     "width": 1,
     "height": 1
   },
+  "HYDROGEN": {
+    "row": 0,
+    "col": 6,
+    "width": 1,
+    "height": 1
+  },
+  "OXYGEN": {
+    "row": 0,
+    "col": 7,
+    "width": 1,
+    "height": 1
+  },
+  "WATER": {
+    "row": 0,
+    "col": 8,
+    "width": 1,
+    "height": 1
+  },
+  "FUEL": {
+    "row": 0,
+    "col": 9,
+    "width": 1,
+    "height": 1
+  },
   "CURSOR": {
     "row": 1,
     "col": 2,
@@ -113,19 +137,7 @@
     "width": 2,
     "height": 2
   },
-  "COPPER-MINER_MENU_ITEM": {
-    "row": 5,
-    "col": 0,
-    "width": 2,
-    "height": 2
-  },
   "ASSEMBLER_MENU": {
-    "row": 5,
-    "col": 2,
-    "width": 2,
-    "height": 2
-  },
-  "ASSEMBLER_MENU_ITEM": {
     "row": 5,
     "col": 2,
     "width": 2,
@@ -161,21 +173,21 @@
     "width": 2,
     "height": 2
   },
-  "IRON-MINER_MENU_ITEM": {
-    "row": 7,
-    "col": 2,
-    "width": 2,
-    "height": 2
-  },
   "TITANIUM-MINER": {
     "row": 9,
     "col": 2,
     "width": 2,
     "height": 2
   },
-  "TITANIUM-MINER_MENU_ITEM": {
+  "HYDROGEN-EXTRACTOR": {
     "row": 9,
-    "col": 2,
+    "col": 0,
+    "width": 2,
+    "height": 2
+  },
+  "OXYGEN-EXTRACTOR": {
+    "row": 9,
+    "col": 4,
     "width": 2,
     "height": 2
   }

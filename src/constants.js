@@ -18,7 +18,17 @@ export const TYPES = {
   TIP: 12,
   INFO: 13
 };
-export const COMPONENTS = ['COPPER', 'IRON', 'TITANIUM', 'WIRE', 'CIRCUIT'];
+export const COMPONENTS = [
+  'COPPER',
+  'IRON',
+  'TITANIUM',
+  'HYDROGEN',
+  'OXYGEN',
+  'WIRE',
+  'CIRCUIT',
+  'WATER',
+  'FUEL'
+];
 // dir values by name, degree, and radian
 const RIGHT = { row: 0, col: 1 };
 const DOWN = { row: 1, col: 0 };
@@ -59,7 +69,9 @@ export const TEXT_PROPS = {
 export const MINER_DURATIONS = {
   COPPER: 10,
   IRON: 10,
-  TITANIUM: 10
+  TITANIUM: 10,
+  HYDROGEN: 10,
+  OXYGEN: 10
 };
 export const RECIPES = [
   {
@@ -115,6 +127,52 @@ export const RECIPES = [
       }
     ],
     duration: 5 // game ticks
+  },
+  {
+    name: 'WATER',
+    inputs: [
+      {
+        name: 'HYDROGEN',
+        total: 1,
+        has: 0
+      },
+      {
+        name: 'OXYGEN',
+        total: 2,
+        has: 0
+      }
+    ],
+    outputs: [
+      {
+        name: 'WATER',
+        total: 1,
+        has: 0
+      }
+    ],
+    duration: 5 // game ticks
+  },
+  {
+    name: 'FUEL',
+    inputs: [
+      {
+        name: 'HYDROGEN',
+        total: 10,
+        has: 0
+      },
+      {
+        name: 'TITANIUM',
+        total: 4,
+        has: 0
+      }
+    ],
+    outputs: [
+      {
+        name: 'FUEL',
+        total: 1,
+        has: 0
+      }
+    ],
+    duration: 5 // game ticks
   }
 ];
 const beltCost = [
@@ -137,6 +195,16 @@ export const COSTS = {
       total: 2
     }
   ],
+  REPAIRER: [
+    {
+      name: 'TITANIUM',
+      total: 50
+    },
+    {
+      name: 'CIRCUIT',
+      total: 50
+    }
+  ],
   'COPPER-MINER': [
     {
       name: 'IRON',
@@ -157,6 +225,34 @@ export const COSTS = {
     {
       name: 'IRON',
       total: 25
+    },
+    {
+      name: 'CIRCUIT',
+      total: 25
+    }
+  ],
+  'HYDROGEN-EXTRACTOR': [
+    {
+      name: 'IRON',
+      total: 50
+    },
+    {
+      name: 'TITANIUM',
+      total: 25
+    },
+    {
+      name: 'CIRCUIT',
+      total: 25
+    }
+  ],
+  'OXYGEN-EXTRACTOR': [
+    {
+      name: 'IRON',
+      total: 25
+    },
+    {
+      name: 'TITANIUM',
+      total: 50
     },
     {
       name: 'CIRCUIT',

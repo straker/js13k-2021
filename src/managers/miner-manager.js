@@ -2,6 +2,8 @@ import { on } from '../libs/kontra';
 import CopperMiner from '../buildings/copper-miner';
 import IronMiner from '../buildings/iron-miner';
 import TitaniumMiner from '../buildings/titanium-miner';
+import HydrogenMiner from '../buildings/hydrogen-miner';
+import OxygenMiner from '../buildings/oxygen-miner';
 import { layers } from '../assets/tilemap.json';
 import { NUM_COLS } from '../constants';
 import { removeFromArray } from '../utils';
@@ -10,7 +12,9 @@ const miners = [];
 const Constructors = {
   'COPPER-MINER': CopperMiner,
   'IRON-MINER': IronMiner,
-  'TITANIUM-MINER': TitaniumMiner
+  'TITANIUM-MINER': TitaniumMiner,
+  'HYDROGEN-EXTRACTOR': HydrogenMiner,
+  'OXYGEN-EXTRACTOR': OxygenMiner
 };
 
 const minerManager = {

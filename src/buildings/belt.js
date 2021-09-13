@@ -18,7 +18,7 @@ export default class Belt extends GameObject {
     super.draw();
 
     // debug purposes
-    // const { segment, context, width, height } = this;
+    // let { segment, context, width, height } = this;
     // if (segment?.start === this) {
     //   context.fillStyle = 'rgba(255, 0, 0, 0.5';
     //   context.fillRect(0, 0, width, height);

@@ -1,10 +1,10 @@
-export const GRID_SIZE = 16;
-export const NUM_ROWS = 36;
-export const NUM_COLS = 34;
-export const GAME_WIDTH = GRID_SIZE * NUM_COLS;
-export const GAME_HEIGHT = GRID_SIZE * NUM_ROWS;
+export let GRID_SIZE = 16;
+export let NUM_ROWS = 36;
+export let NUM_COLS = 34;
+export let GAME_WIDTH = GRID_SIZE * NUM_COLS;
+export let GAME_HEIGHT = GRID_SIZE * NUM_ROWS;
 
-export const TYPES = {
+export let TYPES = {
   WALL: 0,
   BELT: 1,
   COMPONENT: 2,
@@ -18,7 +18,7 @@ export const TYPES = {
   TIP: 12,
   INFO: 13
 };
-export const COMPONENTS = [
+export let COMPONENTS = [
   'COPPER',
   'IRON',
   'TITANIUM',
@@ -30,11 +30,11 @@ export const COMPONENTS = [
   'FUEL'
 ];
 // dir values by name, degree, and radian
-const RIGHT = { row: 0, col: 1 };
-const DOWN = { row: 1, col: 0 };
-const LEFT = { row: 0, col: -1 };
-const UP = { row: -1, col: 0 };
-export const DIRS = {
+let RIGHT = { row: 0, col: 1 };
+let DOWN = { row: 1, col: 0 };
+let LEFT = { row: 0, col: -1 };
+let UP = { row: -1, col: 0 };
+export let DIRS = {
   RIGHT,
   0: RIGHT,
   DOWN,
@@ -47,7 +47,7 @@ export const DIRS = {
   [Math.PI * 1.5]: UP,
   270: UP
 };
-export const COLORS = {
+export let COLORS = {
   WHITE: '#cfc6b8',
   BLACK: '#333333',
   GREY: '#777777',
@@ -59,21 +59,21 @@ export const COLORS = {
   PURPLE: '#472d3c'
 };
 // 200 ms (200ms / 1000 ms = 0.2)
-export const TICK_DURATION = 0.2;
-export const TEXT_PROPS = {
+export let TICK_DURATION = 0.2;
+export let TEXT_PROPS = {
   font: `${GRID_SIZE}px Arial`,
   color: COLORS.WHITE,
   anchor: { x: 0, y: 0.5 }
 };
 // miner produce every n game ticks
-export const MINER_DURATIONS = {
+export let MINER_DURATIONS = {
   COPPER: 10,
   IRON: 10,
   TITANIUM: 10,
   HYDROGEN: 10,
   OXYGEN: 10
 };
-export const RECIPES = [
+export let RECIPES = [
   {
     name: 'NONE',
     inputs: [
@@ -175,13 +175,13 @@ export const RECIPES = [
     duration: 5 // game ticks
   }
 ];
-const beltCost = [
+let beltCost = [
   {
     name: 'IRON',
     total: 1
   }
 ];
-export const COSTS = {
+export let COSTS = {
   BELT: beltCost,
   IMPORT: beltCost,
   EXPORT: beltCost,

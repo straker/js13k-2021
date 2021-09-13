@@ -5,24 +5,24 @@ import { moveComponent } from './component-manager';
 import Repairer from '../buildings/repairer';
 import { removeFromArray } from '../utils';
 
-const repairers = [];
+let repairers = [];
 
-const repairerManager = {
+let repairerManager = {
   init() {
     on('gameTick', () => {
       repairers.forEach(repairer => {
         // repairers move every 2 game ticks
         if (++repairer.lastMove >= 2) {
-          const fromRow = repairer.row - repairer.dir.row;
-          const fromCol = repairer.col - repairer.dir.col;
-          const toRow = repairer.row + repairer.dir.row;
-          const toCol = repairer.col + repairer.dir.col;
+	  let fromRow = repairer.row - repairer.dir.row;
+	  let fromCol = repairer.col - repairer.dir.col;
+	  let toRow = repairer.row + repairer.dir.row;
+	  let toCol = repairer.col + repairer.dir.col;
 
-          const from = grid
+	  let from = grid
             .get({ row: fromRow, col: fromCol })
             .find(item => item.type !== TYPES.WALL);
-          const component = from?.components?.[0] ?? from?.component;
-          const ship = grid
+	  let component = from?.components?.[0] ?? from?.component;
+	  let ship = grid
             .get({ row: 26, col: 8 })
             .filter(item => item.type === TYPES.SHIP)[0];
 
@@ -45,7 +45,7 @@ const repairerManager = {
   },
 
   add(properties) {
-    const repairer = new Repairer(properties);
+    let repairer = new Repairer(properties);
     repairers.push(repairer);
     return repairer;
   },

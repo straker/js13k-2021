@@ -14,19 +14,19 @@ export default class ImageButton extends Button.class {
   }
 
   draw() {
-    const { name, context, width, height } = this;
-    const atlas = tileatlas[name];
-    const end = GRID_SIZE * (0.5 + atlas.width);
+    let { name, context, width, height } = this;
+    let [ atlasRow, atlasCol, atlasWidth, atlasHeight ] = tileatlas[name];
+    let end = GRID_SIZE * (0.5 + atlasWidth);
 
     context.fillStyle = COLORS.BLACK;
     context.fillRect(0, 0, end, end);
 
     context.drawImage(
       imageAssets.tilesheet,
-      atlas.col * GRID_SIZE,
-      atlas.row * GRID_SIZE,
-      atlas.width * GRID_SIZE,
-      atlas.height * GRID_SIZE,
+      atlasCol * GRID_SIZE,
+      atlasRow * GRID_SIZE,
+      atlasWidth * GRID_SIZE,
+      atlasHeight * GRID_SIZE,
       GRID_SIZE / 4,
       GRID_SIZE / 4,
       width,

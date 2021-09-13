@@ -6,8 +6,8 @@ import { TICK_DURATION, TYPES } from '../constants';
 import Component from '../components/component';
 import componentStroage from '../components/storage';
 
-const components = [];
-const moveComponents = [];
+let components = [];
+let moveComponents = [];
 
 let timer = 0;
 on('update', () => {
@@ -37,7 +37,7 @@ export function moveComponent({ component, belt }) {
 }
 
 // belt segments and update pattern inspired from https://www.youtube.com/watch?v=88cIVR4KI_Q
-const componentManager = {
+let componentManager = {
   init() {
     on('preGameTick', () => {
       timer = 0;
@@ -74,7 +74,7 @@ const componentManager = {
           segment = currSegment;
           if (segment.updated) return;
 
-          const visitedSegments = [segment];
+	  let visitedSegments = [segment];
           while (
             !visitedSegments.includes(segment.end.nextBelt?.segment) &&
             segment.end.nextBelt?.segment?.updated === false
@@ -93,7 +93,7 @@ const componentManager = {
             segment.end.component &&
             segment.end.nextBelt.component
           ) {
-            const startBelt = segment.end.nextBelt;
+	    let startBelt = segment.end.nextBelt;
             let belt = startBelt.nextBelt;
             let emptyBelt = false;
             while (belt !== startBelt) {
@@ -129,7 +129,7 @@ const componentManager = {
             }
 
             if (belt.name === 'IMPORT' && !belt.component) {
-              const comp = componentStroage.get(belt.filter);
+	      let comp = componentStroage.get(belt.filter);
               if (comp) {
                 component = this.add(
                   {
@@ -164,9 +164,9 @@ const componentManager = {
   },
 
   add(properties, belt) {
-    const { row, col } = properties;
+    let { row, col } = properties;
     belt = belt ?? grid.getByType({ row, col }, TYPES.BELT)[0];
-    const component = new Component(properties);
+    let component = new Component(properties);
     belt.component = component;
 
     components.push(component);

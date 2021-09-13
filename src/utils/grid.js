@@ -1,10 +1,10 @@
 import { GRID_SIZE, GAME_WIDTH, GAME_HEIGHT, TYPES } from '../constants';
 import { removeFromArray } from './index';
 
-const objects = [];
-const tiles = [];
-const rows = GAME_HEIGHT / GRID_SIZE;
-const cols = GAME_WIDTH / GRID_SIZE;
+let objects = [];
+let tiles = [];
+let rows = GAME_HEIGHT / GRID_SIZE;
+let cols = GAME_WIDTH / GRID_SIZE;
 
 for (let row = 0; row < rows; row++) {
   tiles[row] = [];
@@ -27,15 +27,15 @@ function forEachTile([startRow, startCol, endRow, endCol], cb) {
   }
 }
 
-const grid = {
+let grid = {
   objects,
 
   add(obj) {
     // always add from the bottom-right corner
     // subtract 1 since a 32x32 obj should occupy one tile
     // not two (32 / 32 = 1)
-    const startRow = obj.row - toGrid(obj.height - 1);
-    const startCol = obj.col - toGrid(obj.width - 1);
+    let startRow = obj.row - toGrid(obj.height - 1);
+    let startCol = obj.col - toGrid(obj.width - 1);
 
     forEachTile([startRow, startCol, obj.row, obj.col], tile => tile.push(obj));
 
@@ -45,8 +45,8 @@ const grid = {
   },
 
   remove(obj) {
-    const startRow = obj.row - toGrid(obj.height - 1);
-    const startCol = obj.col - toGrid(obj.width - 1);
+    let startRow = obj.row - toGrid(obj.height - 1);
+    let startCol = obj.col - toGrid(obj.width - 1);
 
     forEachTile([startRow, startCol, obj.row, obj.col], tile => {
       removeFromArray(tile, obj);
@@ -56,8 +56,8 @@ const grid = {
   },
 
   get(pos) {
-    const row = pos.row ?? (pos.y / GRID_SIZE) | 0;
-    const col = pos.col ?? (pos.x / GRID_SIZE) | 0;
+    let row = pos.row ?? (pos.y / GRID_SIZE) | 0;
+    let col = pos.col ?? (pos.x / GRID_SIZE) | 0;
     return tiles[row] && tiles[row][col] ? tiles[row][col] : [];
   },
 
@@ -66,9 +66,9 @@ const grid = {
   },
 
   getAll(obj) {
-    const objs = [];
-    const startRow = obj.row - toGrid(obj.height - 1);
-    const startCol = obj.col - toGrid(obj.width - 1);
+    let objs = [];
+    let startRow = obj.row - toGrid(obj.height - 1);
+    let startCol = obj.col - toGrid(obj.width - 1);
 
     forEachTile([startRow, startCol, obj.row, obj.col], tile =>
       objs.push(...tile)

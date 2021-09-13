@@ -8,15 +8,15 @@ let ship;
 let timer = 0;
 let panelLeftX = 0;
 let panelRightX = 0;
-const duration = TICK_DURATION * 8;
+let duration = TICK_DURATION * 8;
 
-const phases = [
+let phases = [
   ['enter_x', 'enter_y'],
   ['exit_y', 'exit_x']
 ];
 
 let inputIndex = 0;
-const inputs = [
+let inputs = [
   [
     {
       name: 'COPPER',
@@ -156,7 +156,7 @@ on('update', () => {
 });
 
 let shipTimer = 0;
-const shipManager = {
+let shipManager = {
   init() {
     on('gameTick', () => {
       if (!ship) {
@@ -186,7 +186,7 @@ const shipManager = {
   },
 
   render() {
-    const context = getContext();
+    let context = getContext();
     context.fillStyle = COLORS.PURPLE;
     context.fillRect(
       panelLeftX,

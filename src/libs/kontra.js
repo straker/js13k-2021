@@ -3033,7 +3033,7 @@ function pointerHandler(evt, eventName) {
 
     // handle all touches
     for (var i = evt.changedTouches.length; i--; ) {
-      const id = evt.changedTouches[i].identifier;
+      let id = evt.changedTouches[i].identifier;
       if (typeof pointer.touches[id] !== 'undefined') {
         pointer.touches[id].changed = true;
       }
@@ -3420,7 +3420,7 @@ class Button extends factory$3.class {
 
     // create an accessible DOM node for screen readers
     // dn = dom node
-    const button = (this._dn = document.createElement('button'));
+    let button = (this._dn = document.createElement('button'));
     button.style = srOnlyStyle;
     button.textContent = this.text;
 
@@ -4332,7 +4332,7 @@ function bindKeys(
   callback,
   { handler = 'keydown', preventDefault = true } = {}
 ) {
-  const callbacks = handler == 'keydown' ? keydownCallbacks : keyupCallbacks;
+  let callbacks = handler == 'keydown' ? keydownCallbacks : keyupCallbacks;
   // pd = preventDefault
   callback._pd = preventDefault;
   // smaller than doing `Array.isArray(keys) ? keys : [keys]`
@@ -4355,7 +4355,7 @@ function bindKeys(
  * @param {'keydown'|'keyup'} [options.handler=keydown] - Whether to unbind from keydown or keyup events.
  */
 function unbindKeys(keys, { handler = 'keydown' } = {}) {
-  const callbacks = handler == 'keydown' ? keydownCallbacks : keyupCallbacks;
+  let callbacks = handler == 'keydown' ? keydownCallbacks : keyupCallbacks;
   // 0 is the smallest falsy value
   [].concat(keys).map(key => (callbacks[key] = 0));
 }
@@ -5135,7 +5135,7 @@ class Scene extends factory$2.class {
     // create an accessible DOM node for screen readers (do this first
     // so we can move DOM nodes in addChild)
     // dn = dom node
-    const section = (this._dn = document.createElement('section'));
+    let section = (this._dn = document.createElement('section'));
     section.tabIndex = -1;
     section.style = srOnlyStyle;
     section.id = id;
@@ -6147,9 +6147,9 @@ function TileEngine(properties) {
    * @param {HTMLCanvasElement} canvas - Tile engine canvas to draw.
    */
   function render(canvas) {
-    const { width, height } = getCanvas();
-    const sWidth = Math.min(canvas.width, width);
-    const sHeight = Math.min(canvas.height, height);
+    let { width, height } = getCanvas();
+    let sWidth = Math.min(canvas.width, width);
+    let sHeight = Math.min(canvas.height, height);
 
     tileEngine.context.drawImage(
       canvas,

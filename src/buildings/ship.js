@@ -27,7 +27,7 @@ export default class Ship extends GameObject {
   }
 
   canTakeComponent(component) {
-    const input = this.getInput(component);
+    let input = this.getInput(component);
     return input?.has < input?.total;
   }
 }

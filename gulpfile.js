@@ -27,28 +27,25 @@ const rollupConfig = {
   plugins: [
     nodeResolve(),
     json(),
-    // currently something is needed as grid isn't collapsing
-    // the children when removed
-
-    // kontra({
-    //   gameObject: {
-    //     anchor: true,
-    //     group: true,
-    //     opacity: true,
-    //     rotation: true,
-    //     scale: true,
-    //     // for some reason this is needed by the building menubar
-    //     // grid to correctly update the width of the top-level
-    //     // menu items and the expanded the submenu
-    //     velocity: true
-    //   },
-    //   sprite: {
-    //     image: true
-    //   },
-    //   text: {
-    //     autoNewline: true
-    //   }
-    // })
+    kontra({
+      gameObject: {
+	anchor: true,
+	group: true,
+	opacity: true,
+	rotation: true,
+	scale: true,
+	// for some reason this is needed by the building menubar
+	// grid to correctly update the width of the top-level
+	// menu items and the expanded the submenu
+	velocity: true
+      },
+      sprite: {
+	image: true
+      },
+      text: {
+	autoNewline: true
+      }
+    })
   ]
 };
 
@@ -116,8 +113,6 @@ function dist() {
     .pipe(
       rollup(rollupConfig, 'iife')
     )
-    // will gain more savings later when using preprocess on the kontra code
-    // @see https://github.com/straker/rollup-plugin-kontra
     .pipe(
       terser({
         ecma: 2016,
@@ -139,24 +134,24 @@ function dist() {
     )
     // compress js even further before zip
     // @see https://github.com/lifthrasiir/roadroller
-    .pipe(
-      through2.obj(async function (file, _, cb) {
-        if (file.isBuffer()) {
-          const inputs = [
-            {
-              data: file.contents.toString(),
-              type: 'js',
-              action: 'eval'
-            }
-          ];
-          const packer = new Packer(inputs);
-          await packer.optimize();
-          const { firstLine, secondLine } = packer.makeDecoder();
-          file.contents = Buffer.from(firstLine + '\n' + secondLine);
-        }
-        cb(null, file);
-      })
-    );
+    // .pipe(
+    //   through2.obj(async function (file, _, cb) {
+    //     if (file.isBuffer()) {
+    //       const inputs = [
+    //         {
+    //           data: file.contents.toString(),
+    //           type: 'js',
+    //           action: 'eval'
+    //         }
+    //       ];
+    //       const packer = new Packer(inputs);
+    //       await packer.optimize();
+    //       const { firstLine, secondLine } = packer.makeDecoder();
+    //       file.contents = Buffer.from(firstLine + '\n' + secondLine);
+    //     }
+    //     cb(null, file);
+    //   })
+    // );
 
   const assetStream = src('src/assets/*.png')
     .pipe(cwebp({ z: 9 }))
@@ -180,7 +175,7 @@ function dist() {
 }
 
 function zip() {
-  return src(['dist/index.html', 'dist/*.webp'])
+  return src(['dist/index.html'])
     .pipe(debug())
     .pipe(gulpZip(`${pkgName}.zip`))
     .pipe(

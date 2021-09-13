@@ -8,14 +8,15 @@ export default class GameObject extends Sprite.class {
       properties.anchor = { x: 0.5, y: 0.5 };
     }
 
-    const atlas = tileatlas[properties.name];
+    let atlas = tileatlas[properties.name];
     if (atlas) {
-      properties.width = atlas.width * GRID_SIZE;
-      properties.height = atlas.height * GRID_SIZE;
+      let [ a, b, atlasWidth, atlasHeight ] = atlas;
+      properties.width = atlasWidth * GRID_SIZE;
+      properties.height = atlasHeight * GRID_SIZE;
 
       if (!properties.x) {
-        properties.x = (properties.col + (1 - 0.5 * atlas.width)) * GRID_SIZE;
-        properties.y = (properties.row + (1 - 0.5 * atlas.height)) * GRID_SIZE;
+	properties.x = (properties.col + (1 - 0.5 * atlasWidth)) * GRID_SIZE;
+	properties.y = (properties.row + (1 - 0.5 * atlasHeight)) * GRID_SIZE;
       }
     }
 
@@ -39,13 +40,14 @@ export default class GameObject extends Sprite.class {
   }
 
   draw() {
-    const { name, context, width, height } = this;
-    const atlas = tileatlas[name];
+    let { name, context, width, height } = this;
+    let atlas = tileatlas[name];
     if (atlas) {
+      let [ atlasRow, atlasCol ] = atlas;
       context.drawImage(
         imageAssets.tilesheet,
-        atlas.col * GRID_SIZE,
-        atlas.row * GRID_SIZE,
+	atlasCol * GRID_SIZE,
+	atlasRow * GRID_SIZE,
         width,
         height,
         0,

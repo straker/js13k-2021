@@ -2,13 +2,13 @@ import { on } from '../libs/kontra';
 import { removeFromArray } from '../utils';
 import Assembler from '../buildings/assembler';
 
-const assemblers = [];
+let assemblers = [];
 
-const assemblerManager = {
+let assemblerManager = {
   init() {
     on('gameTick', () => {
       assemblers.forEach(assembler => {
-        const { recipe, components, producing, timer } = assembler;
+	let { recipe, components, producing, timer } = assembler;
 
         if (!producing && timer === 0) {
           if (assembler.canProduce() && assembler.hasRequiredInputs()) {
@@ -35,7 +35,7 @@ const assemblerManager = {
   },
 
   add(properties) {
-    const assembler = new Assembler(properties);
+    let assembler = new Assembler(properties);
     assemblers.push(assembler);
     return assembler;
   },

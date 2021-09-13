@@ -22,7 +22,7 @@ let recipeGrid;
 let name;
 let closeBtn;
 
-const textProps = {
+let textProps = {
   ...TEXT_PROPS,
   font: '14px Arial'
 };
@@ -33,7 +33,7 @@ function minerText(name) {
   } seconds. Can only be placed in rooms with a minable resource tile.`;
 }
 
-const uiText = {
+let uiText = {
   BELT: 'Moves items along a path. Place on a wall at the end of a path to export items from a room, place on a wall at the start of a path to import items into a room. Select an import belt once placed to filter which items are imported into the room.',
   MOVER:
     'Moves items from behind the Mover to the building or belt in front of it. Select once placed to filter which items it moves.',
@@ -49,9 +49,9 @@ const uiText = {
 };
 
 function getRecipe(recipe) {
-  const inputs =
+  let inputs =
     recipe.inputs?.map(({ name, total, has }) => {
-      const btn = new ImageButton({
+      let btn = new ImageButton({
         name,
         width: GRID_SIZE,
         height: GRID_SIZE
@@ -74,14 +74,14 @@ function getRecipe(recipe) {
       return btn;
     }) ?? [];
 
-  const arrow = Text({
+  let arrow = Text({
     ...textProps,
     font: '18px Arial',
     anchor: { x: 0.5, y: 0.5 },
     text: '→'
   });
   if (recipe.duration) {
-    const duration = Text({
+    let duration = Text({
       ...textProps,
       font: '12px Arial',
       anchor: { x: 0.5, y: 0 },
@@ -95,9 +95,9 @@ function getRecipe(recipe) {
   // account for unicode character having lots of spacing
   arrow.width -= 7;
 
-  const outputs =
+  let outputs =
     recipe.outputs?.map(({ name, total }) => {
-      const btn = new ImageButton({
+      let btn = new ImageButton({
         name,
         width: GRID_SIZE,
         height: GRID_SIZE
@@ -126,7 +126,7 @@ function getRecipe(recipe) {
   return [...inputs, ...outputs];
 }
 
-const buildingPopup = {
+let buildingPopup = {
   hidden: true,
   width: GRID_SIZE * 10,
   height: GRID_SIZE * 10,
@@ -172,11 +172,11 @@ const buildingPopup = {
     this.menuType = building.menuType;
     recipeGrid.children = [];
 
-    const atlas = tileatlas[building.name];
+    let [ a, b, c, atlasHeight ] = tileatlas[building.name];
     this.hasClose = hasClose;
     popupGrid.hidden = false;
 
-    const buildingName =
+    let buildingName =
       building.name.split('_')[0] +
       (building.type === TYPES.BELT && building.name !== 'BELT' ? ' BELT' : '');
 
@@ -186,12 +186,12 @@ const buildingPopup = {
     switch (building.menuType) {
       case TYPES.FILTER: {
         popupGrid.numCols = 5;
-        const title = Text({
+	let title = Text({
           ...textProps,
           colSpan: popupGrid.numCols,
           text: 'Filter:'
         });
-        const components = ['NONE', ...COMPONENTS].map(name => {
+	let components = ['NONE', ...COMPONENTS].map(name => {
           return new ImageButton({
             name,
             width: GRID_SIZE,
@@ -210,17 +210,17 @@ const buildingPopup = {
 
       case TYPES.SHIP: {
         popupGrid.numCols = 10;
-        const title = Text({
+	let title = Text({
           ...textProps,
           colSpan: popupGrid.numCols,
           text: 'Needed for Repairs:'
         });
-        const children = [];
+	let children = [];
         building.inputs.forEach(input => {
-          const component = new GameObject({
+	  let component = new GameObject({
             name: input.name
           });
-          const text = Text({
+	  let text = Text({
             ...textProps,
             name: input.name,
             colSpan: popupGrid.numCols - 1,
@@ -238,12 +238,12 @@ const buildingPopup = {
         recipeGrid.children = getRecipe(building.recipe);
         recipeGrid._p();
 
-        const title = Text({
+	let title = Text({
           ...textProps,
           colSpan: popupGrid.numCols,
           text: 'Recipe:'
         });
-        const components = [...RECIPES].map(recipe => {
+	let components = [...RECIPES].map(recipe => {
           return new ImageButton({
             name: recipe.name,
             width: GRID_SIZE,
@@ -269,15 +269,15 @@ const buildingPopup = {
 
       case TYPES.INFO: {
         popupGrid.numCols = 5;
-        const title = Text({
+	let title = Text({
           ...textProps,
           colSpan: recipeGrid.numCols,
           text: 'Cost:'
         });
-        const recipe = {
+	let recipe = {
           inputs: COSTS[buildingName]
         };
-        const info = Text({
+	let info = Text({
           ...textProps,
           width: this.width,
           colSpan: popupGrid.numCols,
@@ -292,31 +292,31 @@ const buildingPopup = {
 
     // calculate height to know where to place the popup
     popupGrid._p();
-    const { padding, width } = this;
-    const bodyHeight = recipeGrid.children.length
+    let { padding, width } = this;
+    let bodyHeight = recipeGrid.children.length
       ? recipeGrid.height + GRID_SIZE * 2 + popupGrid.height
       : popupGrid.height;
     this.height =
       padding * 1.5 + GRID_SIZE * 1.5 + (!popupGrid.hidden ? bodyHeight : 0);
 
-    const rect = getWorldRect(building);
-    const sx = building.col ? (building.col + 2) * GRID_SIZE : rect.x;
-    const sy = building.row
-      ? (building.row - 0.5 * (atlas.height - 1)) * GRID_SIZE
+    let rect = getWorldRect(building);
+    let sx = building.col ? (building.col + 2) * GRID_SIZE : rect.x;
+    let sy = building.row
+      ? (building.row - 0.5 * (atlasHeight - 1)) * GRID_SIZE
       : rect.y + GRID_SIZE / 2;
     this.x =
       sx + this.width < GAME_WIDTH ? sx : sx - 4 * GRID_SIZE - this.width;
     this.y =
       sy + this.height < GAME_HEIGHT
         ? sy
-        : sy - this.height + atlas.height * GRID_SIZE * 0.5;
+	: sy - this.height + atlasHeight * GRID_SIZE * 0.5;
     if (this.menuType === TYPES.INFO) {
       this.y -= GRID_SIZE * 2.5;
     } else if (this.menuType === TYPES.TIP) {
       this.y -= GRID_SIZE;
     }
 
-    const { x, y } = this;
+    let { x, y } = this;
     name.x = popupGrid.x = recipeGrid.x = x;
     name.y = y + GRID_SIZE * 0.35;
 
@@ -347,12 +347,12 @@ const buildingPopup = {
   update() {
     if (this.menuType === TYPES.SHIP) {
       popupGrid.children.forEach(child => {
-        const input = this.for.inputs.find(input => {
+	let input = this.for.inputs.find(input => {
           return input.name === child.name;
         });
         if (!input || !child.text) return;
 
-        const text = `${input.has}/${input.total}`;
+	let text = `${input.has}/${input.total}`;
         if (child.text !== text) {
           child.text = text;
         }
@@ -361,17 +361,17 @@ const buildingPopup = {
       let type = 'inputs';
       recipeGrid.children?.forEach(child => {
         if (child.name && child.name !== 'NONE') {
-          const recipe = this.for.recipe[type]?.find(recipe => {
+	  let recipe = this.for.recipe[type]?.find(recipe => {
             return recipe.name === child.name;
           });
-          const has =
+	  let has =
             type === 'inputs'
               ? recipe.has
               : this.for.components.filter(
                   component => component.name === child.name
                 ).length;
 
-          const text = `${has}/${recipe.total}`;
+	  let text = `${has}/${recipe.total}`;
           if (child.children[1].text !== text) {
             child.children[1].text = text;
           }
@@ -385,12 +385,12 @@ const buildingPopup = {
   render() {
     if (this.hidden) return;
 
-    const context = getContext();
-    const { x, y, width, height, padding } = this;
-    const sx = x - padding;
-    const sy = y - padding;
-    const swidth = width + padding * 2;
-    const sheight = height + padding * 2;
+    let context = getContext();
+    let { x, y, width, height, padding } = this;
+    let sx = x - padding;
+    let sy = y - padding;
+    let swidth = width + padding * 2;
+    let sheight = height + padding * 2;
 
     context.fillStyle = COLORS.WHITE;
     context.fillRect(sx, sy, swidth, GRID_SIZE * 1.35);

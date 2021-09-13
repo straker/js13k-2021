@@ -18,7 +18,7 @@ class Cursor extends GameObject {
   }
 
   setImage(name) {
-    const atlas = tileatlas[name];
+    let [ a, b, atlasWidth, atlasHeight ] = tileatlas[name] ?? [];
     this.name = name;
 
     if (name) {
@@ -28,8 +28,8 @@ class Cursor extends GameObject {
     }
 
     this.rotation = 0;
-    this.width = (atlas?.width ?? 1) * GRID_SIZE;
-    this.height = (atlas?.height ?? 1) * GRID_SIZE;
+    this.width = (atlasWidth ?? 1) * GRID_SIZE;
+    this.height = (atlasHeight ?? 1) * GRID_SIZE;
   }
 
   hide() {
@@ -40,7 +40,7 @@ class Cursor extends GameObject {
   show() {
     cursor.hidden = false;
 
-    const atlas = tileatlas[this.name];
+    let atlas = tileatlas[this.name];
     if (atlas) {
       game.style.cursor = 'none';
     } else if (this.state === 'delete') {
@@ -51,18 +51,18 @@ class Cursor extends GameObject {
   }
 
   update() {
-    const atlas = tileatlas[this.name] ?? { width: 1, height: 1 };
-    const pointer = getPointer();
+    let [ a, b, atlasWidth, atlasHeight ] = tileatlas[this.name] ?? [0, 0, 1, 1];
+    let pointer = getPointer();
 
-    this.x = (toGrid(pointer.x) + (1 - 0.5 * atlas.width)) * GRID_SIZE;
-    this.y = (toGrid(pointer.y) + (1 - 0.5 * atlas.height)) * GRID_SIZE;
+    this.x = (toGrid(pointer.x) + (1 - 0.5 * atlasWidth)) * GRID_SIZE;
+    this.y = (toGrid(pointer.y) + (1 - 0.5 * atlasHeight)) * GRID_SIZE;
     this.row = toGrid(this.y);
     this.col = toGrid(this.x);
 
     if (!this.name || this.hidden) return;
 
     // show import / export belt when appropriate
-    const item = grid.get(this)[0];
+    let item = grid.get(this)[0];
     if (['BELT', 'EXPORT', 'IMPORT'].includes(this.name)) {
       if (!item) {
         this.name = 'BELT';
@@ -79,15 +79,15 @@ class Cursor extends GameObject {
   }
 
   drawOutline({ row = this.row, col = this.col, width, height }) {
-    const { context, row: thisRow, col: thisCol } = this;
-    const atlas = tileatlas.CURSOR;
+    let { context, row: thisRow, col: thisCol } = this;
+    let [ atlasRow, atlasCol ] = tileatlas.CURSOR;
     for (let i = 0; i < 4; i++) {
-      const sx =
-        i % 2 === 1 ? (atlas.col + 1) * GRID_SIZE - 4 : atlas.col * GRID_SIZE;
-      const sy =
-        i >= 2 ? (atlas.row + 1) * GRID_SIZE - 4 : atlas.row * GRID_SIZE;
-      const x = i % 2 === 1 ? width - 4 : 0;
-      const y = i >= 2 ? height - 4 : 0;
+      let sx =
+	i % 2 === 1 ? (atlasCol + 1) * GRID_SIZE - 4 : atlasCol * GRID_SIZE;
+      let sy =
+	i >= 2 ? (atlasRow + 1) * GRID_SIZE - 4 : atlasRow * GRID_SIZE;
+      let x = i % 2 === 1 ? width - 4 : 0;
+      let y = i >= 2 ? height - 4 : 0;
 
       context.drawImage(
         imageAssets.tilesheet,
@@ -104,12 +104,12 @@ class Cursor extends GameObject {
   }
 
   draw() {
-    const items = grid.getAll(this);
+    let items = grid.getAll(this);
 
     if (this.hidden) return;
 
     if (this.name) {
-      const { context, width, height } = this;
+      let { context, width, height } = this;
 
       context.save();
       context.globalAlpha = 0.6;
@@ -123,7 +123,7 @@ class Cursor extends GameObject {
 
       this.drawOutline({ width, height });
     } else if (items.length) {
-      const item = items.find(item => item.type && item.type !== TYPES.WALL);
+      let item = items.find(item => item.type && item.type !== TYPES.WALL);
 
       if (
         (item?.menuType && this.state !== 'delete') ||

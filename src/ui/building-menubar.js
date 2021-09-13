@@ -7,7 +7,7 @@ import buildingPopup from './building-popup';
 
 let menubar;
 let openedMenu;
-const menuHierarchy = {};
+let menuHierarchy = {};
 
 function closeOpenMenu() {
   if (openedMenu) {
@@ -19,7 +19,7 @@ function closeOpenMenu() {
 }
 
 function closeMenu(name) {
-  const hierarchy = menuHierarchy[name];
+  let hierarchy = menuHierarchy[name];
   hierarchy.parent.opened = false;
   hierarchy.parent.blur();
   hierarchy.grid.children = [hierarchy.parent];
@@ -63,7 +63,7 @@ function createButton(properties) {
     },
     onFocus() {
       Object.keys(menuHierarchy).forEach(menuName => {
-        const hierarchy = menuHierarchy[menuName];
+	let hierarchy = menuHierarchy[menuName];
 
         if (!this.child) {
           if (hierarchy.parent !== this) {
@@ -107,75 +107,75 @@ function createButton(properties) {
   });
 }
 
-const buildingMenuBar = {
+let buildingMenuBar = {
   init() {
     window.addEventListener('blur', closeOpenMenu);
 
-    const beltMenu = createButton({
+    let beltMenu = createButton({
       name: 'BELT_MENU'
     });
-    const beltMenuItem = createButton({
+    let beltMenuItem = createButton({
       name: 'BELT_MENU_ITEM',
       child: true
     });
-    const moverMenuItem = createButton({
+    let moverMenuItem = createButton({
       name: 'MOVER_MENU_ITEM',
       child: true
     });
-    const repairerMenuItem = createButton({
+    let repairerMenuItem = createButton({
       name: 'REPAIRER_MENU_ITEM',
       child: true
     });
 
-    const minerMenu = createButton({
+    let minerMenu = createButton({
       name: 'MINER_MENU'
     });
-    const copperMinerMenuItem = createButton({
+    let copperMinerMenuItem = createButton({
       name: 'COPPER-MINER',
       child: true
     });
-    const ironMinerMenuItem = createButton({
+    let ironMinerMenuItem = createButton({
       name: 'IRON-MINER',
       child: true
     });
-    const titaniumMinerMenuItem = createButton({
+    let titaniumMinerMenuItem = createButton({
       name: 'TITANIUM-MINER',
       child: true
     });
-    const hydrogenMinerMenuItem = createButton({
+    let hydrogenMinerMenuItem = createButton({
       name: 'HYDROGEN-EXTRACTOR',
       child: true
     });
-    const oxygenMinerMenuItem = createButton({
+    let oxygenMinerMenuItem = createButton({
       name: 'OXYGEN-EXTRACTOR',
       child: true
     });
 
-    const assemblerMenu = createButton({
+    let assemblerMenu = createButton({
       name: 'ASSEMBLER_MENU'
     });
-    const assemblerMenuItem = createButton({
+    let assemblerMenuItem = createButton({
       name: 'ASSEMBLER_MENU',
       child: true
     });
 
-    const deleteMenu = createButton({
+    let deleteMenu = createButton({
       name: 'DELETE_MENU'
     });
 
-    const beltMenuGrid = Grid({
+    let beltMenuGrid = Grid({
       flow: 'row',
       colGap: GRID_SIZE / 1.5
     });
-    const minerMenuGrid = Grid({
+    let minerMenuGrid = Grid({
       flow: 'row',
       colGap: GRID_SIZE / 1.5
     });
-    const assmeblerMenuGrid = Grid({
+    let assmeblerMenuGrid = Grid({
       flow: 'row',
       colGap: GRID_SIZE / 1.5
     });
-    const deleteMenuGrid = Grid({
+    let deleteMenuGrid = Grid({
       flow: 'row',
       colGap: GRID_SIZE / 1.5
     });
@@ -221,7 +221,7 @@ const buildingMenuBar = {
     closeMenu('DELETE_MENU');
 
     bindKeys(['1', '2', '3', '4', '5'], evt => {
-      const key = +evt.key - 1;
+      let key = +evt.key - 1;
 
       // first open menu
       if (!openedMenu) {
@@ -248,7 +248,7 @@ const buildingMenuBar = {
   },
 
   update() {
-    const hierarchy = menuHierarchy[openedMenu?.name];
+    let hierarchy = menuHierarchy[openedMenu?.name];
     hierarchy?.children.forEach(child => {
       if (storage.canBuy(child.name.split('_')[0])) {
         child.enable();

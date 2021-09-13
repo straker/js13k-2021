@@ -5,26 +5,26 @@ import componentManager, { moveComponent } from './component-manager';
 import Mover from '../buildings/mover';
 import { removeFromArray } from '../utils';
 
-const movers = [];
+let movers = [];
 
-const moverManager = {
+let moverManager = {
   init() {
     on('gameTick', () => {
       movers.forEach(mover => {
         // movers move every 2 game ticks
         if (++mover.lastMove >= 2) {
-          const fromRow = mover.row - mover.dir.row;
-          const fromCol = mover.col - mover.dir.col;
-          const toRow = mover.row + mover.dir.row;
-          const toCol = mover.col + mover.dir.col;
+	  let fromRow = mover.row - mover.dir.row;
+	  let fromCol = mover.col - mover.dir.col;
+	  let toRow = mover.row + mover.dir.row;
+	  let toCol = mover.col + mover.dir.col;
 
-          const from = grid
+	  let from = grid
             .get({ row: fromRow, col: fromCol })
             .find(item => item.type !== TYPES.WALL);
-          const to = grid
+	  let to = grid
             .get({ row: toRow, col: toCol })
             .find(item => item.type !== TYPES.WALL);
-          const component = from?.components?.[0] ?? from?.component;
+	  let component = from?.components?.[0] ?? from?.component;
 
           if (
             component &&
@@ -69,7 +69,7 @@ const moverManager = {
   },
 
   add(properties) {
-    const mover = new Mover(properties);
+    let mover = new Mover(properties);
     movers.push(mover);
     return mover;
   },

@@ -20,7 +20,7 @@ import repairerManager from './repairer-manager';
 
 import buildingPopup from '../ui/building-popup';
 
-const managers = {
+let managers = {
   BELT: beltManager,
   EXPORT: beltManager,
   IMPORT: beltManager,
@@ -38,7 +38,7 @@ let menuY;
 let gameRect;
 let displayY;
 
-const cursorManager = {
+let cursorManager = {
   init() {
     // don't show game cursor on the selection menu
     game.addEventListener('mousemove', evt => {
@@ -62,7 +62,7 @@ const cursorManager = {
         col: cursor.col
       };
 
-      const item = grid
+      let item = grid
         .get(cursor)
         .filter(item => item.type && item.type !== TYPES.WALL)[0];
 
@@ -95,14 +95,14 @@ const cursorManager = {
 
     // try to place items in a straight line from where the
     // user started dragging
-    const { row: startRow, col: startCol } = pointerStart ?? {};
-    const { name, row, col, rotation, dir, width, height } = cursor;
+    let { row: startRow, col: startCol } = pointerStart ?? {};
+    let { name, row, col, rotation, dir, width, height } = cursor;
 
     if (pointerPressed('left')) {
-      const diffRow = row - startRow;
-      const diffCol = col - startCol;
-      const absDiffRow = Math.abs(diffRow);
-      const absDiffCol = Math.abs(diffCol);
+      let diffRow = row - startRow;
+      let diffCol = col - startCol;
+      let absDiffRow = Math.abs(diffRow);
+      let absDiffCol = Math.abs(diffCol);
 
       let endRow;
       let endCol;
@@ -124,7 +124,7 @@ const cursorManager = {
       }
 
       function callback(cursorRow, cursorCol) {
-        const cursorPos = {
+	let cursorPos = {
           name,
           dir,
           rotation,
@@ -133,8 +133,8 @@ const cursorManager = {
           width,
           height
         };
-        const items = grid.getAll(cursorPos);
-        const manager = managers[name];
+	let items = grid.getAll(cursorPos);
+	let manager = managers[name];
 
         if (
           manager?.canPlace(cursorPos, items) &&
@@ -148,7 +148,7 @@ const cursorManager = {
               item => item.type && ![TYPES.SHIP, TYPES.WALL].includes(item.type)
             )
             .forEach(item => {
-              const deleteManager = managers[item.name.split('_')[0]];
+	      let deleteManager = managers[item.name.split('_')[0]];
               deleteManager.remove(item);
 
               // remove components from belts
@@ -184,8 +184,8 @@ const cursorManager = {
     }
     // check valid cursor placement
     else {
-      const items = grid.getAll(cursor);
-      const manager = managers[name];
+      let items = grid.getAll(cursor);
+      let manager = managers[name];
       if (manager?.canPlace(cursor, items) && storage.canBuy(cursor.name)) {
         cursor.valid = true;
       } else {

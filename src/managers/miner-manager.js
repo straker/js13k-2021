@@ -8,8 +8,8 @@ import { layers } from '../assets/tilemap.json';
 import { NUM_COLS } from '../constants';
 import { removeFromArray } from '../utils';
 
-const miners = [];
-const Constructors = {
+let miners = [];
+let Constructors = {
   'COPPER-MINER': CopperMiner,
   'IRON-MINER': IronMiner,
   'TITANIUM-MINER': TitaniumMiner,
@@ -17,11 +17,11 @@ const Constructors = {
   'OXYGEN-EXTRACTOR': OxygenMiner
 };
 
-const minerManager = {
+let minerManager = {
   init() {
     on('gameTick', () => {
       miners.forEach(miner => {
-        const { components, maxComponents } = miner;
+	let { components, maxComponents } = miner;
         miner.timer = ++miner.timer % miner.duration;
         if (miner.timer === 0 && components.length < maxComponents) {
           miner.timer = 0;
@@ -34,7 +34,7 @@ const minerManager = {
   },
 
   add(properties) {
-    const miner = new Constructors[properties.name](properties);
+    let miner = new Constructors[properties.name](properties);
     miners.push(miner);
     return miner;
   },
@@ -45,7 +45,7 @@ const minerManager = {
 
   // miner can only be placed on empty spots
   canPlace(cursor, items) {
-    const tile = layers[0].data[cursor.row * NUM_COLS + cursor.col];
+    let tile = layers[0].data[cursor.row * NUM_COLS + cursor.col];
     return !items.length && tile === 11;
   }
 };

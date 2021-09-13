@@ -1,6 +1,6 @@
 import { COSTS, COMPONENTS } from '../constants';
 
-const componentStorage = {
+let componentStorage = {
   // turn an array into object keys with value 0
   ...COMPONENTS.reduce((acc, curr) => ((acc[curr] = 0), acc), {}),
   COPPER: 10,

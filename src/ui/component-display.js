@@ -5,9 +5,9 @@ import componentStorage from '../components/storage';
 import { displayComponentValue } from '../utils';
 
 let grid;
-const componentDisplay = {
+let componentDisplay = {
   init() {
-    const children = [];
+    let children = [];
 
     COMPONENTS.forEach(name => {
       children.push(
@@ -35,7 +35,7 @@ const componentDisplay = {
       if (child.text) {
         // save some processing power by not updating the text value
         // if it hasn't chaned
-        const value = displayComponentValue(componentStorage[child.name]);
+	let value = displayComponentValue(componentStorage[child.name]);
         if (child.text !== value) {
           child.text = value;
         }

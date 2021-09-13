@@ -29,7 +29,7 @@ export default class Assembler extends GameObject {
   }
 
   addComponent(component) {
-    const input = this.getInput(component);
+    let input = this.getInput(component);
     input.has++;
   }
 
@@ -51,7 +51,7 @@ export default class Assembler extends GameObject {
   }
 
   canTakeComponent(component) {
-    const input = this.getInput(component);
+    let input = this.getInput(component);
     return input?.has < this.maxComponents * input?.total;
   }
 }

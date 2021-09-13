@@ -148,7 +148,7 @@ const cursorManager = {
               item => item.type && ![TYPES.SHIP, TYPES.WALL].includes(item.type)
             )
             .forEach(item => {
-              const deleteManager = managers[item.name];
+              const deleteManager = managers[item.name.split('_')[0]];
               deleteManager.remove(item);
 
               // remove components from belts

@@ -131,10 +131,9 @@ Promise.all([
       context.drawImage(imageAssets.tilemap, 0, 0, GAME_WIDTH, GAME_HEIGHT);
       grid.render();
       componentManager.render();
-      cursorManager.render();
-
       componentDisplay.render();
       buildingMenubar.render();
+      cursorManager.render();
     }
   });
   loop.start();

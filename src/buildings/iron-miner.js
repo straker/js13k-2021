@@ -1,3 +1,4 @@
+import { MINER_DURATIONS } from '../constants';
 import CopperMiner from './copper-miner';
 
 export default class IronMiner extends CopperMiner {
@@ -6,5 +7,6 @@ export default class IronMiner extends CopperMiner {
 
     this.name = 'IRON-MINER';
     this.componentName = 'IRON';
+    this.duration = MINER_DURATIONS.IRON;
   }
 }

@@ -1,4 +1,4 @@
-import { getContext, Text, Grid, on } from '../libs/kontra';
+import { getContext, Text, Grid, on, getWorldRect } from '../libs/kontra';
 import {
   COLORS,
   GRID_SIZE,
@@ -8,7 +8,9 @@ import {
   RECIPES,
   GAME_WIDTH,
   GAME_HEIGHT,
-  TICK_DURATION
+  TICK_DURATION,
+  COSTS,
+  MINER_DURATIONS
 } from '../constants';
 import { titleCase } from '../utils';
 import tileatlas from '../assets/tileatlas.json';
@@ -25,9 +27,22 @@ const textProps = {
   font: '14px Arial'
 };
 
+const uiText = {
+  BELT: 'Moves items along a path. Place on a wall at the end of a path to export items from a room, place on a wall at the start of a path to import items into a room. Select an import belt once placed to filter which items are imported into the room.',
+  MOVER:
+    'Moves items from behind the Mover to the building or belt in front of it. Select once placed to filter which items it moves.',
+  REPAIRER:
+    'Moves items from behind the Repairer to the docked ship. Can only be placed on the tiles next to the ship docking station.',
+  'COPPER-MINER': `Produces 1 Copper every ${MINER_DURATIONS.COPPER} seconds. Can only be placed in rooms with a minable resource tile.`,
+  'IRON-MINER': `Produces 1 Iron every ${MINER_DURATIONS.IRON} seconds. Can only be placed in rooms with a minable resource tile.`,
+  'TITANIUM-MINER': `Produces 1 Titanium every ${MINER_DURATIONS.TITANIUM} seconds. Can only be placed in rooms with a minable resource tile.`,
+  ASSEMBLER:
+    'Crafts items into more advanced items. Select once placed to choose which recipe to craft.'
+};
+
 function getRecipe(recipe) {
   const inputs =
-    recipe.inputs?.map(({ name, total }) => {
+    recipe.inputs?.map(({ name, total, has }) => {
       const btn = new ImageButton({
         name,
         width: GRID_SIZE,
@@ -43,7 +58,7 @@ function getRecipe(recipe) {
             strokeColor: COLORS.BLACK,
             x: GRID_SIZE - 4,
             y: GRID_SIZE * 1.75,
-            text: `0/${total}`
+            text: has ? `0/${total}` : total
           })
         );
       }
@@ -96,8 +111,11 @@ function getRecipe(recipe) {
 
       return btn;
     }) ?? [];
+  if (outputs.length) {
+    outputs.unshift(arrow);
+  }
 
-  return [...inputs, arrow, ...outputs];
+  return [...inputs, ...outputs];
 }
 
 const buildingPopup = {
@@ -124,12 +142,13 @@ const buildingPopup = {
     });
     popupGrid = Grid({
       flow: 'grid',
-      rowGap: GRID_SIZE / 2,
       colGap: GRID_SIZE
     });
     recipeGrid = Grid({
-      flow: 'row',
+      flow: 'grid',
+      numCols: 5,
       align: 'center',
+      rowGap: GRID_SIZE / 2,
       colGap: GRID_SIZE
     });
 
@@ -138,12 +157,17 @@ const buildingPopup = {
     });
   },
 
-  show(building) {
+  show(building, hasClose = true) {
     this.for = building;
     this.hidden = false;
+    this.menuType = building.menuType;
     recipeGrid.children = [];
 
     const atlas = tileatlas[building.name];
+    this.hasClose = hasClose;
+    popupGrid.hidden = false;
+    popupGrid.rowGap = [GRID_SIZE / 2, GRID_SIZE];
+
     const buildingName =
       building.name.split('_')[0] +
       (building.type === TYPES.BELT && building.name !== 'BELT' ? ' BELT' : '');
@@ -227,19 +251,75 @@ const buildingPopup = {
         popupGrid.children = [title, ...components];
         break;
       }
+
+      case TYPES.TIP: {
+        popupGrid.hidden = true;
+        name.text += ' Menu';
+        break;
+      }
+
+      case TYPES.INFO: {
+        popupGrid.numCols = 5;
+        const title = Text({
+          ...textProps,
+          colSpan: recipeGrid.numCols,
+          text: 'Cost:'
+        });
+        const recipe = {
+          inputs: COSTS[buildingName]
+        };
+        const info = Text({
+          ...textProps,
+          width: this.width,
+          colSpan: popupGrid.numCols,
+          text: uiText[buildingName]
+        });
+        // popupGrid.rowGap = [GRID_SIZE];
+        recipeGrid.children = [title, ...getRecipe(recipe)];
+        recipeGrid._p();
+        popupGrid.children = [info];
+        break;
+      }
     }
 
-    const sx = (building.col + 2) * GRID_SIZE;
-    const sy = (building.row - 0.5 * (atlas.height - 1)) * GRID_SIZE;
+    // calculate height to know where to place the popup
+    popupGrid._p();
+    const { padding, width } = this;
+    const bodyHeight = recipeGrid.children.length
+      ? recipeGrid.height + GRID_SIZE * 2 + popupGrid.height
+      : popupGrid.height;
+    this.height =
+      padding * 1.5 + GRID_SIZE * 1.5 + (!popupGrid.hidden ? bodyHeight : 0);
+
+    const rect = getWorldRect(building);
+    const sx = building.col ? (building.col + 2) * GRID_SIZE : rect.x;
+    const sy = building.row
+      ? (building.row - 0.5 * (atlas.height - 1)) * GRID_SIZE
+      : rect.y + GRID_SIZE / 2;
     this.x =
       sx + this.width < GAME_WIDTH ? sx : sx - 4 * GRID_SIZE - this.width;
-    this.y = sy + this.height < GAME_HEIGHT ? sy : sy - this.height;
+    this.y =
+      sy + this.height < GAME_HEIGHT
+        ? sy
+        : sy - this.height + atlas.height * GRID_SIZE * 0.5;
+    if (this.menuType === TYPES.INFO) {
+      this.y -= GRID_SIZE * 2.5;
+    } else if (this.menuType === TYPES.TIP) {
+      this.y -= GRID_SIZE;
+    }
 
-    const { x, y, width } = this;
+    const { x, y } = this;
     name.x = popupGrid.x = recipeGrid.x = x;
     name.y = y + GRID_SIZE * 0.35;
-    closeBtn.x = x + width - GRID_SIZE / 4;
-    closeBtn.y = y - GRID_SIZE * 0.15;
+
+    if (hasClose) {
+      closeBtn.enable();
+      closeBtn.x = x + width - GRID_SIZE / 4;
+      closeBtn.y = y - GRID_SIZE * 0.15;
+    } else {
+      closeBtn.disable();
+      closeBtn.x = closeBtn.y = -100;
+    }
 
     if (recipeGrid.children.length) {
       recipeGrid.y = y + GRID_SIZE * 1.5;
@@ -248,8 +328,8 @@ const buildingPopup = {
       popupGrid.y = y + GRID_SIZE * 1.5;
     }
 
+    recipeGrid._p();
     popupGrid._p();
-    this.height = popupGrid.y + popupGrid.height - this.y + GRID_SIZE * 0.5;
   },
 
   hide() {
@@ -257,6 +337,8 @@ const buildingPopup = {
   },
 
   update() {
+    if (this.menuType !== TYPES.RECIPE) return;
+
     let type = 'inputs';
     recipeGrid.children?.forEach(child => {
       if (child.name && child.name !== 'NONE') {
@@ -291,19 +373,24 @@ const buildingPopup = {
     const sheight = height + padding * 2;
 
     context.fillStyle = COLORS.WHITE;
-    context.lineWidth = 1.5;
-    context.strokeStyle = COLORS.WHITE;
-
     context.fillRect(sx, sy, swidth, GRID_SIZE * 1.35);
+
     context.fillStyle = COLORS.BLACK;
+    context.strokeStyle = COLORS.WHITE;
+    context.lineWidth = 1.5;
 
-    context.fillRect(sx, sy + GRID_SIZE * 1.35, swidth, sheight - GRID_SIZE);
-    context.strokeRect(sx, sy, swidth, sheight);
     name.render();
-    closeBtn.render();
 
-    recipeGrid.render();
-    popupGrid.render();
+    if (this.hasClose) {
+      closeBtn.render();
+    }
+
+    if (!popupGrid.hidden) {
+      context.fillRect(sx, sy + GRID_SIZE * 1.35, swidth, sheight - GRID_SIZE);
+      context.strokeRect(sx, sy, swidth, sheight);
+      recipeGrid.render();
+      popupGrid.render();
+    }
   }
 };
 export default buildingPopup;

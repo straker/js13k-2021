@@ -31,9 +31,28 @@ const managers = {
   REPAIRER: repairerManager
 };
 let pointerStart;
+let menuY;
+let gameRect;
+let displayY;
 
 const cursorManager = {
   init() {
+    // don't show game cursor on the selection menu
+    game.addEventListener('mousemove', evt => {
+      // cache bounding rect
+      if (!menuY) {
+        gameRect = game.getBoundingClientRect();
+        menuY = gameRect.y + gameRect.height - GRID_SIZE * 3.1;
+        displayY = gameRect.y + GRID_SIZE * 2.1;
+      }
+
+      if (evt.clientY < displayY || evt.clientY > menuY) {
+        cursor.hide();
+      } else {
+        cursor.show();
+      }
+    });
+
     onPointerDown(() => {
       pointerStart = {
         row: cursor.row,
